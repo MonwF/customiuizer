@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.prefs.SeekBarPreference;
 import name.monwf.customiuizer.utils.AppHelper;
-import name.monwf.customiuizer.utils.Helpers;
 
 public class Launcher extends SubFragment {
 

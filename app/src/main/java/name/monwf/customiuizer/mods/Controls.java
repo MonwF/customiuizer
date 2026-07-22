@@ -102,8 +102,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -113,12 +112,12 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
 									// Power and volkeys are pressed at the same time
-									if (isVolumePressed) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (isVolumePressed) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									KeyEvent keyEvent = (KeyEvent)args[0];
 
 									int keycode = keyEvent.getKeyCode();
@@ -126,13 +125,13 @@ public class Controls {
 									int flags = keyEvent.getFlags();
 
 									// Ignore repeated KeyEvents simulated on Power Key Up
-									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
-									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || keycode != KeyEvent.KEYCODE_POWER) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || keycode != KeyEvent.KEYCODE_POWER) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
 									// Power long press
 									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
-									if (mPowerManager.isInteractive()) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (mPowerManager.isInteractive()) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									//XposedHelpers.log("PowerKeyHook", "interceptKeyBeforeQueueing: " + args[1] + ", isTracking: " + keyEvent.isTracking() + " | Source: " + keyEvent.getSource() + " | KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags());
 									if (action == KeyEvent.ACTION_DOWN) {
 										isPowerPressed = true;
@@ -188,14 +187,13 @@ public class Controls {
 										isWaitingForPowerLongPressed = false;
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -208,12 +206,12 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
 									// Power and volkeys are pressed at the same time
-									if (isPowerPressed) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (isPowerPressed) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									final KeyEvent keyEvent = (KeyEvent)args[0];
 
 									int keycode = keyEvent.getKeyCode();
@@ -221,13 +219,13 @@ public class Controls {
 									int flags = keyEvent.getFlags();
 
 									// Ignore repeated KeyEvents simulated on volume Key Up
-									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
-									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || (keycode != KeyEvent.KEYCODE_VOLUME_UP && keycode != KeyEvent.KEYCODE_VOLUME_DOWN)) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if ((flags & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == KeyEvent.FLAG_VIRTUAL_HARD_KEY) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+									if ((flags & KeyEvent.FLAG_FROM_SYSTEM) != KeyEvent.FLAG_FROM_SYSTEM || (keycode != KeyEvent.KEYCODE_VOLUME_UP && keycode != KeyEvent.KEYCODE_VOLUME_DOWN)) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
 									// Volume long press
 									final Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									final PowerManager mPowerManager = (PowerManager)XposedHelpers.getObjectField(thisObject, "mPowerManager");
-									if (mPowerManager.isInteractive()) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (mPowerManager.isInteractive()) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									//XposedHelpers.log("VolumeMediaButtonsHook", "interceptKeyBeforeQueueing: KeyCode: " + keyEvent.getKeyCode() + " | Action: " + keyEvent.getAction() + " | RepeatCount: " + keyEvent.getRepeatCount()+ " | Flags: " + keyEvent.getFlags() + " | " + mPowerManager.isInteractive());
 									if (action == KeyEvent.ACTION_DOWN) {
 										isVolumePressed = true;
@@ -290,14 +288,13 @@ public class Controls {
 										isWaitingForVolumeLongPressed = false;
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -310,7 +307,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -322,14 +319,13 @@ public class Controls {
 										mContext.sendBroadcast(intent);
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -341,7 +337,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -349,20 +345,19 @@ public class Controls {
 									int code = (int)args[0];
 									if ((code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN) && ims.isInputViewShown()) {
 										String pkgName = Settings.Global.getString(ims.getContentResolver(), Helpers.modulePkg + ".foreground.package");
-										if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+										if (MainModule.mPrefs.getStringSet("controls_volumecursor_apps").contains(pkgName)) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 										boolean swapDir = MainModule.mPrefs.getBoolean("controls_volumecursor_reverse");
 										ims.sendDownUpKeyEvents(code == (swapDir ? KeyEvent.KEYCODE_VOLUME_DOWN : KeyEvent.KEYCODE_VOLUME_UP) ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT);
 										{ skipped = true; result = true; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -372,7 +367,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -384,14 +379,13 @@ public class Controls {
 											{ skipped = true; result = true; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -603,8 +597,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -650,8 +643,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 		ModuleHelper.findAndHookMethod("com.android.systemui.navigationbar.NavigationBarView", lpparam.getClassLoader(), "onConfigurationChanged", Configuration.class,
@@ -675,8 +667,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -730,7 +721,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -750,14 +741,13 @@ public class Controls {
 										{ skipped = true; result = null; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -767,7 +757,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -779,14 +769,13 @@ public class Controls {
 									else if (key == KeyEvent.KEYCODE_APP_SWITCH)
 										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).removeCallbacks(mMenuLongPressAction);
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -807,7 +796,7 @@ public class Controls {
 					final Object thisObject = chain.getThisObject();
 
 									boolean mAuthSuccess = XposedHelpers.getBooleanField(thisObject, "mAuthSuccess");
-									if (!mAuthSuccess) { if (throwable != null) throw throwable; return result; }
+									if (!mAuthSuccess) { return XposedHelpers.throwOrReturn(throwable, result); }
 									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 
 									boolean ignoreSystem = MainModule.mPrefs.getBoolean("controls_fingerprintsuccess_ignore");
@@ -820,8 +809,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -833,19 +821,18 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 
 									{ skipped = true; result = null; throwable = null; }
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -867,17 +854,16 @@ public class Controls {
 					final Object thisObject = chain.getThisObject();
 
 									boolean mAuthSuccess = XposedHelpers.getBooleanField(thisObject, "mAuthSuccess");
-									if (mAuthSuccess) { if (throwable != null) throw throwable; return result; }
+									if (mAuthSuccess) { return XposedHelpers.throwOrReturn(throwable, result); }
 									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									PowerManager mPowerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
-									if (mPowerManager.isInteractive()) { if (throwable != null) throw throwable; return result; }
+									if (mPowerManager.isInteractive()) { return XposedHelpers.throwOrReturn(throwable, result); }
 									if (!GlobalActions.commonSendAction(mContext, "WakeUp")) XposedHelpers.log("FingerprintScreenOnHook", "Failed to wake up device");
 			
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -904,8 +890,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -926,7 +911,7 @@ public class Controls {
 					final Object thisObject = chain.getThisObject();
 
 									int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
-									if (pct == 100) { if (throwable != null) throw throwable; return result; }
+									if (pct == 100) { return XposedHelpers.throwOrReturn(throwable, result); }
 									int mGestureStubDefaultSize = XposedHelpers.getIntField(thisObject, "mGestureStubDefaultSize");
 									int mGestureStubSize  = XposedHelpers.getIntField(thisObject, "mGestureStubSize");
 									mGestureStubDefaultSize = Math.round(mGestureStubDefaultSize * pct / 100f);
@@ -937,8 +922,7 @@ public class Controls {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -948,24 +932,23 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
 									int pct = MainModule.mPrefs.getInt("controls_fsg_width", 100);
-									if (pct == 100) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (pct == 100) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									int mGestureStubDefaultSize = XposedHelpers.getIntField(thisObject, "mGestureStubDefaultSize");
-									if ((int)args[0] == mGestureStubDefaultSize) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if ((int)args[0] == mGestureStubDefaultSize) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									args[0] = Math.round((int)args[0] * pct / 100f);
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -993,28 +976,26 @@ public class Controls {
 											boolean skipped = false;
 											Object result = null;
 											Throwable throwable = null;
-											Object[] args = chain.getArgs().toArray(new Object[0]);
+											Object[] args = XposedHelpers.getArgsArray(chain);
 											try {
 
 																							Object GestureObserver = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.miui.systemui.controller.GestureObserver");
 																							XposedHelpers.setObjectField(GestureObserver, "mGestureLineEnable", true);
 										
-												if (skipped) { if (throwable != null) throw throwable; return result; }
+												if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 												result = chain.proceed(args);
 											} catch (Throwable t) {
 												throwable = t;
 												result = null;
 											}
-											if (throwable != null) throw throwable;
-											return result;
+											return XposedHelpers.throwOrReturn(throwable, result);
 										}
 									});
 			
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 		ModuleHelper.hookAllMethods("com.android.systemui.navigationbar.NavigationBarController", lpparam.getClassLoader(), "createNavigationBar", new MethodHook() {
@@ -1023,21 +1004,20 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 
 									if (args.length >= 3) {
 										{ skipped = true; result = null; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -1054,7 +1034,7 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
@@ -1068,14 +1048,13 @@ public class Controls {
 										{ skipped = true; result = true; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 
@@ -1092,20 +1071,19 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 
 									boolean isScreenOn = (boolean)args[1];
 									if (!isScreenOn) { skipped = true; result = null; throwable = null; }
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}
@@ -1117,12 +1095,12 @@ public class Controls {
 				boolean skipped = false;
 				Object result = null;
 				Throwable throwable = null;
-				Object[] args = chain.getArgs().toArray(new Object[0]);
+				Object[] args = XposedHelpers.getArgsArray(chain);
 				try {
 					final Object thisObject = chain.getThisObject();
 
 									Bundle bundle = (Bundle)args[0];
-									if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+									if (bundle == null || bundle.getInt("triggered_by", 0) != 83 || bundle.getInt("invocation_type", 0) != 1) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									String pos = bundle.getInt("inDirection", 0) == 1 ? "right" : "left";
 									if (GlobalActions.handleAction(mContext, "controls_fsg_assist_" + pos, false, bundle)) {
@@ -1130,14 +1108,13 @@ public class Controls {
 										{ skipped = true; result = null; throwable = null; }
 									}
 			
-					if (skipped) { if (throwable != null) throw throwable; return result; }
+					if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
 					result = chain.proceed(args);
 				} catch (Throwable t) {
 					throwable = t;
 					result = null;
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 

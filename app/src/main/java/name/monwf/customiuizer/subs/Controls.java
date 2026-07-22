@@ -1,14 +1,12 @@
 package name.monwf.customiuizer.subs;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
 import java.util.Objects;
 
-import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.utils.AppHelper;
 

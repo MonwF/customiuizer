@@ -140,7 +140,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -156,7 +156,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -189,8 +189,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -202,21 +201,20 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.callMethod(thisObject, "declineRequest", args[0]);
             		                { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -227,12 +225,12 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                String reason = (String)args[3];
-            		                if (reason == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (reason == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (
             		                    reason.startsWith("android.server.power:PLUGGED")
             		                    || reason.equals("com.android.systemui:RAPID_CHARGE")
@@ -240,14 +238,13 @@ public class System {
             		                    || reason.equals("com.android.systemui:WIRELESS_RAPID_CHARGE")
             		                ) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -266,7 +263,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                View[][] mViews = (View[][])XposedHelpers.getObjectField(thisObject, "mViews");
             		                ArrayList<View> mRandomViews = new ArrayList<View>();
@@ -311,8 +308,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -337,7 +333,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mPWMContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                KeyguardManager kgMgr = (KeyguardManager)mPWMContext.getSystemService(Context.KEYGUARD_SERVICE);
@@ -352,8 +348,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -363,7 +358,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -371,14 +366,13 @@ public class System {
             		                KeyguardManager kgMgr = (KeyguardManager)mPWMContext.getSystemService(Context.KEYGUARD_SERVICE);
             		                if (kgMgr.isKeyguardLocked() && kgMgr.isKeyguardSecure()) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -459,19 +453,18 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (isUnlockedInnerCall) {
             		                    isUnlockedInnerCall = false;
-            		                    { if (throwable != null) throw throwable; return result; }
+            		                    { return XposedHelpers.throwOrReturn(throwable, result); }
             		                }
             		                isUnlockedWithStrong = true;
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -488,15 +481,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                isUnlockedWithFingerprint = true;
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -513,7 +505,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)XposedHelpers.callMethod(thisObject, "getContext");
             		                mContext.registerReceiver(new BroadcastReceiver() {
@@ -531,8 +523,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -542,13 +533,13 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
-            		                if (forcedOption == 0) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (forcedOption == 0) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
-            		                if (!isUnlocked(mContext, lpparam.getClassLoader())) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (!isUnlocked(mContext, lpparam.getClassLoader())) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
             		                boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
             		                if (skip) {
@@ -560,14 +551,13 @@ public class System {
             		                unlockIntent.setPackage("com.android.systemui");
             		                mContext.sendBroadcast(unlockIntent);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -584,7 +574,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context) XposedHelpers.getObjectField(thisObject, "mContext");
             		                IntentFilter filter = new IntentFilter();
@@ -637,8 +627,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -655,14 +644,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (forcedOption == 0) { if (throwable != null) throw throwable; return result; }
+            		                if (forcedOption == 0) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                boolean skip = MainModule.mPrefs.getBoolean("system_noscreenlock_skip");
-            		                if (skip) { if (throwable != null) throw throwable; return result; }
+            		                if (skip) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object mKeyguardUpdateMonitor = XposedHelpers.getObjectField(thisObject, "mKeyguardUpdateMonitor");
             		                Context mContext = (Context) XposedHelpers.getObjectField(mKeyguardUpdateMonitor, "mContext");
-            		                if (!isUnlocked(mContext, lpparam.getClassLoader())) { if (throwable != null) throw throwable; return result; }
+            		                if (!isUnlocked(mContext, lpparam.getClassLoader())) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                Class<?> securityModeEnum = findClass("com.android.keyguard.KeyguardSecurityModel$SecurityMode", lpparam.getClassLoader());
             		                Object securityModeNone = XposedHelpers.getStaticObjectField(securityModeEnum, "None");
@@ -679,8 +668,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -697,7 +685,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)args[0];
             		                mContext.registerReceiver(new BroadcastReceiver() {
@@ -719,8 +707,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -737,7 +724,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                if (mContext != null) {
@@ -747,8 +734,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -767,7 +753,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                View view = (View)thisObject;
             		                ModuleHelper.setViewInfo(view, "currentTouchTime", 0L);
@@ -807,8 +793,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -829,7 +814,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                View view = (View) XposedHelpers.getObjectField(thisObject, "mView");
             		                int btnId = view.getResources().getIdentifier("btn_delete", "id", "com.android.settings");
@@ -839,8 +824,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         final String[] wifiSharedKey = new String[1];
@@ -851,7 +835,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -859,14 +843,13 @@ public class System {
             		                    args[0] = dlgTitleId;
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -876,7 +859,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -886,14 +869,13 @@ public class System {
             		                    args[0] = str;
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("miuix.appcompat.app.AlertDialog", lpparam.getClassLoader(), "onCreate", new MethodHook() {
@@ -909,7 +891,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (wifiSharedKey[0] != null) {
             		                    TextView messageView = (TextView) XposedHelpers.callMethod(thisObject, "getMessageView");
@@ -919,8 +901,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("com.android.settings.wifi.MiuiSavedAccessPointsWifiSettings", lpparam.getClassLoader(), "showDeleteDialog", new MethodHook() {
@@ -929,7 +910,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -955,7 +936,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -976,8 +957,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -1169,7 +1149,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context) XposedHelpers.getObjectField(thisObject, "mContext");
             		                Runnable mWeatherRunnable = new Runnable() {
@@ -1183,8 +1163,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1210,7 +1189,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                initSecondTimer(thisObject);
             		                Context mContext = (Context) XposedHelpers.getObjectField(thisObject, "mContext");
@@ -1227,8 +1206,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         if (ccClockTweak || statusbarClockTweak) {
@@ -1249,10 +1227,10 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                final TextView clock = (TextView)thisObject;
-            		                if (args.length != 3) { if (throwable != null) throw throwable; return result; }
+            		                if (args.length != 3) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int clockId = clock.getResources().getIdentifier("clock", "id", "com.android.systemui");
             		                int bigClockId = clock.getResources().getIdentifier("big_time", "id", "com.android.systemui");
             		                int dateClockId = clock.getResources().getIdentifier("date_time", "id", "com.android.systemui");
@@ -1289,8 +1267,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         MethodHook updateTimeHook = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
@@ -1299,7 +1276,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1312,7 +1289,7 @@ public class System {
             		                ) {
             		                    clock.setText("");
             		                    { skipped = true; result = null; throwable = null; }
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
 
             		                Object mMiuiStatusBarClockController = XposedHelpers.getObjectField(clock, "mMiuiStatusBarClockController");
@@ -1384,14 +1361,13 @@ public class System {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.views.MiuiClock", lpparam.getClassLoader(), "updateTime", updateTimeHook);
@@ -1403,7 +1379,7 @@ public class System {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
@@ -1416,14 +1392,13 @@ public class System {
                 		                        XposedHelpers.setObjectField(thisObject, "mAttached", true);
                 		                    }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -1441,7 +1416,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    TextView clock = (TextView) XposedHelpers.getObjectField(thisObject, "mClock");
                 		                    initClockStyle(clock, "clock");
@@ -1449,8 +1424,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             boolean customTextColor = MainModule.mPrefs.getBoolean("system_statusbar_clock_chip_customtextcolor");
@@ -1462,7 +1436,7 @@ public class System {
                     	boolean skipped = false;
                     	Object result = null;
                     	Throwable throwable = null;
-                    	Object[] args = chain.getArgs().toArray(new Object[0]);
+                    	Object[] args = XposedHelpers.getArgsArray(chain);
                     	Object thisObject = chain.getThisObject();
                     	try {
 
@@ -1472,14 +1446,13 @@ public class System {
                     		                            { skipped = true; result = null; throwable = null; }
                     		                        }
                     
-                    		if (skipped) { if (throwable != null) throw throwable; return result; }
+                    		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                     		result = chain.proceed(args);
                     	} catch (Throwable t) {
                     		throwable = t;
                     		result = null;
                     	}
-                    	if (throwable != null) throw throwable;
-                    	return result;
+                    	return XposedHelpers.throwOrReturn(throwable, result);
                     }
                 });
             }
@@ -1489,7 +1462,7 @@ public class System {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
@@ -1499,14 +1472,13 @@ public class System {
                 		                        if (mFakeClock == null) { skipped = true; result = null; throwable = null; }
                 		                    }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -1530,7 +1502,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView clock = (TextView)XposedHelpers.getObjectField(thisObject, "mBigTime");
             		                boolean ccClockTweak = MainModule.mPrefs.getBoolean("system_cc_clocktweak");
@@ -1550,8 +1522,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "updateResources", ccClockHook);
@@ -1572,7 +1543,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView clock = (TextView)XposedHelpers.getObjectField(thisObject, "mBigTime");
             		                int mPolicyVisibility = XposedHelpers.getIntField(clock, "mPolicyVisibility");
@@ -1587,8 +1558,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         if (centerClock) {
@@ -1607,7 +1577,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (centerClock) {
             		                    TextView clock = (TextView)XposedHelpers.getObjectField(thisObject, "mBigTime");
@@ -1630,8 +1600,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.qs.MiuiNotificationHeaderView", lpparam.getClassLoader(), "onFinishInflate", clockMarginHook);
@@ -1645,7 +1614,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1659,14 +1628,13 @@ public class System {
             		                        XposedHelpers.callMethod(thisObject, "setSystemExpanded", true);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1685,7 +1653,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean mOnKeyguard = XposedHelpers.getBooleanField(thisObject, "mOnKeyguard");
             		                boolean showHeadsUp = (boolean) args[0];
@@ -1710,8 +1678,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1731,7 +1698,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                mCustomBlurModifier[0] = MainModule.mPrefs.getInt("system_drawer_blur", 100);
             		                ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
@@ -1745,8 +1712,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1756,7 +1722,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -1771,7 +1737,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -1790,8 +1756,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
 
@@ -1801,7 +1766,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1812,14 +1777,13 @@ public class System {
             		                    args[1] = newRatio;
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1829,20 +1793,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = (float)args[0] * mCustomBlurModifier[0] / 100f;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1887,7 +1850,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float val = (float)result;
             		                if (val >= 0) {
@@ -1898,8 +1861,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1916,7 +1878,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setLongField(thisObject, "mBrighteningLightDebounceConfig", 1000L);
             		                XposedHelpers.setLongField(thisObject, "mDarkeningLightDebounceConfig", 1200L);
@@ -1924,8 +1886,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1942,7 +1903,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float val = (float)result;
             		                if (val >= 0) {
@@ -1953,8 +1914,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1964,7 +1924,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1976,14 +1936,13 @@ public class System {
             		                mMinimumBacklight = (minBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
             		                mMaximumBacklight = (maxBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1996,7 +1955,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -2019,7 +1978,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -2043,8 +2002,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -2064,7 +2022,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int delay = MainModule.mPrefs.getInt("system_betterpopups_delay", 0) * 1000;
             		                if (delay == 0) delay = 5000;
@@ -2084,8 +2042,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2100,7 +2057,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2109,14 +2066,13 @@ public class System {
             		                    public void run() {}
             		                });
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2126,20 +2082,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.setBooleanField(thisObject, "mReleaseOnExpandFinish", true);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2183,7 +2138,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (args[1] != null) {
             		                    Notification mN = (Notification) args[1];
@@ -2201,8 +2156,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2212,20 +2166,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[2] = false;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2242,7 +2195,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mEntry = XposedHelpers.getObjectField(thisObject, "mEntry");
             		                if (mEntry != null) {
@@ -2266,8 +2219,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2277,7 +2229,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2285,14 +2237,13 @@ public class System {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2302,20 +2253,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = XposedHelpers.getObjectField(thisObject, "mBackgroundColor"); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2332,7 +2282,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mEntry = XposedHelpers.getObjectField(thisObject, "mNotificationEntry");
             		                Object singleLineView = XposedHelpers.getObjectField(thisObject, "mSingleLineView");
@@ -2351,8 +2301,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2363,17 +2312,17 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                Notification.Builder builder = (Notification.Builder) args[0];
             		                Notification mN = (Notification) XposedHelpers.getObjectField(builder, "mN");
-            		                if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
-            		                if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if ((boolean)XposedHelpers.callMethod(mN, "isColorized")) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+            		                if ((boolean)XposedHelpers.callMethod(mN, "isMediaNotification")) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                ApplicationInfo applicationInfo = mN.extras.getParcelable("android.appInfo");
             		                if (applicationInfo == null) {
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
             		                Context mContext = (Context) args[1];
             		                String pkgName = applicationInfo.packageName;
@@ -2423,14 +2372,13 @@ public class System {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2449,13 +2397,13 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Class<?> NotificationHelper = findClass("com.android.systemui.statusbar.notification.NotificationSettingsHelper", lpparam.getClassLoader());
             		                boolean miuiStyle = false;
             		                Notification.Builder builder = (Notification.Builder) args[1];
             		                Notification notification = builder.getNotification();
-            		                if ((boolean)XposedHelpers.callMethod(notification, "isMediaNotification")) { if (throwable != null) throw throwable; return result; }
+            		                if ((boolean)XposedHelpers.callMethod(notification, "isMediaNotification")) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                boolean isFoldEntrance = notification.extras.getBoolean("miui_unimportant", false);
             		                boolean showMiuiStyle = (boolean) XposedHelpers.callStaticMethod(NotificationHelper, "showMiuiStyle");
             		                if (showMiuiStyle || isFoldEntrance) {
@@ -2482,8 +2430,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2502,7 +2449,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mState = XposedHelpers.callMethod(thisObject, "getState");
             		                int state = XposedHelpers.getIntField(mState, "state");
@@ -2519,8 +2466,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2532,21 +2478,20 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                Object notification = XposedHelpers.getObjectField(args[0], "mSbn");
             		                XposedHelpers.setObjectField(notification, "mHasShownAfterUnlock", false);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2577,7 +2522,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                ArrayList<Object> mMenuItems = (ArrayList<Object>)XposedHelpers.getObjectField(thisObject, "mMenuItems");
@@ -2593,7 +2538,7 @@ public class System {
             		                } catch (Throwable t1) {
             		                    XposedHelpers.log(t1);
             		                }
-            		                if (infoBtn == null || forceCloseBtn == null || openFwBtn == null) { if (throwable != null) throw throwable; return result; }
+            		                if (infoBtn == null || forceCloseBtn == null || openFwBtn == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object notification = XposedHelpers.getObjectField(thisObject, "mSbn");
             		                mMenuItems.add(infoBtn);
             		                mMenuItems.add(forceCloseBtn);
@@ -2677,8 +2622,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2710,7 +2654,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setAdditionalInstanceField(thisObject, "mVibrationMode", Integer.parseInt(MainModule.mPrefs.getString("system_vibration", "1")));
             		                ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
@@ -2733,8 +2677,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2744,22 +2687,21 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                String pkgName = (String)args[1];
-            		                if (pkgName == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (pkgName == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (checkVibration(pkgName, thisObject)) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2773,20 +2715,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if ((int)args[0] == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2807,7 +2748,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                //Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                //XposedHelpers.log("rotationForOrientationLw: " + args[0] + ", " + args[1] + " = " + result);
@@ -2826,8 +2767,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2873,7 +2813,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		            ViewGroup mMemoryAndClearContainer = (ViewGroup)XposedHelpers.getObjectField(thisObject, "mMemoryAndClearContainer");
             		            if (mMemoryAndClearContainer != null) mMemoryAndClearContainer.setVisibility(View.GONE);
@@ -2881,8 +2821,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2942,11 +2881,11 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Window wnd = (Window)thisObject;
             		                int mStatusBarColor = XposedHelpers.getIntField(thisObject, "mStatusBarColor");
-            		                if (mStatusBarColor == -16777216) { if (throwable != null) throw throwable; return result; }
+            		                if (mStatusBarColor == -16777216) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int newColor = getActionBarColor(wnd, mStatusBarColor);
             		                if (newColor != mStatusBarColor)
             		                    XposedHelpers.callMethod(thisObject, "setStatusBarColor", newColor);
@@ -2954,8 +2893,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2965,21 +2903,20 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (actionBarColor != NOCOLOR) args[0] = actionBarColor;
             		                else if (Color.alpha((int)args[0]) < 255) args[0] = Color.TRANSPARENT;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2989,20 +2926,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                hookToolbar(thisObject, (Drawable)args[0]);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -3012,20 +2948,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                hookWindowDecor(thisObject, (Drawable)args[0]);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3045,20 +2980,19 @@ public class System {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
                 		                    hookToolbar(thisObject, (Drawable)args[0]);
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
 
@@ -3073,20 +3007,19 @@ public class System {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
                 		                    hookWindowDecor(thisObject, (Drawable)args[0]);
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
 
@@ -3102,20 +3035,19 @@ public class System {
                     	boolean skipped = false;
                     	Object result = null;
                     	Throwable throwable = null;
-                    	Object[] args = chain.getArgs().toArray(new Object[0]);
+                    	Object[] args = XposedHelpers.getArgsArray(chain);
                     	Object thisObject = chain.getThisObject();
                     	try {
 
                     		                        hookToolbar(thisObject, (Drawable)args[0]);
                     
-                    		if (skipped) { if (throwable != null) throw throwable; return result; }
+                    		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                     		result = chain.proceed(args);
                     	} catch (Throwable t) {
                     		throwable = t;
                     		result = null;
                     	}
-                    	if (throwable != null) throw throwable;
-                    	return result;
+                    	return XposedHelpers.throwOrReturn(throwable, result);
                     }
                 });
 
@@ -3129,20 +3061,19 @@ public class System {
                     	boolean skipped = false;
                     	Object result = null;
                     	Throwable throwable = null;
-                    	Object[] args = chain.getArgs().toArray(new Object[0]);
+                    	Object[] args = XposedHelpers.getArgsArray(chain);
                     	Object thisObject = chain.getThisObject();
                     	try {
 
                     		                        hookWindowDecor(thisObject, (Drawable)args[0]);
                     
-                    		if (skipped) { if (throwable != null) throw throwable; return result; }
+                    		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                     		result = chain.proceed(args);
                     	} catch (Throwable t) {
                     		throwable = t;
                     		result = null;
                     	}
-                    	if (throwable != null) throw throwable;
-                    	return result;
+                    	return XposedHelpers.throwOrReturn(throwable, result);
                     }
                 });
         }
@@ -3167,22 +3098,21 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                String pkgName = (String) XposedHelpers.getObjectField(args[0], "pkg");
-            		                if (pkgName == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (pkgName == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (checkToast(pkgName)) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3201,18 +3131,18 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Intent mOriginalIntent = (Intent)XposedHelpers.getObjectField(thisObject, "mOriginalIntent");
-            		                if (mOriginalIntent == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mOriginalIntent == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                String action = mOriginalIntent.getAction();
-            		                if (action == null) { if (throwable != null) throw throwable; return result; }
-            		                if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) { if (throwable != null) throw throwable; return result; }
-            		                if (mOriginalIntent.getDataString() != null && mOriginalIntent.getDataString().contains(":")) { if (throwable != null) throw throwable; return result; }
+            		                if (action == null) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                if (mOriginalIntent.getDataString() != null && mOriginalIntent.getDataString().contains(":")) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                String mAimPackageName = (String)XposedHelpers.getObjectField(thisObject, "mAimPackageName");
-            		                if (mContext == null || mAimPackageName == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mContext == null || mAimPackageName == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanshare_apps");
             		                View mRootView = (View)XposedHelpers.getObjectField(thisObject, "mRootView");
             		                int appResId1 = mContext.getResources().getIdentifier("app1", "id", "android.miui");
@@ -3227,8 +3157,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3247,18 +3176,18 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                try {
-            		                    if (args[0] == null) { if (throwable != null) throw throwable; return result; }
-            		                    if (args.length < 6) { if (throwable != null) throw throwable; return result; }
+            		                    if (args[0] == null) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                    if (args.length < 6) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    Intent origIntent = (Intent)args[0];
             		                    String action = origIntent.getAction();
-            		                    if (action == null) { if (throwable != null) throw throwable; return result; }
-            		                    if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) { if (throwable != null) throw throwable; return result; }
+            		                    if (action == null) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                    if (!action.equals(Intent.ACTION_SEND) && !action.equals(Intent.ACTION_SENDTO) && !action.equals(Intent.ACTION_SEND_MULTIPLE)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    Intent intent = (Intent)origIntent.clone();
-            		                    if (intent.getDataString() != null && intent.getDataString().contains(":")) { if (throwable != null) throw throwable; return result; }
-            		                    if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) { if (throwable != null) throw throwable; return result; }
+            		                    if (intent.getDataString() != null && intent.getDataString().contains(":")) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                    if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanshare_apps");
             		                    List<ResolveInfo> resolved = (List<ResolveInfo>)result;
             		                    ResolveInfo resolveInfo;
@@ -3283,8 +3212,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -3361,17 +3289,17 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Intent mOriginalIntent = (Intent)XposedHelpers.getObjectField(thisObject, "mOriginalIntent");
-            		                if (mOriginalIntent == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mOriginalIntent == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                String action = mOriginalIntent.getAction();
-            		                if (!Intent.ACTION_VIEW.equals(action)) { if (throwable != null) throw throwable; return result; }
-            		                //if (mOriginalIntent.getDataString() != null && mOriginalIntent.getDataString().contains(":")) { if (throwable != null) throw throwable; return result; }
+            		                if (!Intent.ACTION_VIEW.equals(action)) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                //if (mOriginalIntent.getDataString() != null && mOriginalIntent.getDataString().contains(":")) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                String mAimPackageName = (String)XposedHelpers.getObjectField(thisObject, "mAimPackageName");
-            		                if (mContext == null || mAimPackageName == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mContext == null || mAimPackageName == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanopenwith_apps");
             		                String mimeType = getContentType(mContext, mOriginalIntent);
             		                Pair<Boolean, Boolean> isRemove = isRemoveApp(true, mContext, mAimPackageName, selectedApps, mimeType);
@@ -3387,8 +3315,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3408,20 +3335,20 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                try {
-            		                    if (args[0] == null) { if (throwable != null) throw throwable; return result; }
-            		                    if (args.length < 6) { if (throwable != null) throw throwable; return result; }
+            		                    if (args[0] == null) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                    if (args.length < 6) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    Intent origIntent = (Intent)args[0];
             		                    Intent intent = (Intent)origIntent.clone();
             		                    String action = intent.getAction();
             		                    //XposedHelpers.log(action + ": " + intent.getType() + " | " + intent.getDataString());
-            		                    if (!Intent.ACTION_VIEW.equals(action)) { if (throwable != null) throw throwable; return result; }
-            		                    if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) { if (throwable != null) throw throwable; return result; }
+            		                    if (!Intent.ACTION_VIEW.equals(action)) { return XposedHelpers.throwOrReturn(throwable, result); }
+            		                    if (intent.hasExtra("CustoMIUIzer") && intent.getBooleanExtra("CustoMIUIzer", false)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    String scheme = intent.getScheme();
             		                    boolean validSchemes = "http".equals(scheme) || "https".equals(scheme) || "vnd.youtube".equals(scheme);
-            		                    if (intent.getType() == null && !validSchemes) { if (throwable != null) throw throwable; return result; }
+            		                    if (intent.getType() == null && !validSchemes) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                    Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                    String mimeType = getContentType(mContext, intent);
@@ -3451,8 +3378,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -3467,22 +3393,21 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
-            		                if (!"*".equals(args[1])) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (!"*".equals(args[1])) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                int mode = (int)XposedHelpers.callMethod(thisObject, "getAccessControlLockMode", args[0]);
             		                if (mode != 1) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3528,7 +3453,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -3541,7 +3466,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -3558,8 +3483,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
 
@@ -3569,7 +3493,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -3582,7 +3506,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -3599,8 +3523,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
 
@@ -3610,7 +3533,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -3625,7 +3548,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -3644,8 +3567,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -3681,12 +3603,12 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                FrameLayout mNotificationPanel = (FrameLayout) XposedHelpers.getObjectField(thisObject, "panelView");
             		                if (mNotificationPanel == null) {
             		                    XposedHelpers.log("AudioVisualizerHook", "Cannot find mNotificationPanel");
-            		                    { if (throwable != null) throw throwable; return result; }
+            		                    { return XposedHelpers.throwOrReturn(throwable, result); }
             		                }
 
             		                Context mContext = mNotificationPanel.getContext();
@@ -3706,8 +3628,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -3724,7 +3645,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mScreenObserver = XposedHelpers.getObjectField(thisObject, "mScreenObserver");
             		                Class<?> ScreenObserverCls = mScreenObserver.getClass();
@@ -3741,7 +3662,7 @@ public class System {
             		                    	}
             		                    	try {
             		                    		Object thisObject = chain.getThisObject();
-            		                    		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		                    		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                    		                        screenAndDoze[0] = false;
             		                    		                        if (audioViz != null) audioViz.updateScreenOn(false);
@@ -3749,8 +3670,7 @@ public class System {
             		                    	} catch (Throwable t) {
             		                    		XposedHelpers.log(t);
             		                    	}
-            		                    	if (throwable != null) throw throwable;
-            		                    	return result;
+            		                    	return XposedHelpers.throwOrReturn(throwable, result);
             		                    }
             		                });
 
@@ -3767,7 +3687,7 @@ public class System {
             		                    	}
             		                    	try {
             		                    		Object thisObject = chain.getThisObject();
-            		                    		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		                    		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                    		                        screenAndDoze[0] = true;
             		                    		                        if (audioViz != null) audioViz.updateScreenOn(!screenAndDoze[1]);
@@ -3775,16 +3695,14 @@ public class System {
             		                    	} catch (Throwable t) {
             		                    		XposedHelpers.log(t);
             		                    	}
-            		                    	if (throwable != null) throw throwable;
-            		                    	return result;
+            		                    	return XposedHelpers.throwOrReturn(throwable, result);
             		                    }
             		                });
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.CentralSurfacesImpl", lpparam.getClassLoader(), "updateDozingState", new MethodHook() {
@@ -3800,7 +3718,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean mDozing = XposedHelpers.getBooleanField(thisObject, "mDozing");
             		                screenAndDoze[1] = mDozing;
@@ -3809,8 +3727,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.policy.KeyguardStateControllerImpl", lpparam.getClassLoader(), "notifyKeyguardState", boolean.class, boolean.class, new MethodHook() {
@@ -3826,7 +3743,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean isKeyguardShowingNew = (boolean) args[0];
             		                if (isKeyguardShowing != isKeyguardShowingNew) {
@@ -3838,8 +3755,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -3856,7 +3772,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean isNotificationPanelExpandedNew = XposedHelpers.getBooleanField(thisObject, "mPanelExpanded");
             		                if (isNotificationPanelExpanded != isNotificationPanelExpandedNew) {
@@ -3868,8 +3784,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -3879,15 +3794,15 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
-            		                if (audioViz == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (audioViz == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                if (!screenAndDoze[0] || screenAndDoze[1]) {
             		                    audioViz.updateScreenOn(false);
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                } else audioViz.isScreenOn = true;
 
             		                MediaMetadata mMediaMetadata = (MediaMetadata)XposedHelpers.getObjectField(thisObject, "mMediaMetadata");
@@ -3909,14 +3824,13 @@ public class System {
             		                updateAudioVisualizerState(mContext);
             		                audioViz.updateMusicArt(art);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3944,7 +3858,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -3958,7 +3872,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -3977,8 +3891,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
 
@@ -3988,20 +3901,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                removeListener(thisObject);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -4011,20 +3923,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                removeListener(thisObject);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4043,15 +3954,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setIntField(thisObject, "mAllowAllRotations", MainModule.mPrefs.getStringAsInt("system_allrotations2", 1) == 2 ? 1 : 0);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4070,7 +3980,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ImageView mBatteryIconView = (ImageView)XposedHelpers.getObjectField(thisObject, "mBatteryIconView");
             		                mBatteryIconView.setVisibility(View.GONE);
@@ -4078,8 +3988,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4101,7 +4010,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    View mBatteryView = (View) XposedHelpers.getObjectField(thisObject, "mBattery");
                 		                    mBatteryView.setTag(batteryId, true);
@@ -4109,8 +4018,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.phone.KeyguardStatusBarView", lpparam.getClassLoader(), "onFinishInflate", new MethodHook() {
@@ -4126,7 +4034,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    ViewGroup mSystemIconsContainer = (ViewGroup) XposedHelpers.getObjectField(thisObject, "mSystemIconsContainer");
                 		                    int batteryResId = mSystemIconsContainer.getResources().getIdentifier("battery", "id", "com.android.systemui");
@@ -4136,8 +4044,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -4154,7 +4061,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (MainModule.mPrefs.getBoolean("system_statusbaricons_battery4")) {
             		                    TextView mBatteryPercentMarkView = (TextView)XposedHelpers.getObjectField(thisObject, "mBatteryPercentMarkView");
@@ -4181,8 +4088,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4229,7 +4135,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
@@ -4252,7 +4158,7 @@ public class System {
             		                    	boolean skipped = false;
             		                    	Object result = null;
             		                    	Throwable throwable = null;
-            		                    	Object[] args = chain.getArgs().toArray(new Object[0]);
+            		                    	Object[] args = XposedHelpers.getArgsArray(chain);
             		                    	Object thisObject = chain.getThisObject();
             		                    	try {
 
@@ -4261,14 +4167,13 @@ public class System {
             		                    		                        updateAlarmVisibility(thisObject);
             		                    		                        { skipped = true; result = null; throwable = null; }
                     
-            		                    		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		                    		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    		result = chain.proceed(args);
             		                    	} catch (Throwable t) {
             		                    		throwable = t;
             		                    		result = null;
             		                    	}
-            		                    	if (throwable != null) throw throwable;
-            		                    	return result;
+            		                    	return XposedHelpers.throwOrReturn(throwable, result);
             		                    }
             		                });
             		                ModuleHelper.findAndHookMethod(mNextAlarmCallback.getClass(), "onNextAlarmChanged", AlarmManager.AlarmClockInfo.class, new MethodHook() {
@@ -4277,7 +4182,7 @@ public class System {
             		                    	boolean skipped = false;
             		                    	Object result = null;
             		                    	Throwable throwable = null;
-            		                    	Object[] args = chain.getArgs().toArray(new Object[0]);
+            		                    	Object[] args = XposedHelpers.getArgsArray(chain);
             		                    	Object thisObject = chain.getThisObject();
             		                    	try {
 
@@ -4288,22 +4193,20 @@ public class System {
             		                    		                        updateAlarmVisibility(thisObject);
             		                    		                        { skipped = true; result = null; throwable = null; }
                     
-            		                    		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		                    		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    		result = chain.proceed(args);
             		                    	} catch (Throwable t) {
             		                    		throwable = t;
             		                    		result = null;
             		                    	}
-            		                    	if (throwable != null) throw throwable;
-            		                    	return result;
+            		                    	return XposedHelpers.throwOrReturn(throwable, result);
             		                    }
             		                });
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4315,26 +4218,25 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                Object wifiState = args[0];
             		                if (wifiState != null) {
             		                    int opt = MainModule.mPrefs.getStringAsInt("system_statusbaricons_wifistandard", 1);
-            		                    if (opt == 1) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    if (opt == 1) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                    int wifiStandard = (int) XposedHelpers.getObjectField(wifiState, "wifiStandard");
             		                    XposedHelpers.setObjectField(wifiState, "showWifiStandard", opt == 2 && wifiStandard > 0);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4354,7 +4256,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                HashSet<String> mSystemKeyPackages = (HashSet<String>)XposedHelpers.getObjectField(thisObject, "mSystemKeyPackages");
             		                mSystemKeyPackages.remove("com.miui.securitycenter");
@@ -4371,8 +4273,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4385,20 +4286,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = true;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4410,20 +4310,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = true;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4443,20 +4342,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = new HashSet<String>(); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4468,7 +4366,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -4480,14 +4378,13 @@ public class System {
             		                    }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.settings.notification.ChannelNotificationSettings", lpparam.getClassLoader(), "setupChannelDefaultPrefs", new MethodHook() {
@@ -4503,7 +4400,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object pref = XposedHelpers.callMethod(thisObject, "findPreference", "importance");
             		                XposedHelpers.setObjectField(thisObject, "mImportance", pref);
@@ -4543,8 +4440,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4562,7 +4458,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -4571,14 +4467,13 @@ public class System {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         XposedHelpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.getClassLoader(), "setVisibility", int.class, hideClockHook);
@@ -4595,15 +4490,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.callMethod(thisObject, "setVisibility", View.GONE);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         XposedHelpers.findAndHookMethod("com.android.keyguard.clock.KeyguardClockContainer", lpparam.getClassLoader(), "doAnimationToAod", boolean.class, boolean.class, new MethodHook() {
@@ -4612,7 +4506,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -4628,7 +4522,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -4648,8 +4542,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -4668,21 +4561,20 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int streamType = (int)args[0];
-            		                if (streamType != AudioManager.STREAM_MUSIC) { if (throwable != null) throw throwable; return result; }
+            		                if (streamType != AudioManager.STREAM_MUSIC) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                boolean isMuteAdjust = (boolean)args[2];
-            		                if (isMuteAdjust) { if (throwable != null) throw throwable; return result; }
+            		                if (isMuteAdjust) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object mController = XposedHelpers.getObjectField(thisObject, "mController");
-            		                if (mController == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mController == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                { result = false; throwable = null; }
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4700,25 +4592,24 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (thisObject == signUnknown || args[0] == signUnknown) {
             		                    { skipped = true; result = false; throwable = null; }
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
             		                int flags = (int) args[1];
             		                if (flags != 4) { skipped = true; result = true; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -4735,15 +4626,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setObjectField(thisObject, "signatureSchemeRollbackProtectionsEnforced", false);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("android.util.jar.StrictJarVerifier", lpparam.getClassLoader(), "verifyMessageDigest", HookerClassHelper.returnConstant(true));
@@ -4755,7 +4645,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -4765,14 +4655,13 @@ public class System {
             		                    { skipped = true; result = true; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("com.android.server.pm.InstallPackageHelper", lpparam.getClassLoader(), "cannotInstallWithBadPermissionGroups", HookerClassHelper.returnConstant(false));
@@ -4782,7 +4671,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -4791,14 +4680,13 @@ public class System {
             		                    { skipped = true; result = true; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("android.content.pm.ApplicationInfo", lpparam.getClassLoader(), "isSignedWithPlatformKey", new MethodHook() {
@@ -4814,7 +4702,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean isSystemSign = (boolean) result;
             		                if (!isSystemSign) {
@@ -4825,8 +4713,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4845,7 +4732,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float opt = MainModule.mPrefs.getInt("system_dimtime", 0) / 100f;
             		                XposedHelpers.setIntField(thisObject, "mMaximumScreenDimDurationConfig", 600000);
@@ -4854,8 +4741,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4867,20 +4753,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = false;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -4899,7 +4784,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    try {
                 		                        XposedHelpers.callMethod(thisObject, "setSpringBackEnable", false);
@@ -4910,8 +4795,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             ModuleHelper.findAndHookMethodSilently(sblCls, "setSpringBackEnable", boolean.class, hookParam);
@@ -4932,7 +4816,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    ((View)thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
                 		                    try {
@@ -4944,8 +4828,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             ModuleHelper.findAndHookMethodSilently(rrvCls, "setSpringEnabled", boolean.class, hookParam);
@@ -4957,20 +4840,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                ((AbsListView)thisObject).setOverScrollMode(View.OVER_SCROLL_NEVER);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -4983,20 +4865,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = false;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllConstructors("com.android.server.wm.WindowSurfaceController", lpparam.getClassLoader(), new MethodHook() {
@@ -5005,7 +4886,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5014,14 +4895,13 @@ public class System {
             		                flags &= ~secureFlag;
             		                args[2] = flags;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("com.android.server.wm.WindowManagerServiceImpl", lpparam.getClassLoader(), "notAllowCaptureDisplay", new MethodHook() {
@@ -5030,20 +4910,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5070,7 +4949,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5094,7 +4973,7 @@ public class System {
             		                if (isRingtone) ratio = ratio_ringer;
             		                else if (isNotification) ratio = ratio_notif;
             		                else ratio = ratio_other;
-            		                if (ratio == 1.0f) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (ratio == 1.0f) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
             		                String key = "system_vibration_amp_period";
             		                int start_hour = MainModule.mPrefs.getInt(key + "_start_hour", 0);
@@ -5108,7 +4987,7 @@ public class System {
             		                Date now = formatter.parse(formatter.format(new Date()));
 
             		                boolean insidePeriod = start.before(end) ? now.after(start) && now.before(end) : now.before(end) || now.after(start);
-            		                if (!insidePeriod) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (!insidePeriod) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
             		                boolean mSupportsAmplitudeControl = false;
             		                try {
@@ -5120,14 +4999,13 @@ public class System {
             		                else
             		                    args[0] = Math.max(3, (long)Math.round((long)args[0] * ratio));
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5178,7 +5056,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView mTopIndicationView = (TextView) XposedHelpers.getObjectField(thisObject, "mTopIndicationView");
             		                mTopIndicationView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -5198,8 +5076,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.KeyguardIndicationController", lpparam.getClassLoader(), "updateDeviceEntryIndication", boolean.class, new MethodHook() {
@@ -5215,7 +5092,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView mTopIndicationView = (TextView) XposedHelpers.getObjectField(thisObject, "mTopIndicationView");
             		                hookUpdateTime(mTopIndicationView);
@@ -5225,8 +5102,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.keyguard.injector.KeyguardBottomAreaInjector", lpparam.getClassLoader(), "handleBottomButtonClickedAnimation", boolean.class, new MethodHook() {
@@ -5242,7 +5118,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView mTopIndicationView = (TextView) ModuleHelper.getObjectFieldByPath(thisObject, "mKeyguardIndicationInjector.mKeyguardIndicationController.mTopIndicationView");
             		                boolean showTips = (boolean) args[0];
@@ -5256,8 +5132,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5269,11 +5144,11 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
-            		                if (args.length != 4) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (args.length != 4) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                ContentValues contentValues = (ContentValues) args[1];
             		                String displayName = contentValues.getAsString("_display_name");
             		                if (displayName != null && displayName.contains("Screenshot")) {
@@ -5284,14 +5159,13 @@ public class System {
             		                    contentValues.put("_display_name", displayName);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("android.content.ContentResolver", lpparam.getClassLoader(), "insert", Uri.class, ContentValues.class, new MethodHook() {
@@ -5300,7 +5174,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5330,14 +5204,13 @@ public class System {
             		                    contentValues.put("_display_name", displayName);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -5354,22 +5227,21 @@ public class System {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
-                		                    if (args.length < 7) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+                		                    if (args.length < 7) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
                 		                    Bitmap.CompressFormat compress = format <= 2 ? Bitmap.CompressFormat.JPEG : (format == 3 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.WEBP);
                 		                    args[4] = compress;
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             };
             try {
@@ -5386,12 +5258,12 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                int quality = (int) args[1];
-            		                if (quality != 100 || (args[2] instanceof ByteArrayOutputStream)) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (quality != 100 || (args[2] instanceof ByteArrayOutputStream)) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                int format = MainModule.mPrefs.getStringAsInt("system_screenshot_format", 2);
             		                quality = MainModule.mPrefs.getInt("system_screenshot_quality", 100);
             		                if (format == 3) {
@@ -5401,14 +5273,13 @@ public class System {
             		                args[0] = compress;
             		                args[1] = quality;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5428,12 +5299,12 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)XposedHelpers.callMethod(thisObject, "getContext");
             		                Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
             		                ArrayList<Object> mToastQueue = (ArrayList<Object>)XposedHelpers.getObjectField(thisObject, "mToastQueue");
-            		                if (mContext == null || mHandler == null || mToastQueue == null || mToastQueue.size() == 0) { if (throwable != null) throw throwable; return result; }
+            		                if (mContext == null || mHandler == null || mToastQueue == null || mToastQueue.size() == 0) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int mod = (MainModule.mPrefs.getInt("system_toasttime", 0) - 4) * 1000;
             		                for (Object record: mToastQueue)
             		                    if (record != null && mHandler.hasMessages(2, record)) {
@@ -5446,8 +5317,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -5458,7 +5328,7 @@ public class System {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -5472,7 +5342,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -5485,7 +5355,7 @@ public class System {
 	            		                Object lp = args.length == 1 ? args[0] : args[1];
 	            		                long mPrevHideTimeout = (long)XposedHelpers.getAdditionalInstanceField(thisObject, "mPrevHideTimeout");
 	            		                long mHideTimeout = XposedHelpers.getLongField(lp, "hideTimeoutMilliseconds");
-	            		                if (mPrevHideTimeout == -1 || mHideTimeout == -1) { if (throwable != null) throw throwable; return result; }
+	            		                if (mPrevHideTimeout == -1 || mHideTimeout == -1) { return XposedHelpers.throwOrReturn(throwable, result); }
 
 	            		                long dur = 0;
 	            		                if (mPrevHideTimeout == 1000 || mPrevHideTimeout == 4000 || mPrevHideTimeout == 5000 || mPrevHideTimeout == 7000 || mPrevHideTimeout != mHideTimeout)
@@ -5497,8 +5367,7 @@ public class System {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -5518,15 +5387,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                { result = null; throwable = null; }
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5552,12 +5420,12 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                MotionEvent event = (MotionEvent)args[0];
-            		                if (event.getPointerCount() > 1) { if (throwable != null) throw throwable; return result; }
+            		                if (event.getPointerCount() > 1) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int action = event.getActionMasked();
-            		                if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) { if (throwable != null) throw throwable; return result; }
+            		                if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_UP) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object thisObect = XposedHelpers.getSurroundingThis(thisObject);
             		                boolean isOnKeyguard = (boolean) XposedHelpers.callMethod(thisObect, "isOnKeyguard");
             		                Object mQsController = XposedHelpers.getObjectField(thisObect, "mQsController");
@@ -5567,15 +5435,15 @@ public class System {
             		                        Object mKeyguardPanelViewInjector = XposedHelpers.getObjectField(thisObect, "mKeyguardPanelViewInjector");
             		                        Object mKeyguardMoveHelper = XposedHelpers.getObjectField(mKeyguardPanelViewInjector, "mKeyguardMoveHelper");
             		                        int mCurrentScreen = XposedHelpers.getIntField(mKeyguardMoveHelper, "mCurrentScreen");
-            		                        if (mCurrentScreen == 0) { if (throwable != null) throw throwable; return result; }
+            		                        if (mCurrentScreen == 0) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                        Object keyguardBottomAreaInjector = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.keyguard.injector.KeyguardBottomAreaInjector");
-            		                        if (!XposedHelpers.getBooleanField(keyguardBottomAreaInjector, "mTouchAtKeyguardBottomArea")) { if (throwable != null) throw throwable; return result; }
+            		                        if (!XposedHelpers.getBooleanField(keyguardBottomAreaInjector, "mTouchAtKeyguardBottomArea")) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                        Context mContext = (Context) XposedHelpers.getObjectField(keyguardBottomAreaInjector, "mContext");
             		                        float mTouchDownX = XposedHelpers.getFloatField(keyguardBottomAreaInjector, "mTouchDownX");
             		                        float mTouchDownY = XposedHelpers.getFloatField(keyguardBottomAreaInjector, "mTouchDownY");
             		                        int slop = ViewConfiguration.get(mContext).getScaledTouchSlop();
             		                        if (Math.abs(event.getX() - mTouchDownX) > slop || Math.abs(event.getY() - mTouchDownY) > slop)
-            		                            { if (throwable != null) throw throwable; return result; }
+            		                            { return XposedHelpers.throwOrReturn(throwable, result); }
             		                        Object statusBarKeyguardViewManager = XposedHelpers.getObjectField(thisObect, "statusBarKeyguardViewManager");
             		                        XposedHelpers.callMethod(statusBarKeyguardViewManager, "showBouncer", true);
             		                        { result = true; throwable = null; }
@@ -5585,8 +5453,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5599,7 +5466,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5607,20 +5474,19 @@ public class System {
             		                if (windowType != WindowManager.LayoutParams.TYPE_PHONE
             		                    && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
             		                    && windowType != WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-            		                    && windowType != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    && windowType != WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                int flags = (int) args[flagIndex];
             		                int skipFlag = 64;
             		                flags |= skipFlag;
             		                args[flagIndex] = flags;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5654,7 +5520,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                LinearLayout keys = (LinearLayout)thisObject;
             		                ArrayList<View> mRandomViews = new ArrayList<View>();
@@ -5696,8 +5562,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5716,7 +5581,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int charge = (int)args[0];
             		                String hint = (String)result;
@@ -5755,7 +5620,7 @@ public class System {
             		                            values.add(Math.round(tempVal / 10f) + " ℃");
             		                        }
             		                    }
-            		                    if (values.size() == 0) { if (throwable != null) throw throwable; return result; }
+            		                    if (values.size() == 0) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    String info = TextUtils.join(" · ", values);
 
             		                    int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
@@ -5770,8 +5635,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -5788,18 +5652,17 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
-            		                if (opt != 1) { if (throwable != null) throw throwable; return result; }
+            		                if (opt != 1) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                TextView indicator = (TextView)thisObject;
             		                if (indicator != null) indicator.setSingleLine(false);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5811,7 +5674,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5821,14 +5684,13 @@ public class System {
             		                }
             		                { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5847,15 +5709,14 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.callMethod(args[0], "setShowInSettings", true);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         if (!miui.os.Build.IS_INTERNATIONAL_BUILD) {
@@ -5865,7 +5726,7 @@ public class System {
                                 	boolean skipped = false;
                                 	Object result = null;
                                 	Throwable throwable = null;
-                                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                                	Object[] args = XposedHelpers.getArgsArray(chain);
                                 	Object thisObject = chain.getThisObject();
                                 	__beforeBody__: {
                                 		try {
@@ -5878,7 +5739,7 @@ public class System {
                                 			XposedHelpers.log(t);
                                 		}
                                 	}
-                                	if (skipped) { if (throwable != null) throw throwable; return result; }
+                                	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                                 	try {
                                 		result = chain.proceed(args);
                                 	} catch (Throwable t) {
@@ -5895,8 +5756,7 @@ public class System {
                                 			XposedHelpers.log(t);
                                 		}
                                 	}
-                                	if (throwable != null) throw throwable;
-                                	return result;
+                                	return XposedHelpers.throwOrReturn(throwable, result);
                                 }
             });
         }
@@ -5906,27 +5766,26 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (args[0] == null) {
             		                    { skipped = true; result = false; throwable = null; }
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
             		                ApplicationInfo applicationInfo = (ApplicationInfo) args[0];
             		                int flags = applicationInfo.flags;
             		                boolean systemApp = (flags & 1) != 0 || (flags & 128) != 0 || applicationInfo.uid < 10000;
             		                { skipped = true; result = !systemApp; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5938,7 +5797,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -5950,14 +5809,13 @@ public class System {
             		                    XposedHelpers.setObjectField(thisObject, "mMaxIconsOnLockscreen", opt);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -5976,7 +5834,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object headsUpEntry = thisObject;
             		                boolean expanded = XposedHelpers.getBooleanField(headsUpEntry, "expanded");
@@ -5994,8 +5852,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarNotificationPresenter", lpparam.getClassLoader(), "onExpandClicked",  new MethodHook() {
@@ -6011,7 +5868,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean expanded = (boolean) args[1];
             		                Object mKeyguardStateController = XposedHelpers.getObjectField(thisObject, "mKeyguardStateController");
@@ -6032,8 +5889,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6045,7 +5901,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -6062,14 +5918,13 @@ public class System {
             		                    mAllowNotificationSlide.remove(pkgName);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6088,7 +5943,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                List<String> blackList = (List<String>)result;
             		                if (blackList != null) blackList.clear();
@@ -6098,8 +5953,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.hookAllMethodsSilently("android.util.MiuiMultiWindowAdapter", cl, "getListFromCloudData", clearHook);
@@ -6112,7 +5966,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -6120,14 +5974,13 @@ public class System {
             		                blackList.add("com.android.camera");
             		                args[0] = blackList;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("android.util.MiuiMultiWindowUtils", cl, "isForceResizeable", HookerClassHelper.returnConstant(true));
@@ -6210,7 +6063,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                IntentFilter intentFilter = new IntentFilter();
@@ -6231,8 +6084,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -6249,13 +6101,13 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (freeformCallingPackage == null || "SkipCheck".equals(freeformCallingPackage)) {
-            		                    { if (throwable != null) throw throwable; return result; }
+            		                    { return XposedHelpers.throwOrReturn(throwable, result); }
             		                }
             		                if (!"com.miui.packageinstaller".equals(freeformCallingPackage) && freeformCallingPackage.equals(args[0])) {
-            		                    { if (throwable != null) throw throwable; return result; }
+            		                    { return XposedHelpers.throwOrReturn(throwable, result); }
             		                }
             		                boolean openInFw = (boolean) result;
             		                if (!openInFw) {
@@ -6271,8 +6123,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -6282,7 +6133,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -6292,7 +6143,7 @@ public class System {
             		                        ActivityOptions ao = (ActivityOptions) XposedHelpers.getObjectField(safeOptions, "mOriginalOptions");
             		                        if (ao != null && XposedHelpers.getIntField(ao, "mLaunchWindowingMode") == 5) {
             		                            freeformCallingPackage = "SkipCheck";
-            		                            { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                            { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                        }
             		                    }
             		                    freeformCallingPackage = (String) args[6];
@@ -6307,14 +6158,13 @@ public class System {
             		//                );
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 //        ModuleHelper.hookAllMethods("com.android.server.wm.ActivityStarterInjector", lpparam.getClassLoader(), "modifyLaunchActivityOptionIfNeed", new MethodHook() {
@@ -6364,7 +6214,7 @@ public class System {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
                 		                    mHandler.postDelayed(new Runnable() {
@@ -6382,8 +6232,7 @@ public class System {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -6403,9 +6252,9 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		            if (args.length != 3) { if (throwable != null) throw throwable; return result; }
+            		            if (args.length != 3) { return XposedHelpers.throwOrReturn(throwable, result); }
             		            Object expandableRow = XposedHelpers.getObjectField(args[0], "row");
             		            Object mNotificationData = XposedHelpers.getObjectField(thisObject, "mNotificationData");
             		            boolean newLowPriority = (boolean)XposedHelpers.callMethod(mNotificationData, "isAmbient", XposedHelpers.callMethod(args[1], "getKey")) && !(boolean)XposedHelpers.callMethod(XposedHelpers.callMethod(args[1], "getNotification"), "isGroupSummary");
@@ -6419,8 +6268,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6439,16 +6287,16 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object entry = XposedHelpers.callMethod(XposedHelpers.getObjectField(thisObject, "mParent"), "getEntry");
             		                String channelId = (String)XposedHelpers.callMethod(XposedHelpers.callMethod(entry, "getChannel"), "getId");
-            		                if ("miscellaneous".equals(channelId)) { if (throwable != null) throw throwable; return result; }
+            		                if ("miscellaneous".equals(channelId)) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
             		                Object notification = XposedHelpers.getObjectField(entry, "mSbn");
             		                Class<?> nuCls = findClassIfExists("com.android.systemui.statusbar.notification.NotificationUtil", lpparam.getClassLoader());
             		                boolean isHybrid = (boolean)XposedHelpers.callStaticMethod(nuCls, "isHybrid", notification);
-            		                if (isHybrid) { if (throwable != null) throw throwable; return result; }
+            		                if (isHybrid) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object mInfoItem = XposedHelpers.getObjectField(thisObject, "mInfoItem");
             		                ImageView mIcon = (ImageView) XposedHelpers.getObjectField(mInfoItem, "mIcon");
             		                mIcon.setOnClickListener(new View.OnClickListener() {
@@ -6482,8 +6330,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6502,15 +6349,15 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Intent intent = (Intent)args[0];
-            		                if (intent == null || intent.getComponent() == null) { if (throwable != null) throw throwable; return result; }
+            		                if (intent == null || intent.getComponent() == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                String pkgName = intent.getComponent().getPackageName();
             		                String actName = intent.getComponent().getClassName();
             		                String key = "system_applock_skip_activities";
             		                String itemStr = MainModule.mPrefs.getString(key, "");
-            		                if (itemStr == null || itemStr.isEmpty()) { if (throwable != null) throw throwable; return result; }
+            		                if (itemStr == null || itemStr.isEmpty()) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                String[] itemArr = itemStr.trim().split("\\|");
             		                for (String uuid: itemArr) {
             		                    String pkgAct = MainModule.mPrefs.getString(key + "_" + uuid + "_activity", "");
@@ -6520,8 +6367,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6533,20 +6379,19 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.setObjectField(thisObject, "mPersistentUnlockMessage", "");
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6565,7 +6410,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                View mKeyguardStatusBar = (View) thisObject;
             		                mKeyguardStatusBar.setVisibility(View.GONE);
@@ -6574,8 +6419,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6587,7 +6431,7 @@ public class System {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -6597,14 +6441,13 @@ public class System {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6623,7 +6466,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mWifiActivityView = XposedHelpers.getObjectField(thisObject, "mWifiActivityView");
             		                XposedHelpers.callMethod(mWifiActivityView, "setVisibility", 4);
@@ -6631,8 +6474,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarWifiView", lpparam.getClassLoader(), "applyWifiState", hideWifiActivity);
@@ -6652,12 +6494,12 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (throwable != null || result == null || (int)args[5] == 1 || "com.android.thememanager".equals(args[1])) { if (throwable != null) throw throwable; return result; }
+            		                if (throwable != null || result == null || (int)args[5] == 1 || "com.android.thememanager".equals(args[1])) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
-            		                if (mContext == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mContext == null) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                int handleIncomingUser = 0;
             		                try {
@@ -6736,8 +6578,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -6760,7 +6601,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Context context = (Context) args[0];
             		                Resources resources = context.getResources();
@@ -6779,8 +6620,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6799,7 +6639,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float scale = MainModule.mPrefs.getInt("system_other_wallpaper_scale", 6) / 10.0f;
             		                XposedHelpers.setObjectField(thisObject, "mMaxWallpaperScale", scale);
@@ -6815,8 +6655,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -6838,7 +6677,7 @@ public class System {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int mode = (int) result;
             		                if (mode == 1) { result = 2; throwable = null; }
@@ -6852,8 +6691,7 @@ public class System {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }

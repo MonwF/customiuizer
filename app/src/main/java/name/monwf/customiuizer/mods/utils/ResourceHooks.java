@@ -82,7 +82,7 @@ public class ResourceHooks {
 						if (mContext != null) {
 							Resources modRes = ModuleHelper.getModuleRes(mContext);
 							if (modRes != null) {
-								Object[] argsArr = args.toArray(new Object[0]);
+								Object[] argsArr = XposedHelpers.getArgsArray(args);
 								Object value = getModuleResValue(modRes, method, (int) replacement.mValue, argsArr);
 								if (value != null) {
 									skipValue = value;
@@ -99,7 +99,7 @@ public class ResourceHooks {
 						if (mContext != null) {
 							Resources modRes = ModuleHelper.getModuleRes(mContext);
 							if (modRes != null) {
-								Object[] argsArr = args.toArray(new Object[0]);
+								Object[] argsArr = XposedHelpers.getArgsArray(args);
 								Object value = getModuleResValue(modRes, method, modResId, argsArr);
 								if (value != null) {
 									skipValue = value;
@@ -177,8 +177,7 @@ public class ResourceHooks {
 				} catch (Throwable t) {
 					XposedHelpers.log(t);
 				}
-				if (throwable != null) throw throwable;
-				return result;
+				return XposedHelpers.throwOrReturn(throwable, result);
 			}
 		});
 	}

@@ -11,10 +11,8 @@ import android.widget.TextView;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Locale;
 
 import name.monwf.customiuizer.prefs.ListPreferenceEx;

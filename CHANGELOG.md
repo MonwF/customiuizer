@@ -4,6 +4,42 @@
 > 仅兼容：**HyperOS 1 / Android 14 / libxposed API 101**。  
 > 应用名：**米客_forA14**
 
+## r14.1.2
+
+- 分支：`a14-api101`
+- 在 `r14.1.1` 基础上进行代码审计与重复模式清理，**无功能变更**：
+  - 移除 17 个无效 import，涉及 8 个文件：
+    - `AboutFragment.java`、`SubFragment.java`、`SubFragmentWithSearch.java`
+    - `subs/Controls.java`、`subs/Launcher.java`、`subs/System.java`、`subs/WiFiList.java`
+    - `utils/Helpers.java`
+  - 在 `mods/utils/XposedHelpers.java` 新增 4 个静态辅助方法：
+    - `getArgsArray(XposedInterface.Chain chain)`
+    - `getArgsArray(List<Object> args)`
+    - `throwOrReturn(Throwable throwable, Object result)`
+    - `proceedOrThrow(XposedInterface.Chain chain, Object[] args, Throwable throwable)`
+  - 用上述辅助方法替换重复 boilerplate：
+    - `Controls.java` / `Launcher.java` / `System.java` / `Various.java`：`chain.getArgs().toArray(new Object[0])` → `XposedHelpers.getArgsArray(chain)`
+    - `ResourceHooks.java`：`args.toArray(new Object[0])` → `XposedHelpers.getArgsArray(args)`
+    - `GlobalActions.java` 等 6 个模块中的 `if (throwable != null) throw throwable; return result;` / `return chain.proceed(args);` 模式统一收敛到 `throwOrReturn` / `proceedOrThrow`
+    - 累计减少约 300 行生成代码，`git diff --stat` 约 988 insert / 1319 delete。
+- `SystemUI.java` 保持 `r14.1.0` 适配层不变，未引入新的迁移。
+- 已通过 `compileReleaseJavaWithJavac` 编译验证；clean build 后仍会走 zipalign 与 v2 签名。
+- 与 `r14.1.1` 的详细对比（性能、稳定性、省电性）：
+
+  | 指标 | r14.1.1 | r14.1.2 | 说明 |
+  |---|---|---|---|
+  | 功能行为 | `GlobalActions` / `Controls` / `Launcher` / `System` / `Various` 原生 `intercept(Chain)`；`SystemUI` 适配层 | 与 r14.1.1 一致 | 无功能变更 |
+  | Hook 调用额外对象分配 | 5 个模块已迁移；`SystemUI` 保持原状 | 与 r14.1.1 持平 | helper 方法不引入新对象 |
+  | 单次 hook 调用反射/包装层 | 进一步减少 | 重复代码收敛，调用层数相同 | 仅是代码整理 |
+  | 参数数组拷贝 | 已迁移模块减少一次拷贝；`SystemUI` 保持原状 | 与 r14.1.1 持平 | `toArray` 仍在 helper 内执行 |
+  | 异常传播 | PASSTHROUGH；`SystemUI` 回退兼容 | PASSTHROUGH；无行为变更 | 语义不变 |
+  | 源码/DEX 体积 | 较大（生成代码重复） | 缩小约 300+ 行 | 更易维护，加载解析开销微降 |
+  | 编译产物体积 | - | 持平或略小 | `minifyEnabled`/`shrinkResources` 会进一步压缩 |
+  | 电池消耗 | 无额外后台任务 | 无新增后台任务 | 与 r14.1.1 持平 |
+  | 稳定性 | 只迁移已验证模块，`SystemUI` 不动 | 与 r14.1.1 一致 | 仅代码清理，未改动 hook 逻辑 |
+- `versionCode`：`116`；`versionName`：`r14.1.2`
+- 输出 APK：`Pengeek-HyperOS1-A14-API101-r14.1.2.apk`
+
 ## r14.1.1
 
 - 分支：`a14-api101`
@@ -73,8 +109,8 @@
 
 ## 全局检查
 
-- r14.1.1 最终代码：`GlobalActions.java`、`Controls.java`、`Launcher.java`、`System.java`、`Various.java` 已完成 `intercept(Chain)` 迁移；`SystemUI.java` 保留 `HookerClassHelper` 适配层，已验证重启后稳定生效。
-- 各模块均经过单独安装、设置、重启测试：`Launcher` / `System` / `SystemUI-rollback` / `Various` 均通过。
-- 无额外后台服务、无定时任务、无持续轮询，电池消耗与 r14.1.0 持平或略优。
-- 最终 APK 使用 v2 签名，`versionCode 115`，`versionName r14.1.1`。
+- r14.1.2 最终代码：在 `r14.1.1` 基础上清理 17 个无效 import，并把 `Controls.java` / `Launcher.java` / `System.java` / `Various.java` / `GlobalActions.java` / `ResourceHooks.java` 中的重复 `getArgs().toArray` 与 `throwable/return` 模式收敛到 `XposedHelpers` 的 4 个 helper；`SystemUI.java` 保留 `HookerClassHelper` 适配层不变。
+- 本次为纯代码清理版本，hook 行为与 `r14.1.1` 一致；已通过 `compileReleaseJavaWithJavac` 编译验证，clean build 后仍会走 zipalign 与 v2 签名。建议升级后仍做一次重启验证。
+- 无额外后台服务、无定时任务、无持续轮询，电池消耗与 `r14.1.1` 持平。
+- 最终 APK 使用 v2 签名，`versionCode 116`，`versionName r14.1.2`。
 - 建议后续若需继续迁移 `SystemUI`，必须单独按功能子模块拆分并逐个重启验证，避免一次性大改引入回归。

@@ -11,10 +11,7 @@ import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
-
-import java.util.Objects;
 
 import miui.os.Build;
 import name.monwf.customiuizer.CredentialsLauncher;
@@ -22,7 +19,6 @@ import name.monwf.customiuizer.PrefsProvider;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.prefs.CheckBoxPreferenceEx;
-import name.monwf.customiuizer.prefs.ListPreferenceEx;
 import name.monwf.customiuizer.prefs.PreferenceEx;
 import name.monwf.customiuizer.prefs.SeekBarPreference;
 import name.monwf.customiuizer.qs.AutoRotateService;

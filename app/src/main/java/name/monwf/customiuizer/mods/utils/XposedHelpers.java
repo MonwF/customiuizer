@@ -73,6 +73,29 @@ public final class XposedHelpers {
     private static final ConcurrentHashMap<String, Class<?>[]> parameterClassesCache = new ConcurrentHashMap<>();
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+
+    /** Returns the hooked method arguments as an array. */
+    public static Object[] getArgsArray(XposedInterface.Chain chain) {
+        return chain.getArgs().toArray(EMPTY_OBJECT_ARRAY);
+    }
+
+    /** Returns the supplied argument list as an array. */
+    public static Object[] getArgsArray(List<Object> args) {
+        return args.toArray(EMPTY_OBJECT_ARRAY);
+    }
+
+    /** If {@code throwable} is set, throws it; otherwise returns {@code result}. */
+    public static Object throwOrReturn(Throwable throwable, Object result) throws Throwable {
+        if (throwable != null) throw throwable;
+        return result;
+    }
+
+    /** If {@code throwable} is set, throws it; otherwise proceeds to the next hook/original method. */
+    public static Object proceedOrThrow(XposedInterface.Chain chain, Object[] args, Throwable throwable) throws Throwable {
+        if (throwable != null) throw throwable;
+        return chain.proceed(args);
+    }
+
     private static final WeakHashMap<Object, HashMap<String, Object>> additionalFields = new WeakHashMap<>();
     private static final HashMap<String, ThreadLocal<AtomicInteger>> sMethodDepth = new HashMap<>();
 

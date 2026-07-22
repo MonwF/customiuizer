@@ -73,11 +73,11 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
-            		                if ((boolean)XposedHelpers.callMethod(thisObject, "isInNormalEditingMode")) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if ((boolean)XposedHelpers.callMethod(thisObject, "isInNormalEditingMode")) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                String key = null;
             		                Context helperContext = ((ViewGroup)thisObject).getContext();
             		                int numOfFingers = 1;
@@ -96,14 +96,13 @@ public class Launcher {
             		                    if (GlobalActions.handleAction(helperContext, key)) { skipped = true; result = true; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -113,20 +112,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -136,20 +134,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -167,15 +164,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) { result = "no_action"; throwable = null; }
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -186,20 +182,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = "no_action"; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -209,20 +204,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         })) {
             ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.search.SearchEdgeLayout", lpparam.getClassLoader(), "isTopSearchEnable", new MethodHook() {
@@ -231,20 +225,19 @@ public class Launcher {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
                 		                    if (MainModule.mPrefs.getInt("launcher_swipedown_action", 1) > 1) { skipped = true; result = false; throwable = null; }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.search.SearchEdgeLayout", lpparam.getClassLoader(), "isBottomGlobalSearchEnable", new MethodHook() {
@@ -253,20 +246,19 @@ public class Launcher {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
                 		                    if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = false; throwable = null; }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
             ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "isGlobalSearchBottomEffectEnable", Context.class, new MethodHook() {
@@ -275,20 +267,19 @@ public class Launcher {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
                 		                    if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = false; throwable = null; }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         } else if (!ModuleHelper.findAndHookMethodSilently("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader(), "allowedSlidingUpToStartGolbalSearch", Context.class, new MethodHook() {
@@ -297,20 +288,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (MainModule.mPrefs.getInt("launcher_swipeup_action", 1) > 1) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         })) if (lpparam.getPackageName().equals("com.miui.home")) XposedHelpers.log("HomescreenSwipesHook", "Cannot disable swipe up search");
     }
@@ -330,7 +320,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean canInterceptTouch = (boolean) result;
             		                if (canInterceptTouch) {
@@ -349,8 +339,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.hotseats.HotSeats", lpparam.getClassLoader(), "dispatchTouchEvent", MotionEvent.class, new MethodHook() {
@@ -359,27 +348,26 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                MotionEvent ev = (MotionEvent)args[0];
-            		                if (ev == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (ev == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
 
             		                ViewGroup hotSeat = (ViewGroup)thisObject;
             		                Context helperContext = hotSeat.getContext();
-            		                if (helperContext == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (helperContext == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (mDetectorHorizontal == null) mDetectorHorizontal = new GestureDetector(helperContext, new SwipeListenerHorizontal(hotSeat));
             		                mDetectorHorizontal.onTouchEvent(ev);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -434,7 +422,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ShakeManager shakeMgr = (ShakeManager)XposedHelpers.getAdditionalInstanceField(thisObject, shakeMgrKey);
             		                if (shakeMgr == null) {
@@ -449,8 +437,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -467,9 +454,9 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (XposedHelpers.getAdditionalInstanceField(thisObject, shakeMgrKey) == null) { if (throwable != null) throw throwable; return result; }
+            		                if (XposedHelpers.getAdditionalInstanceField(thisObject, shakeMgrKey) == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Activity launcherActivity = (Activity)thisObject;
             		                SensorManager sensorMgr = (SensorManager)launcherActivity.getSystemService(Context.SENSOR_SERVICE);
             		                sensorMgr.unregisterListener((ShakeManager)XposedHelpers.getAdditionalInstanceField(thisObject, shakeMgrKey));
@@ -477,8 +464,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -511,7 +497,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ModuleHelper.observePreferenceChange(new ModuleHelper.PreferenceObserver() {
             		                    @Override
@@ -556,8 +542,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -574,7 +559,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setAdditionalInstanceField(thisObject, "mLabelOrig", XposedHelpers.getObjectField(thisObject, "mLabel"));
             		                if (args != null && args.length > 0) modifyTitle(thisObject);
@@ -582,8 +567,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -600,7 +584,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setAdditionalInstanceField(thisObject, "mLabelOrig", XposedHelpers.getObjectField(thisObject, "mLabel"));
             		                modifyTitle(thisObject);
@@ -608,8 +592,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -626,7 +609,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.setAdditionalInstanceField(thisObject, "mLabelOrig", args[0]);
             		                modifyTitle(thisObject);
@@ -634,8 +617,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -652,15 +634,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                modifyTitle(thisObject);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -677,15 +658,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                modifyTitle(thisObject);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -704,17 +684,16 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) != 2) { if (throwable != null) throw throwable; return result; }
+            		                if (MainModule.mPrefs.getStringAsInt("launcher_closefolders", 1) != 2) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                boolean mHasLaunchedAppFromFolder = XposedHelpers.getBooleanField(thisObject, "mHasLaunchedAppFromFolder");
             		                if (mHasLaunchedAppFromFolder) XposedHelpers.callMethod(thisObject, "closeFolder");
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -728,21 +707,20 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR");
             		                if (!fsg) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -759,10 +737,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean fsg = (boolean)XposedHelpers.getAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR");
-            		                if (fsg) { if (throwable != null) throw throwable; return result; }
+            		                if (fsg) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                Object mNavStubView = XposedHelpers.getObjectField(thisObject, "mNavStubView");
             		                Object mWindowManager = XposedHelpers.getObjectField(thisObject, "mWindowManager");
@@ -774,8 +752,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -792,23 +769,22 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (!"force_fsg_nav_bar".equals(args[1])) { if (throwable != null) throw throwable; return result; }
+            		                if (!"force_fsg_nav_bar".equals(args[1])) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                for (StackTraceElement el: Thread.currentThread().getStackTrace()) {
             		                    if ("com.miui.home.recents.BaseRecentsImpl".equals(el.getClassName())) {
             		                        XposedHelpers.setAdditionalStaticField(XposedHelpers.findClass("com.miui.home.recents.BaseRecentsImpl", lpparam.getClassLoader()), "REAL_FORCE_FSG_NAV_BAR", result);
             		                        { result = true; throwable = null; }
-            		                        { if (throwable != null) throw throwable; return result; }
+            		                        { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    }
             		                }
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -818,26 +794,25 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                MotionEvent event = (MotionEvent)args[0];
-            		                if (event.getAction() != MotionEvent.ACTION_DOWN) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (event.getAction() != MotionEvent.ACTION_DOWN) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                ForegroundInfo foregroundInfo = ProcessManager.getForegroundInfo();
             		                if (foregroundInfo != null) {
             		                    String pkgName = foregroundInfo.mForegroundPackageName;
             		                    if (MainModule.mPrefs.getStringSet("controls_fsg_horiz_apps").contains(pkgName)) { skipped = true; result = false; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -911,19 +886,18 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (args.length != 3) { if (throwable != null) throw throwable; return result; }
+            		                if (args.length != 3) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object mDoubleTapControllerEx = XposedHelpers.getAdditionalInstanceField(thisObject, "mDoubleTapControllerEx");
-            		                if (mDoubleTapControllerEx != null) { if (throwable != null) throw throwable; return result; }
+            		                if (mDoubleTapControllerEx != null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                mDoubleTapControllerEx = new DoubleTapController((Context)args[0], "launcher_doubletap");
             		                XposedHelpers.setAdditionalInstanceField(thisObject, "mDoubleTapControllerEx", mDoubleTapControllerEx);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -933,27 +907,26 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                DoubleTapController mDoubleTapControllerEx = (DoubleTapController)XposedHelpers.getAdditionalInstanceField(thisObject, "mDoubleTapControllerEx");
-            		                if (mDoubleTapControllerEx == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
-            		                if (!mDoubleTapControllerEx.isDoubleTapEvent((MotionEvent)args[0])) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (mDoubleTapControllerEx == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+            		                if (!mDoubleTapControllerEx.isDoubleTapEvent((MotionEvent)args[0])) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                int mCurrentScreenIndex = XposedHelpers.getIntField(thisObject, lpparam.getPackageName().equals("com.miui.home") ? "mCurrentScreenIndex" : "mCurrentScreen");
             		                Object cellLayout = XposedHelpers.callMethod(thisObject, "getCellLayout", mCurrentScreenIndex);
-            		                if ((boolean)XposedHelpers.callMethod(cellLayout, "lastDownOnOccupiedCell")) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
-            		                if ((boolean)XposedHelpers.callMethod(thisObject, "isInNormalEditingMode")) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if ((boolean)XposedHelpers.callMethod(cellLayout, "lastDownOnOccupiedCell")) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
+            		                if ((boolean)XposedHelpers.callMethod(thisObject, "isInNormalEditingMode")) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                mDoubleTapControllerEx.onDoubleTapEvent();
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -973,17 +946,16 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    int color = (int)result;
-                		                    if (color == Color.TRANSPARENT) { if (throwable != null) throw throwable; return result; }
+                		                    if (color == Color.TRANSPARENT) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		                    { result = Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)); throwable = null; }
                 
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             }); else
             ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "getTitleShadowColor", int.class, new MethodHook() {
@@ -999,17 +971,16 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    int color = (int)result;
-                		                    if (color == Color.TRANSPARENT) { if (throwable != null) throw throwable; return result; }
+                		                    if (color == Color.TRANSPARENT) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		                    { result = Color.argb(Math.round(Color.alpha(color) + (255 - Color.alpha(color)) / 1.9f), Color.red(color), Color.green(color), Color.blue(color)); throwable = null; }
                 
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
     }
@@ -1022,7 +993,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1033,14 +1004,13 @@ public class Launcher {
             		                }
             		                args[0] = flags & -3;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.recents.views.RecentsContainer", lpparam.getClassLoader(), "showLandscapeOverviewGestureView", boolean.class, HookerClassHelper.DO_NOTHING);
@@ -1050,20 +1020,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = !showNavBar[0]; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.getClassLoader(), "onPointerEvent", MotionEvent.class, new MethodHook() {
@@ -1072,7 +1041,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1084,14 +1053,13 @@ public class Launcher {
             		                    }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.recents.NavStubView", lpparam.getClassLoader(), "updateScreenSize", new MethodHook() {
@@ -1100,20 +1068,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.setObjectField(thisObject, "mHideGestureLine", false);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1133,10 +1100,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object mLauncher = XposedHelpers.getObjectField(thisObject, "mLauncher");
-            		                if (mLauncher == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mLauncher == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                View workspace = (View) XposedHelpers.getObjectField(mLauncher, "mWorkspace");
             		                boolean isInEditingMode = (boolean)XposedHelpers.callMethod(workspace, "isInNormalEditingMode");
             		                Context mContext = workspace.getContext();
@@ -1164,7 +1131,7 @@ public class Launcher {
             		                if (!isInEditingMode && MainModule.mPrefs.getBoolean("launcher_hideseekpoints_edit")) {
             		                    mScreenSeekBar.setAlpha(0.0f);
             		                    mScreenSeekBar.setVisibility(View.GONE);
-            		                    { if (throwable != null) throw throwable; return result; }
+            		                    { return XposedHelpers.throwOrReturn(throwable, result); }
             		                }
             		                mScreenSeekBar.setVisibility(View.VISIBLE);
             		                mScreenSeekBar.animate().alpha(1.0f).setDuration(300);
@@ -1177,8 +1144,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1197,9 +1163,9 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (args[0] != result) { if (throwable != null) throw throwable; return result; }
+            		                if (args[0] != result) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int screenCount = (int)XposedHelpers.callMethod(thisObject, "getScreenCount");
             		                if ((int)args[2] == -1 && (int)args[0] == 0)
             		                    { result = screenCount; throwable = null; }
@@ -1209,8 +1175,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1227,10 +1192,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int mCurrentScreenIndex = XposedHelpers.getIntField(thisObject, lpparam.getPackageName().equals("com.miui.home") ? "mCurrentScreenIndex" : "mCurrentScreen");
-            		                if (mCurrentScreenIndex != (int)result) { if (throwable != null) throw throwable; return result; }
+            		                if (mCurrentScreenIndex != (int)result) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                int screenCount = (int)XposedHelpers.callMethod(thisObject, "getScreenCount");
             		                if ((int)result == 0)
             		                    { result = screenCount; throwable = null; }
@@ -1240,8 +1205,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1271,15 +1235,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                XposedHelpers.callMethod(XposedHelpers.getObjectField(thisObject, "mScreenCellsConfig"), "setVisible", true);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         Class <?> DeviceConfigClass = XposedHelpers.findClass("com.miui.home.launcher.DeviceConfig", lpparam.getClassLoader());
@@ -1296,7 +1259,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                int sCellCountY = (int) XposedHelpers.getStaticObjectField(DeviceConfigClass, "sCellCountY");
             		                if (sCellCountY > 6) {
@@ -1307,8 +1270,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.ScreenUtils", lpparam.getClassLoader(), "getScreenCellsSizeOptions", Context.class, new MethodHook() {
@@ -1317,7 +1279,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -1334,14 +1296,13 @@ public class Launcher {
             		                }
             		                { skipped = true; result = arrayList; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1351,20 +1312,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = true;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1375,7 +1335,7 @@ public class Launcher {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -1388,7 +1348,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -1406,8 +1366,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -1440,7 +1399,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                setFolderWidth(thisObject);
             		                int cols = MainModule.mPrefs.getInt("launcher_folder_cols", 1);
@@ -1458,8 +1417,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1476,15 +1434,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                setFolderWidth(thisObject);
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1501,9 +1458,9 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (!MainModule.mPrefs.getBoolean("launcher_folderwidth")) { if (throwable != null) throw throwable; return result; }
+            		                if (!MainModule.mPrefs.getBoolean("launcher_folderwidth")) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                GridView mContent = (GridView)XposedHelpers.getObjectField(thisObject, "mContent");
             		                ImageView mFakeIcon = (ImageView)XposedHelpers.getObjectField(thisObject, "mFakeIcon");
             		                mFakeIcon.layout(mContent.getLeft(), mContent.getTop(), mContent.getRight(), mContent.getTop() + mContent.getWidth());
@@ -1511,8 +1468,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1531,10 +1487,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(thisObject, "mIconContainer");
-            		                if (mIconContainer == null || mIconContainer.getChildAt(0) == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mIconContainer == null || mIconContainer.getChildAt(0) == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
             		                mIconContainer.getChildAt(0).setScaleX(multx);
             		                mIconContainer.getChildAt(0).setScaleY(multx);
@@ -1542,8 +1498,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1560,7 +1515,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
 
@@ -1622,8 +1577,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1640,11 +1594,11 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
             		                Rect rect = (Rect)result;
-            		                if (rect == null) { if (throwable != null) throw throwable; return result; }
+            		                if (rect == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                rect.right = rect.left + Math.round(rect.width() * multx);
             		                rect.bottom = rect.top + Math.round(rect.height() * multx);
             		                { result = rect; throwable = null; }
@@ -1652,8 +1606,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1670,10 +1623,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ViewGroup mIconContainer = (ViewGroup)XposedHelpers.getObjectField(thisObject, "mIconContainer");
-            		                if (mIconContainer == null || mIconContainer.getChildAt(0) == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mIconContainer == null || mIconContainer.getChildAt(0) == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                float multx = (float)Math.sqrt(MainModule.mPrefs.getInt("launcher_iconscale", 100) / 100f);
             		                mIconContainer.getChildAt(0).setScaleX(multx);
             		                mIconContainer.getChildAt(0).setScaleY(multx);
@@ -1681,8 +1634,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1725,7 +1677,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView mTitle = (TextView)XposedHelpers.getObjectField(thisObject, "mTitle");
             		                if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
@@ -1733,8 +1685,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1751,18 +1702,17 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object buddyIcon = XposedHelpers.callMethod(args[3], "getBuddyIconView", args[2]);
-            		                if (buddyIcon == null) { if (throwable != null) throw throwable; return result; }
+            		                if (buddyIcon == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                TextView mTitle = (TextView)XposedHelpers.getObjectField(buddyIcon, "mTitle");
             		                if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1779,18 +1729,17 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Object buddyIcon = result;
-            		                if (buddyIcon == null) { if (throwable != null) throw throwable; return result; }
+            		                if (buddyIcon == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                TextView mTitle = (TextView)XposedHelpers.getObjectField(buddyIcon, "mTitle");
             		                if (mTitle != null) mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainModule.mPrefs.getInt("launcher_titlefontsize", 5));
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1807,7 +1756,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                TextView mTitle = (TextView)args[1];
             		                if (mTitle != null && mTitle.getId() == mTitle.getResources().getIdentifier("icon_title", "id", "com.miui.home"))
@@ -1816,8 +1765,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1836,10 +1784,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                ViewGroup mTitleContainer = (ViewGroup)XposedHelpers.getObjectField(thisObject, "mTitleContainer");
-            		                if (mTitleContainer == null) { if (throwable != null) throw throwable; return result; }
+            		                if (mTitleContainer == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                ViewGroup.LayoutParams lp = mTitleContainer.getLayoutParams();
             		                int opt = Math.round((MainModule.mPrefs.getInt("launcher_titletopmargin", 0) - 11) * mTitleContainer.getResources().getDisplayMetrics().density);
             		                if (lp instanceof RelativeLayout.LayoutParams) {
@@ -1856,8 +1804,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1877,7 +1824,7 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    final Activity act = (Activity)thisObject;
                 		                    IntentFilter intentFilter = new IntentFilter();
@@ -1903,8 +1850,7 @@ public class Launcher {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -1914,29 +1860,28 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                if (XposedHelpers.getAdditionalInstanceField(thisObject, "fromSecretCode") != null) {
             		                    XposedHelpers.removeAdditionalInstanceField(thisObject, "fromSecretCode");
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
             		                if (GlobalActions.handleAction((Activity)thisObject, "launcher_spread")) {
             		                    { skipped = true; result = null; throwable = null; }
-            		                    { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                    { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                }
             		                boolean opt = MainModule.mPrefs.getBoolean("launcher_privacyapps_gest");
             		                if (opt) { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1955,7 +1900,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                View mTitleContainer = (View)XposedHelpers.getObjectField(thisObject, "mTitleContainer");
             		                if (mTitleContainer != null) mTitleContainer.setVisibility(View.GONE);
@@ -1963,8 +1908,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -1989,20 +1933,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[2] = false;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2016,7 +1959,7 @@ public class Launcher {
                 	boolean skipped = false;
                 	Object result = null;
                 	Throwable throwable = null;
-                	Object[] args = chain.getArgs().toArray(new Object[0]);
+                	Object[] args = XposedHelpers.getArgsArray(chain);
                 	Object thisObject = chain.getThisObject();
                 	try {
 
@@ -2027,14 +1970,13 @@ public class Launcher {
                 		                        { skipped = true; result = blurRatio; throwable = null; }
                 		                    }
                 
-                		if (skipped) { if (throwable != null) throw throwable; return result; }
+                		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                 		result = chain.proceed(args);
                 	} catch (Throwable t) {
                 		throwable = t;
                 		result = null;
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
 
@@ -2051,7 +1993,7 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    Activity launcher = (Activity) XposedHelpers.getObjectField(thisObject, "mLauncher");
 
@@ -2062,8 +2004,7 @@ public class Launcher {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
 
@@ -2080,7 +2021,7 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    Activity launcher = (Activity) XposedHelpers.getObjectField(thisObject, "mLauncher");
                 		                    XposedHelpers.callStaticMethod(BlurUtils, "fastBlur", 0f, launcher.getWindow(), args[0]);
@@ -2088,8 +2029,7 @@ public class Launcher {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
 
@@ -2106,7 +2046,7 @@ public class Launcher {
                 	}
                 	try {
                 		Object thisObject = chain.getThisObject();
-                		Object[] args = chain.getArgs().toArray(new Object[0]);
+                		Object[] args = XposedHelpers.getArgsArray(chain);
 
                 		                    boolean isFolderShowing = (boolean) XposedHelpers.callMethod(thisObject, "isFolderShowing");
                 		                    if (isFolderShowing) {
@@ -2119,8 +2059,7 @@ public class Launcher {
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
                 	}
-                	if (throwable != null) throw throwable;
-                	return result;
+                	return XposedHelpers.throwOrReturn(throwable, result);
                 }
             });
         }
@@ -2137,23 +2076,22 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                float scale = Helpers.getAnimationScale(2);
-            		                if (scale == 1.0f) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (scale == 1.0f) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (scale == 0) scale = 0.01f;
             		                args[2] = scaleStiffness((float)args[2], scale);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2163,12 +2101,12 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                float scale = Helpers.getAnimationScale(2);
-            		                if (scale == 1.0f) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (scale == 1.0f) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                if (scale == 0) scale = 0.01f;
             		                XposedHelpers.setFloatField(thisObject, "mCenterXStiffness", scaleStiffness(XposedHelpers.getFloatField(thisObject, "mCenterXStiffness"), scale));
             		                XposedHelpers.setFloatField(thisObject, "mCenterYStiffness", scaleStiffness(XposedHelpers.getFloatField(thisObject, "mCenterYStiffness"), scale));
@@ -2181,14 +2119,13 @@ public class Launcher {
             		                    XposedHelpers.setFloatField(thisObject, "mRadioStiffness", scaleStiffness(XposedHelpers.getFloatField(thisObject, "mRadioStiffness"), scale));
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -2215,20 +2152,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = Math.round(Helpers.dp2px(opt)); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2240,20 +2176,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = Math.round(Helpers.dp2px(opt)); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2265,20 +2200,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = Math.round(Helpers.dp2px(dockHeight)); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2290,20 +2224,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                { skipped = true; result = Math.round(Helpers.dp2px(opt)); throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
 
@@ -2322,7 +2255,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2331,14 +2264,13 @@ public class Launcher {
             		                    { skipped = true; result = Math.round(Helpers.dp2px(opt)); throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2357,9 +2289,9 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
-            		                if (args.length < 4) { if (throwable != null) throw throwable; return result; }
+            		                if (args.length < 4) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                long spec = (long)result;
             		                long width = spec >> 32;
             		                long height = spec - ((spec >> 32) << 32);
@@ -2370,8 +2302,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2388,15 +2319,14 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                { result = new Rect(); throwable = null; }
             
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2408,26 +2338,25 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                ComponentName component = (ComponentName)XposedHelpers.callMethod(args[0], "getComponentName");
-            		                if (component == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (component == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                View view = (View)args[1];
-            		                if (view == null) { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                if (view == null) { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                UserHandle userHandle = (UserHandle)XposedHelpers.callMethod(args[0], "getUserHandle");
             		                ModuleHelper.openAppInfo(view.getContext(), component.getPackageName(), userHandle != null ? userHandle.hashCode() : 0);
             		                { skipped = true; result = null; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2439,20 +2368,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = 0;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2485,7 +2413,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                Activity act = (Activity)thisObject;
             		                act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -2493,8 +2421,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2519,7 +2446,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                if (args[0] != null) {
             		                    Object mainTask = XposedHelpers.getObjectField(args[0], "mMainTaskInfo");
@@ -2545,8 +2472,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2568,7 +2494,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2580,14 +2506,13 @@ public class Launcher {
             		                    { skipped = true; result = null; throwable = null; }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllMethods(utilsClass, "fastBlurWhenGestureResetTaskView", new MethodHook() {
@@ -2596,20 +2521,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.setAdditionalStaticField(utilsClass, "customBlurRatio", true);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2619,7 +2543,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2631,14 +2555,13 @@ public class Launcher {
             		                    }
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2657,7 +2580,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                final View.OnClickListener listener = (View.OnClickListener)result;
             		                { result = new View.OnClickListener() {
@@ -2675,8 +2598,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2688,20 +2610,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                XposedHelpers.callMethod(XposedHelpers.getObjectField(thisObject, "mLauncher"), "hideAppView");
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         };
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.allapps.category.fragment.AppsListFragment", lpparam.getClassLoader(), "onClick", View.class, hook);
@@ -2717,7 +2638,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2728,19 +2649,18 @@ public class Launcher {
             		                    float f2 = (float) args[1];
             		                    if (f < mAssistantWidth || f > f2 - mAssistantWidth) {
             		                        { skipped = true; result = true; throwable = null; }
-            		                        { if (skipped) { if (throwable != null) throw throwable; return result; } if (throwable != null) throw throwable; return chain.proceed(args); }
+            		                        { if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); } return XposedHelpers.proceedOrThrow(chain, args, throwable); }
             		                    }
             		                }
             		                { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2759,7 +2679,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                MotionEvent motionEvent = (MotionEvent) args[0];
             		                if (motionEvent.getAction() == 0) {
@@ -2771,8 +2691,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -2782,21 +2701,20 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                Bundle bundle = (Bundle) args[0];
             		                bundle.putInt("inDirection", inDirection[0]);
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2824,7 +2742,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -2847,14 +2765,13 @@ public class Launcher {
             		                    XposedHelpers.setObjectField(view, "mReadyState", readyState);
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         Class<?> GestureStubViewClass = findClass("com.miui.home.recents.GestureStubView", lpparam.getClassLoader());
@@ -2864,20 +2781,19 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
             		                args[0] = false;
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod(GestureStubViewClass, "isDisableQuickSwitch", HookerClassHelper.returnConstant(false));
@@ -2888,7 +2804,7 @@ public class Launcher {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -2905,7 +2821,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -2925,8 +2841,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.recents.GestureStubView", lpparam.getClassLoader(), "getNextTask", Context.class, boolean.class, int.class, new MethodHook() {
@@ -2942,10 +2857,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                boolean nextTaskInfo = (boolean) args[1];
-            		                if (!nextTaskInfo || gestureStubViews[0] == null) { if (throwable != null) throw throwable; return result; }
+            		                if (!nextTaskInfo || gestureStubViews[0] == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Object outerThis = gestureStubViews[0];
             		                ModuleHelper.callMethodSilently(outerThis, "onBackCancelled");
             		                Context mContext = (Context) XposedHelpers.getObjectField(outerThis, "mContext");
@@ -2957,8 +2872,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2982,7 +2896,7 @@ public class Launcher {
                         	boolean skipped = false;
                         	Object result = null;
                         	Throwable throwable = null;
-                        	Object[] args = chain.getArgs().toArray(new Object[0]);
+                        	Object[] args = XposedHelpers.getArgsArray(chain);
                         	Object thisObject = chain.getThisObject();
                         	__beforeBody__: {
                         		try {
@@ -2997,7 +2911,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (skipped) { if (throwable != null) throw throwable; return result; }
+                        	if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
                         	try {
                         		result = chain.proceed(args);
                         	} catch (Throwable t) {
@@ -3016,8 +2930,7 @@ public class Launcher {
                         			XposedHelpers.log(t);
                         		}
                         	}
-                        	if (throwable != null) throw throwable;
-                        	return result;
+                        	return XposedHelpers.throwOrReturn(throwable, result);
                         }
         });
     }
@@ -3043,7 +2956,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -3052,14 +2965,13 @@ public class Launcher {
             		                if (dampingScale < screenScaleRatio)
             		                    if (MainModule.mPrefs.getInt("launcher_pinch_action", 1) > 1) { skipped = true; result = false; throwable = null; }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -3069,7 +2981,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -3092,14 +3004,13 @@ public class Launcher {
             		                        { skipped = true; result = null; throwable = null; }
             		                    }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3117,10 +3028,10 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                AppWidgetProviderInfo widgetInfo = (AppWidgetProviderInfo) result;
-            		                if (widgetInfo == null) { if (throwable != null) throw throwable; return result; }
+            		                if (widgetInfo == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                widgetInfo.resizeMode = AppWidgetProviderInfo.RESIZE_VERTICAL | AppWidgetProviderInfo.RESIZE_HORIZONTAL;
             		                widgetInfo.minHeight = 0;
             		                widgetInfo.minWidth = 0;
@@ -3131,8 +3042,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3143,7 +3053,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -3152,14 +3062,13 @@ public class Launcher {
             		                    args[0] = val == 2 ? 2 : 0;
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.miui.home.launcher.WallpaperUtils", lpparam.getClassLoader(), "setCurrentWallpaperColorMode", int.class, new MethodHook() {
@@ -3168,7 +3077,7 @@ public class Launcher {
             	boolean skipped = false;
             	Object result = null;
             	Throwable throwable = null;
-            	Object[] args = chain.getArgs().toArray(new Object[0]);
+            	Object[] args = XposedHelpers.getArgsArray(chain);
             	Object thisObject = chain.getThisObject();
             	try {
 
@@ -3177,14 +3086,13 @@ public class Launcher {
             		                    args[0] = val == 2 ? 2 : 0;
             		                }
             
-            		if (skipped) { if (throwable != null) throw throwable; return result; }
+            		if (skipped) { return XposedHelpers.throwOrReturn(throwable, result); }
             		result = chain.proceed(args);
             	} catch (Throwable t) {
             		throwable = t;
             		result = null;
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -3202,7 +3110,7 @@ public class Launcher {
             	}
             	try {
             		Object thisObject = chain.getThisObject();
-            		Object[] args = chain.getArgs().toArray(new Object[0]);
+            		Object[] args = XposedHelpers.getArgsArray(chain);
 
             		                final Activity act = (Activity)thisObject;
             		                IntentFilter intentFilter = new IntentFilter();
@@ -3244,8 +3152,7 @@ public class Launcher {
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
-            	if (throwable != null) throw throwable;
-            	return result;
+            	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }

@@ -1,14 +1,12 @@
 package name.monwf.customiuizer;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +33,6 @@ public class SubFragmentWithSearch extends SubFragment {
 			t.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

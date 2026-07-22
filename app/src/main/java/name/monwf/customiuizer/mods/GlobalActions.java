@@ -493,13 +493,13 @@ public class GlobalActions {
             result = null;
         }
         try {
-            if (chain.getArgs().get(0) == null) { if (throwable != null) throw throwable; return result; }
+            if (chain.getArgs().get(0) == null) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             Context mContext = ((Activity)chain.getThisObject()).getBaseContext();
             int opt = MainModule.mPrefs.getStringAsInt("miuizer_settingsiconpos", 1);
 
             Class<?> headerCls = findClassIfExists("com.android.settingslib.miuisettings.preference.PreferenceActivity$Header", lpparam.getClassLoader());
-            if (headerCls == null) { if (throwable != null) throw throwable; return result; }
+            if (headerCls == null) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             Resources modRes = ModuleHelper.getModuleRes(mContext);
             Object header = XposedHelpers.newInstance(headerCls);
@@ -524,9 +524,9 @@ public class GlobalActions {
             for (Object head: headers) {
                 position++;
                 long id = XposedHelpers.getLongField(head, "id");
-                if (opt == 1 && id == -1) { headers.add(position - 1, header); if (throwable != null) throw throwable; return result; }
-                if (opt == 2 && id == themes) { headers.add(position, header); if (throwable != null) throw throwable; return result; }
-                if (opt == 3 && id == special) { headers.add(position, header); if (throwable != null) throw throwable; return result; }
+                if (opt == 1 && id == -1) { headers.add(position - 1, header); return XposedHelpers.throwOrReturn(throwable, result); }
+                if (opt == 2 && id == themes) { headers.add(position, header); return XposedHelpers.throwOrReturn(throwable, result); }
+                if (opt == 3 && id == special) { headers.add(position, header); return XposedHelpers.throwOrReturn(throwable, result); }
             }
             if (headers.size() > 25)
                 headers.add(25, header);
@@ -535,8 +535,7 @@ public class GlobalActions {
         } catch (Throwable t) {
             XposedHelpers.log(t);
         }
-        if (throwable != null) throw throwable;
-        return result;
+        return XposedHelpers.throwOrReturn(throwable, result);
     }
         });
         ModuleHelper.hookAllMethods("com.android.settings.MiuiSettings$HeaderAdapter", lpparam.getClassLoader(), "setIcon", new MethodHook() {
@@ -561,8 +560,7 @@ public class GlobalActions {
         } catch (Throwable t) {
             XposedHelpers.log(t);
         }
-        if (throwable != null) throw throwable;
-        return result;
+        return XposedHelpers.throwOrReturn(throwable, result);
     }
         });
     }
@@ -608,8 +606,7 @@ public class GlobalActions {
                                             } catch (Throwable t) {
                                                 XposedHelpers.log(t);
                                             }
-                                            if (throwable != null) throw throwable;
-                                            return result;
+                                            return XposedHelpers.throwOrReturn(throwable, result);
                                         }
                                     });
                                     if (MainModule.mPrefs.getStringAsInt("various_showcallui", 0) > 0) {
@@ -643,8 +640,7 @@ public class GlobalActions {
                                                 } catch (Throwable t) {
                                                     XposedHelpers.log(t);
                                                 }
-                                                if (throwable != null) throw throwable;
-                                                return result;
+                                                return XposedHelpers.throwOrReturn(throwable, result);
                                             }
                                         });
                                     }
@@ -652,8 +648,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -770,8 +765,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -842,8 +836,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -922,8 +915,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.findAndHookMethod("com.android.wm.shell.sosc.SoScSplitScreenController", lpparam.getClassLoader(), "onInit", new MethodHook() {
@@ -986,8 +978,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
         ModuleHelper.hookAllConstructors("com.android.systemui.controlcenter.policy.AutoBrightnessController", lpparam.getClassLoader(),  new MethodHook() {
@@ -1034,8 +1025,7 @@ public class GlobalActions {
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
                 }
-                if (throwable != null) throw throwable;
-                return result;
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
