@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">米客_forA14</string>
-    <string name="app_slogan" translatable="false">仅适用于A14的HyperOS 1，适配API101，性能优化与重构</string>
     <string name="app_about">关于</string>
     <string name="about_version">版本：%1$s</string>
-    <string name="about_dev">作者：Mikanoshi &amp; MonwF，米客_forA14 优化 fork</string>
+    <string name="about_dev">维护：tomthenpc · 基于 Mikanoshi 与 MonwF 的开源工作</string>
     <string name="about_dynamic">标记有⟲的模块由默认值修改为其他值后只需软重启一次，之后的更改将立即应用；其他选项始终需要软重启。</string>
     <string name="about_unsupported">标记⨯的模块不支持此设备。</string>
     <string name="menu_update">更新</string>
@@ -815,7 +813,7 @@
     <string name="qs_toggle_fps">刷新频率</string>
     <string name="qs_toggle_floatingtime">悬浮时间</string>
 
-    <string name="miuizer">米客设置</string>
+    <string name="miuizer">米客 A14 设置</string>
     <string name="miuizer_show_newmods_title">标记新模块</string>
     <string name="miuizer_show_newmods_summ">添加到当前版本中的模块在标题处显示\"新!\"标签</string>
     <string name="miuizer_new_mod">新！</string>

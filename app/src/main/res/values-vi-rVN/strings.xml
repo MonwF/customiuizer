@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">Giới thiệu</string>
     <string name="about_version">Phiên bản %1$s</string>
-    <string name="about_dev">bởi Mikanoshi &amp; MonwF</string>
+    <string name="about_dev">Duy trì bởi tomthenpc · Dựa trên công trình của Mikanoshi và MonwF</string>
     <string name="about_dynamic">Nói chung, các mod yêu cầu khởi động lại mềm để được kích hoạt hoặc hủy kích hoạt, nhưng những mod được đánh dấu ⟲ chỉ yêu cầu một lần khởi động lại mềm sau khi giá trị của chúng được thay đổi từ mặc định thành tùy chỉnh, các thay đổi tiếp theo sẽ được áp dụng ngay lập tức.</string>
     <string name="about_unsupported">Mod được đánh dấu bằng ⨯ không được hỗ trợ trên thiết bị này.</string>
     <string name="menu_update">Cập nhật</string>

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">このアプリについて</string>
     <string name="about_version">バージョン %1$s</string>
-    <string name="about_dev">by Mikanoshi &amp; MonwF</string>
+    <string name="about_dev">保守：tomthenpc · Mikanoshi / MonwF のオープンソースを基盤に開発</string>
     <string name="about_dynamic">一般的なModの有効化/無効化にはソフトリブートが必要です。⟲のマークがある物は値の変更後、ソフトリブートすることで設定が適用されます。</string>
     <string name="about_unsupported">⨯の付いたModは使用中のデバイスに対応していません。</string>
     <string name="menu_update">アップデート</string>
@@ -846,7 +846,7 @@
     <string name="qs_toggle_5g">5Gネットワーク</string>
     <string name="qs_toggle_fps">リフレッシュレート</string>
     <string name="qs_toggle_floatingtime">フローティング時間</string>
-    <string name="miuizer">Pengeekの設定</string>
+    <string name="miuizer">米客 A14 の設定</string>
     <string name="miuizer_show_newmods_title">新しいModをマークする</string>
     <string name="miuizer_show_newmods_summ">現在のバージョンで追加されたModのタイトルに\"New!\"とラベルを表示するようにします</string>
     <string name="miuizer_new_mod">New!</string>

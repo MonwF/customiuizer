@@ -2,7 +2,7 @@
 <resources>
     <string name="app_about">O modulu</string>
     <string name="about_version">Verze %1$s</string>
-    <string name="about_dev">od Mikanoshi &amp; MonwF
+    <string name="about_dev">Spravuje tomthenpc · založeno na práci Mikanoshi a MonwF
 Překlad S11V3R 🇨🇿</string>
     <string name="about_dynamic">Obecně platí, že změny vyžadují k aktivaci nebo deaktivaci měkký restart, ale změny označené symbolem ⟲ vyžadují pouze jeden měkký restart poté, co byla jejich hodnota změněna z výchozí na vlastní, další změny se použijí okamžitě.</string>
     <string name="about_unsupported">Modifikace označené ⨯ nejsou v tomto zařízení podporovány.</string>
@@ -842,7 +842,7 @@ Překlad S11V3R 🇨🇿</string>
     <string name="qs_toggle_5g">5G síť</string>
     <string name="qs_toggle_fps">Obnovovací frekvence</string>
     <string name="qs_toggle_floatingtime">Plovoucí čas</string>
-    <string name="miuizer">Nastavení Pengeek</string>
+    <string name="miuizer">Nastavení 米客 A14</string>
     <string name="miuizer_show_newmods_title">Označit nové úpravy</string>
     <string name="miuizer_show_newmods_summ">Zobrazit štítek \"Nově!\" v názvu pro mody přidané v aktuální verzi</string>
     <string name="miuizer_new_mod">Nově!</string>
