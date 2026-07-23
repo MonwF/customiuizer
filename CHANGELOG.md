@@ -7,6 +7,27 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.2.8 — 深入优化与无效代码清理
+
+发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待完成后正式发布**。
+
+### 热路径与偏好监听
+
+- `MainModule` 偏好变化监听不再每次调用 `sharedPreferences.getAll()` 复制整个远程偏好表，改为根据 `PrefMap` 中已有值类型直接调用 `getBoolean`/`getInt`/`getString`/`getLong`/`getFloat`/`getStringSet` 单次读取；未命中或新键时回退到 `getAll()`，显著降低设置项调整时的内存与 CPU 开销。
+- `GlobalActions.setupStatusBar` 内的 `MiuiFreeformModeController`（PinningWindow，动作码 28）、`SoScSplitScreenController`（SplitScreen，动作码 29）与 `AutoBrightnessController`（ToggleAutoBrightness，toggle 6）Hook 不再在任意自定义动作开启时全部注册，仅在对应动作被配置时才注册，进一步减少 `com.android.systemui` 中的无效 Hook 与 BroadcastReceiver。
+
+### 无效/失效代码清理
+
+- 移除 `GlobalActions.mSBReceiver` `OpenVolumeDialog` 分支内被错误嵌套、永远不会执行的 `ToggleZenMode` / `ToggleNightMode` 子分支；这两个动作已由顶层分支正确处理。
+
+### 构建产物验证
+
+- `versionCode` 126 / `versionName` r14.2.8。
+- APK：`CustoMIUIzer-A14-r14.2.8.apk`，2,886,169 B。
+- SHA-256：`28630DF069EE8786E0A22767E0E2D38BECF351B92409E62CB37D559B0CF74792`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.7 一致，可直接覆盖升级。
+
 ## r14.2.7 — 功能关闭零成本与生命周期治理
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
