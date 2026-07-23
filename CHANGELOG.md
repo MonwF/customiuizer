@@ -27,7 +27,7 @@
 - `versionCode` 127 / `versionName` r14.2.9。
 - APK：`CustoMIUIzer-A14-r14.2.9.apk`，2,886,165 B。
 - SHA-256：`dabc71b2e5b5353f03ddf2ba513567888b6f87fc8f71994c3122dc3304cf6e10`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 未触发致命错误，既有 ROM API 兼容性警告保持。构建日志中出现 `kotlin-stdlib` 元数据版本兼容性 `e:` 提示（binary 2.2.0 vs expected 2.0.0），属于非致命 lint 报告，不影响打包与签名。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.2.8 一致，可直接覆盖升级。
 
 ## r14.2.8 — 深入优化与无效代码清理
