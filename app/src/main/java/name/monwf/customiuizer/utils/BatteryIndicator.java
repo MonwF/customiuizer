@@ -26,6 +26,8 @@ import name.monwf.customiuizer.mods.utils.XposedHelpers;
 
 public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageView {
     protected int mDisplayWidth;
+    protected float mDensity;
+    protected int mStatusBarHeight;
     protected boolean mIsBeingCharged;
     protected boolean mIsExtremePowerSave;
     protected boolean mIsPowerSave;
@@ -289,6 +291,8 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
 
     public void updateDisplaySize() {
         this.mDisplayWidth = getMeasuredWidth();
+        this.mDensity = getResources().getDisplayMetrics().density;
+        this.mStatusBarHeight = getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
     }
 
     protected void updateParameters() {
@@ -315,10 +319,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
         try { this.setImageAlpha(255 - Math.round(255 * mTransparency / 100f)); } catch (Throwable ignore) {};
         this.setVisibility(mVisibility);
         this.setScaleType(mCentered ? ScaleType.CENTER : ScaleType.MATRIX);
-        Matrix matrix = new Matrix();
-        matrix.setTranslate(0, 0);
-        matrix.setScale(1, 1);
-        this.setImageMatrix(new Matrix());
+        this.setImageMatrix(null);
         if (mColorMode == ColorMode.RAINBOW) {
             updateRainbowColors();
         }
@@ -403,8 +404,8 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
             }
 
             int mWidth = Math.round((this.mDisplayWidth - mDisplayPadding * 2) * level / 100f);
-            float mDensity = getResources().getDisplayMetrics().density;
-            int sbHeight = getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
+            float density = this.mDensity;
+            int sbHeight = this.mStatusBarHeight;
             if (mGlow == 0) {
                 paint.clearShadowLayer();
                 if (mBottom)
@@ -416,7 +417,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
             } else {
                 int shadowPadding = sbHeight - mHeight;
                 paint.setShadowLayer(
-                    (mGlow / 100f) * (sbHeight - 9 * mDensity),
+                    (mGlow / 100f) * (sbHeight - 9 * density),
                     (mCentered || mDisplayPadding > 0) ? 0 : shadowPadding / 2f,
                     mBottom ? mHeight - 10 : 10 - mHeight,
                     Color.argb(Math.min(Math.round(mGlow / 100f * 255), Math.round(255 - mTransparency / 100f * 255)), Color.red(color), Color.green(color), Color.blue(color))
