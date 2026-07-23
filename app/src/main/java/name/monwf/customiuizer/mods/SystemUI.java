@@ -121,6 +121,8 @@ public class SystemUI {
     private final static int textIconTagId = ResourceHooks.getFakeResId("text_icon_tag");
     private final static int viewInitedTag = ResourceHooks.getFakeResId("view_inited_tag");
     public static void setupStatusBar(Context mContext) {
+        Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
+        if (!hasStatusBarModifications()) return;
         statusbarTextIconLayoutResId = MainModule.resHooks.addFakeResource("statusbar_text_icon", R.layout.statusbar_text_icon, "layout");
         if (MainModule.mPrefs.getBoolean("system_statusbar_topmargin")) {
             int topMargin = MainModule.mPrefs.getInt("system_statusbar_topmargin_val", 1);
@@ -164,7 +166,20 @@ public class SystemUI {
         if (userActivityTimeout > 3) {
             MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "integer", "config_lockScreenDisplayTimeout", userActivityTimeout * 1000);
         }
-        Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
+    }
+
+    public static boolean hasStatusBarModifications() {
+        return MainModule.mPrefs.getBoolean("system_statusbar_topmargin")
+            || MainModule.mPrefs.getBoolean("system_statusbar_horizmargin")
+            || MainModule.mPrefs.getBoolean("system_cc_enable_style_switch")
+            || MainModule.mPrefs.getBoolean("system_volumetimer")
+            || MainModule.mPrefs.getInt("system_statusbar_iconsize", 6) > 6
+            || MainModule.mPrefs.getBoolean("system_cc_show_stepcount")
+            || (!MainModule.mPrefs.getBoolean("system_drawer_hidedate") && MainModule.mPrefs.getInt("system_drawer_date_fontsize", 12) > 12)
+            || MainModule.mPrefs.getBoolean("system_taptounlock")
+            || MainModule.mPrefs.getInt("system_lstimeout", 3) > 3
+            || MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent")
+            || MainModule.mPrefs.getBoolean("system_statusbar_showdevicetemperature");
     }
 
     private static String getSlotNameByType(int mIconType) {
