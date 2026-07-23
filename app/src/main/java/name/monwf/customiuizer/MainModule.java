@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 
 import io.github.libxposed.api.XposedModule;
 import io.github.libxposed.api.XposedModuleInterface;
@@ -82,7 +83,27 @@ public class MainModule extends XposedModule {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
                 if (key == null) return;
-                Object val = sharedPreferences.getAll().get(key);
+                Object val;
+                if (sharedPreferences.contains(key)) {
+                    Object oldVal = mPrefs.get(key);
+                    if (oldVal instanceof Boolean) {
+                        val = sharedPreferences.getBoolean(key, false);
+                    } else if (oldVal instanceof Integer) {
+                        val = sharedPreferences.getInt(key, 0);
+                    } else if (oldVal instanceof Long) {
+                        val = sharedPreferences.getLong(key, 0L);
+                    } else if (oldVal instanceof Float) {
+                        val = sharedPreferences.getFloat(key, 0f);
+                    } else if (oldVal instanceof String) {
+                        val = sharedPreferences.getString(key, null);
+                    } else if (oldVal instanceof Set) {
+                        val = sharedPreferences.getStringSet(key, null);
+                    } else {
+                        val = sharedPreferences.getAll().get(key);
+                    }
+                } else {
+                    val = null;
+                }
                 if (val == null) {
 //                    XposedHelpers.log(processName + " key removed: " + key);
                     mPrefs.remove(key);

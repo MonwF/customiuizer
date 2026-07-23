@@ -260,22 +260,6 @@ public class GlobalActions {
                         XposedHelpers.log("OpenVolumeDialog", "MIUI volume dialog is NULL!");
                         return;
                     }
-                    else if (action.equals(ACTION_PREFIX + "ToggleZenMode")) {
-                        Object zenModeController = XposedHelpers.callStaticMethod(findClass("com.android.systemui.Dependency", context.getClassLoader()), "get", findClassIfExists("com.android.systemui.statusbar.policy.ZenModeController", context.getClassLoader()));
-                        boolean zenModeEnabled = (boolean)XposedHelpers.callMethod(zenModeController, "isZenModeOn");
-                        if (zenModeEnabled) {
-                            XposedHelpers.callMethod(zenModeController, "setZen", 0, null, "DNDTile");
-                        }
-                        else {
-                            XposedHelpers.callMethod(zenModeController, "setZen", 1, null, "DNDTile");
-                        }
-                    }
-                    else if (action.equals(ACTION_PREFIX + "ToggleNightMode")) {
-                        Settings.System.putInt(context.getContentResolver(), "dark_mode_enable_by_setting", 1);
-                        UiModeManager mUiModeManager = (UiModeManager) context.getSystemService("uimode");
-                        boolean nightMode = mUiModeManager.getNightMode() == 2;
-                        XposedHelpers.callMethod(mUiModeManager, "setNightModeActivated", !nightMode);
-                    }
 
                     Handler mHandler = (Handler)XposedHelpers.getObjectField(miuiVolumeDialog, "mHandler");
                     mHandler.post(new Runnable() {
@@ -674,6 +658,20 @@ public class GlobalActions {
         return false;
     }
 
+    public static boolean hasActionCode(int code) {
+        for (String key : customActionKeys) {
+            if (MainModule.mPrefs.getInt(key + "_action", 1) == code) return true;
+        }
+        return false;
+    }
+
+    public static boolean hasToggle(int what) {
+        for (String key : customActionKeys) {
+            if (MainModule.mPrefs.getInt(key + "_action", 1) == 10 && MainModule.mPrefs.getInt(key + "_toggle", 0) == what) return true;
+        }
+        return false;
+    }
+
     public static void setupGlobalActions(XposedModuleInterface.SystemServerStartingParam lpparam) {
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -861,6 +859,7 @@ public class GlobalActions {
             }
         });
 
+        if (hasActionCode(28)) {
         ModuleHelper.findAndHookMethod("com.android.wm.shell.miuifreeform.MiuiFreeformModeController", lpparam.getClassLoader(), "onInit", new MethodHook() {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -942,6 +941,8 @@ public class GlobalActions {
                 return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
+        }
+        if (hasActionCode(29)) {
         ModuleHelper.findAndHookMethod("com.android.wm.shell.sosc.SoScSplitScreenController", lpparam.getClassLoader(), "onInit", new MethodHook() {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -1008,6 +1009,8 @@ public class GlobalActions {
                 return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
+        }
+        if (hasToggle(6)) {
         ModuleHelper.hookAllConstructors("com.android.systemui.controlcenter.policy.AutoBrightnessController", lpparam.getClassLoader(),  new MethodHook() {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -1058,6 +1061,7 @@ public class GlobalActions {
                 return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
+        }
     }
 
     enum IntentType {
