@@ -16,7 +16,7 @@
 |---|---|
 | 当前稳定版 | r14.2.9 |
 | 上一稳定版 | r14.2.8 |
-| 当前候选版 | r14.2.10 |
+| 当前候选版 | r14.3.0 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -24,7 +24,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.10 已完成构建、签名、单元测试与 `assembleRelease`，为当前候选版；实机完整重启验证待完成后才能标记为稳定。r14.2.9、r14.2.8、r14.2.7 均已通过 LSPosed 后台日志验证，未出现 CustoMIUIzer 相关崩溃或异常，可视为当前推荐稳定版序列。r14.2.4、r14.2.3、r14.2.2、r14.2.1、r14.2.0、r14.1.3 日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.3.0 已完成构建、签名、单元测试与 `assembleRelease`，为当前候选版；实机完整重启验证待完成后才能标记为稳定。r14.2.9、r14.2.8、r14.2.7 均已通过 LSPosed 后台日志验证，未出现 CustoMIUIzer 相关崩溃或异常，可视为当前推荐稳定版序列。r14.2.4、r14.2.3、r14.2.2、r14.2.1、r14.2.0、r14.1.3 日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -62,7 +62,7 @@ r14.2.10 已完成构建、签名、单元测试与 `assembleRelease`，为当�
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
 
-## r14.2.10 优化重点
+## r14.3.0 优化重点
 
 - 新增 `SystemUI.hasStatusBarModifications()`，无对应功能开启时 `setupStatusBar` 不再调用 `addFakeResource` 和 `setThemeValueReplacement`/`setResReplacement`，仅保留 `systemui_restart_time` 标记写入，降低 SystemUI 启动时无效资源替换开销。
 - `WeatherDataController` 改用单一 `ExecutorService` 后台查询天气，避免每分钟 `TIME_TICK` 触发时新建 `Thread`；`Handler` 改为静态 `Looper.getMainLooper()` 实例；`initContext` 重复进入时先注销旧 `TIME_TICK` 接收者并显式使用 `Context.RECEIVER_NOT_EXPORTED`。
@@ -130,7 +130,7 @@ r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块
 | [r14.2.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.2) | 2,886,165 B | 0 B | `XposedHelpers` 反射缓存完整迁移为 `NOT_FOUND` 哨兵，减少缓存命中/写回包装对象 |
 | [r14.2.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.3) | 2,886,165 B | 0 B | ContentObserver / BroadcastReceiver 生命周期治理，减少重复注册与 Handler/Runnable 临时分配 |
 | [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 按开关跳过 `ControlCenterPluginHook` 注册，治理 `BroadcastReceiver` 重复注册，减少功能关闭时的无效 Hook |
-| [r14.2.10](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.10) | 2,886,165 B | 0 B | `SystemUI.setupStatusBar` 按 `hasStatusBarModifications()` 跳过无效资源替换；`WeatherDataController` 统一后台执行器并修复接收者生命周期 |
+| [r14.3.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.0) | 2,886,165 B | 0 B | `SystemUI.setupStatusBar` 按 `hasStatusBarModifications()` 跳过无效资源替换；`WeatherDataController` 统一后台执行器并修复接收者生命周期 |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | -4 B | 修复 `StepCounterController` 接收者生命周期；`BatteryIndicator` 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配 |
 | [r14.2.8](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.8) | 2,886,169 B | +4 B | 偏好监听避免 `getAll()` 全量复制；按具体动作码 gate 控制器子 Hook；清理 `OpenVolumeDialog` 内失效嵌套分支 |
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 按自定义动作开关跳过 `GlobalActions` 接收者与控制器 Hook；治理 `ContentObserver` / `TIME_SET` 接收者生命周期 |

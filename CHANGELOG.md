@@ -7,7 +7,7 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.2.10 — 功能关闭零成本与线程统一
+## r14.3.0 — 功能关闭零成本与线程统一
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待完成后正式发布**。
 
@@ -25,8 +25,8 @@
 
 ### 构建产物验证
 
-- `versionCode` 128 / `versionName` r14.2.10。
-- APK：`CustoMIUIzer-A14-r14.2.10.apk`，2,886,169 bytes，SHA-256: `43fd2c26632709604c4ff271b0e40e10a26b001ec681184e022290ff583ea291`。
+- `versionCode` 129 / `versionName` r14.3.0。
+- APK：`CustoMIUIzer-A14-r14.3.0.apk`，2,886,165 bytes，SHA-256: `4f81ad4528787d9350d5058ac1104be4b57cd44e6b7535705b6700c0ba1316a4`。
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.2.9 一致，可直接覆盖升级。
 
