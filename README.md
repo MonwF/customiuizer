@@ -16,6 +16,7 @@
 |---|---|
 | 当前稳定版 | r14.3.0 |
 | 上一稳定版 | r14.2.9 |
+| 当前候选版 | r14.3.1 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -23,7 +24,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.3.0 已完成构建、签名、单元测试与 `assembleRelease`，实机完整重启验证已通过，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常，为当前推荐稳定版。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.3.0 已完成构建、签名、单元测试与 `assembleRelease`，实机完整重启验证已通过，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常，为当前推荐稳定版。r14.3.1 候选发布版已构建并签名，修复锁屏充电数据重复显示问题，实机验证待完成后从候选转正。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 

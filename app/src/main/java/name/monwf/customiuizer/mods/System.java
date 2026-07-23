@@ -430,6 +430,7 @@ public class System {
     private static boolean isUnlockedInnerCall = false;
     private static boolean isUnlockedWithFingerprint = false;
     private static boolean isUnlockedWithStrong = false;
+    private static boolean isChargingInfoHooked = false;
     private static int forcedOption = -1;
     public static void NoScreenLockHook(PackageReadyParam lpparam) {
         ModuleHelper.findAndHookMethod("com.android.systemui.keyguard.KeyguardViewMediator", lpparam.getClassLoader(), "handleKeyguardDone", new MethodHook() {
@@ -5458,6 +5459,8 @@ public class System {
     }
 
     public static void ChargingInfoHook(PackageReadyParam lpparam) {
+        if (isChargingInfoHooked) return;
+        isChargingInfoHooked = true;
         ModuleHelper.findAndHookMethod("com.miui.charge.ChargeUtils", lpparam.getClassLoader(), "getChargingHintText", int.class, boolean.class, Context.class, new MethodHook() {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -5475,7 +5478,7 @@ public class System {
             		                int charge = (int)args[0];
             		                String hint = (String)result;
 
-            		                if (charge <= 100) {
+            		                if (charge <= 100 && hint != null && isKeyguardIndicationCaller()) {
             		                    boolean showCurr = MainModule.mPrefs.getBoolean("system_charginginfo_current");
             		                    boolean showVolt = MainModule.mPrefs.getBoolean("system_charginginfo_voltage");
             		                    boolean showWatt = MainModule.mPrefs.getBoolean("system_charginginfo_wattage");
@@ -5511,6 +5514,8 @@ public class System {
             		                    }
             		                    if (values.size() == 0) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                    String info = TextUtils.join(" · ", values);
+
+            		                    if (hint.contains(info)) { return XposedHelpers.throwOrReturn(throwable, result); }
 
             		                    int opt = MainModule.mPrefs.getStringAsInt("system_charginginfo_view", 1);
             		                    if (opt == 1)
@@ -5553,6 +5558,17 @@ public class System {
             	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
+    }
+
+    private static boolean isKeyguardIndicationCaller() {
+        try {
+            for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+                String className = e.getClassName();
+                if (className.contains("KeyguardIndication")) return true;
+                if (className.contains("MiuiCharge") || className.contains("miui.charge")) return false;
+            }
+        } catch (Throwable ignore) {}
+        return false;
     }
 
     public static void NoSOSHook(PackageReadyParam lpparam) {
