@@ -910,6 +910,9 @@ public class GlobalActions {
                                             }
                                         }
                                     };
+                                    BroadcastReceiver oldReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(thisObject, "customiuizer_receiver");
+                                    if (oldReceiver != null) try { mContext.unregisterReceiver(oldReceiver); } catch (Throwable ignore) {}
+                                    XposedHelpers.setAdditionalInstanceField(thisObject, "customiuizer_receiver", mFreeFormReceiver);
                                     mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
             
                 } catch (Throwable t) {
@@ -973,6 +976,9 @@ public class GlobalActions {
                                             }
                                         }
                                     };
+                                    BroadcastReceiver oldReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(thisObject, "customiuizer_receiver");
+                                    if (oldReceiver != null) try { mContext.unregisterReceiver(oldReceiver); } catch (Throwable ignore) {}
+                                    XposedHelpers.setAdditionalInstanceField(thisObject, "customiuizer_receiver", mFreeFormReceiver);
                                     mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
             
                 } catch (Throwable t) {
@@ -1020,6 +1026,9 @@ public class GlobalActions {
                                             }
                                         }
                                     };
+                                    BroadcastReceiver oldReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(thisObject, "customiuizer_receiver");
+                                    if (oldReceiver != null) try { mContext.unregisterReceiver(oldReceiver); } catch (Throwable ignore) {}
+                                    XposedHelpers.setAdditionalInstanceField(thisObject, "customiuizer_receiver", mFreeFormReceiver);
                                     mContext.registerReceiver(mFreeFormReceiver, intentfilter, Context.RECEIVER_EXPORTED);
             
                 } catch (Throwable t) {

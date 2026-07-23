@@ -2168,6 +2168,28 @@ public class SystemUI {
         }
     }
 
+    public static boolean hasControlCenterModifications() {
+        return MainModule.mPrefs.getBoolean("system_nosilentvibrate")
+            || MainModule.mPrefs.getInt("system_volumedialogdelay_collapsed", 0) > 0
+            || MainModule.mPrefs.getInt("system_volumedialogdelay_expanded", 0) > 0
+            || MainModule.mPrefs.getInt("system_volumeblur_collapsed", 0) > 0
+            || MainModule.mPrefs.getInt("system_volumeblur_expanded", 0) > 0
+            || MainModule.mPrefs.getBoolean("system_volumebar_blur_mtk")
+            || MainModule.mPrefs.getBoolean("system_volumetimer")
+            || MainModule.mPrefs.getBoolean("system_cc_tile_roundedrect")
+            || MainModule.mPrefs.getBoolean("system_cc_volume_showpct")
+            || MainModule.mPrefs.getBoolean("system_qs_hideoperator")
+            || MainModule.mPrefs.getBoolean("system_cc_hideoperator_delimiter")
+            || MainModule.mPrefs.getBoolean("system_cc_show_stepcount")
+            || MainModule.mPrefs.getInt("system_ccgridcolumns", 4) > 4
+            || MainModule.mPrefs.getBoolean("system_cc_hide_edit")
+            || MainModule.mPrefs.getBoolean("system_cc_hide_profile_monitoring")
+            || MainModule.mPrefs.getBoolean("system_cc_btandtorch_ascard")
+            || MainModule.mPrefs.getBoolean("system_cc_tile_enabled_color")
+            || MainModule.mPrefs.getBoolean("system_cc_card_enabled_color")
+            || MainModule.mPrefs.getBoolean("system_cc_slider_color_enable");
+    }
+
     public static void ControlCenterPluginHook(PackageReadyParam lpparam) {
         ModuleHelper.hookAllMethods("com.android.systemui.shared.plugins.PluginInstance$PluginFactory", lpparam.getClassLoader(), "createPlugin", new MethodHook() {
             private boolean isHooked = false;

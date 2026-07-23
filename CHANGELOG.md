@@ -7,9 +7,27 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.2.3 — 生命周期与重复注册治理
+## r14.2.4 — 关闭时零成本与接收者防重注册
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
+
+### 按开关减少无效 Hook 与监听
+
+- `MainModule` 在 `SystemUI` 进程中通过 `SystemUI.hasControlCenterModifications()` 判断是否存在控制中心/音量相关定制；未开启任何对应功能时不再注册 `ControlCenterPluginHook`，避免加载 `miui.systemui.plugin` 的插件 loader 及后续大量 UI 回调。
+- `GlobalActions` 中 `MiuiFreeformModeController`、`SoScSplitScreenController` 与 `AutoBrightnessController` 的 `BroadcastReceiver` 注册前，先通过 `AdditionalInstanceField` 检查并注销旧接收者，再写入新实例；重复进入 `onInit`/`构造` 时不会累积多个接收者。
+- 保留 r14.2.3 的 `ContentObserver` / `BroadcastReceiver` 生命周期治理、r14.2.2 的反射缓存哨兵与 r14.2.1 的热路径缓存边界，不扩大未验证的 API 101 原生拦截范围。
+
+### 构建产物验证
+
+- `versionCode` 122 / `versionName` r14.2.4。
+- APK：`CustoMIUIzer-A14-r14.2.4.apk`，2,886,165 B。
+- SHA-256：`24A22518B29F9714012E01A1B81BEA4905B58492FE31478F7D5A8228BA9EABE6`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.3 一致，可直接覆盖升级。
+
+## r14.2.3 — 生命周期与重复注册治理
+
+发布日期：2026-07-23。状态：**稳定版，已在新 LSPosed 日志（`LSPosed_2026-07-23T14_06_59.179485`）中确认无 CustoMIUIzer 相关崩溃或异常**。
 
 ### 监听与调度
 

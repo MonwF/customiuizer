@@ -328,7 +328,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getBoolean("controls_nonavbar")) Controls.HideNavBarHook(lpparam);
             else if (mPrefs.getBoolean("controls_hidenavbar_whenscreenshot")) SystemUI.HideNavBarBeforeScreenshotHook(lpparam);
             if (mPrefs.getBoolean("system_visualizer")) System.AudioVisualizerHook(lpparam);
-            SystemUI.ControlCenterPluginHook(lpparam);
+            if (SystemUI.hasControlCenterModifications()) SystemUI.ControlCenterPluginHook(lpparam);
             if (mPrefs.getBoolean("system_batteryindicator")) SystemUI.BatteryIndicatorHook(lpparam);
             if (mPrefs.getBoolean("system_disableanynotif")) System.DisableAnyNotificationHook(lpparam);
             if (mPrefs.getBoolean("system_lockscreenshortcuts")) SystemUI.LockScreenShortcutHook(lpparam);

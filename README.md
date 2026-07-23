@@ -14,8 +14,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | r14.2.3 |
-| 上一稳定版 | r14.2.2 |
+| 当前稳定版 | r14.2.4 |
+| 上一稳定版 | r14.2.3 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -23,7 +23,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.3 已完成构建、签名、单元测试与 `assembleRelease`，并已发布。实机完整重启验证待完成后更新为稳定状态；r14.2.2 在目标设备 LSPosed 日志中未出现本模块相关崩溃或异常。
+r14.2.4 已按以往发布格式完成构建、签名、单元测试与 `assembleRelease`，并已发布。实机完整重启验证待完成后更新为稳定状态；r14.2.3 在目标设备 LSPosed 日志中未出现本模块相关崩溃或异常。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -61,11 +61,11 @@ r14.2.3 已完成构建、签名、单元测试与 `assembleRelease`，并已发
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
 
-## r14.2.3 优化重点
+## r14.2.4 优化重点
 
-- 系统服务、SystemUI 与天气刷新中的 `ContentObserver` / `BroadcastReceiver` 增加生命周期治理，同一实例只注册一次，避免重复监听、空唤醒和泄漏。
-- `BatteryIndicator` 偏好监听改用 `View.post()`，测试动画结束 `Runnable` 改为复用；`WeatherDataController` 的 `TIME_TICK` 接收者与延迟刷新 `Handler` 也只在首次 `initContext` 注册。
-- 保留 r14.2.2 的反射缓存哨兵、r14.2.1 的热路径缓存与绘制对象复用边界，不扩大未验证的 API 101 原生拦截范围。
+- `MainModule` 在 `SystemUI` 进程中按开关判断是否存在控制中心/音量相关定制；未开启对应功能时跳过 `ControlCenterPluginHook` 注册，避免加载 `miui.systemui.plugin` 插件 loader 及其后续大量 UI 回调。
+- `GlobalActions` 中 `MiuiFreeformModeController`、`SoScSplitScreenController` 与 `AutoBrightnessController` 的 `BroadcastReceiver` 注册前通过 `AdditionalInstanceField` 检查并注销旧实例，重复进入 `onInit`/`构造` 时不再累积多个接收者。
+- 保留 r14.2.3 的 `ContentObserver` / `BroadcastReceiver` 生命周期治理、r14.2.2 的反射缓存哨兵、r14.2.1 的热路径缓存与绘制对象复用边界，不扩大未验证的 API 101 原生拦截范围。
 
 ## r14.2.0 优化重点
 
@@ -104,6 +104,7 @@ r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块
 | [r14.2.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.1) | 2,886,165 B | 0 B | 偏好解析缓存、反射 `Optional`→`NOT_FOUND` 哨兵、BatteryIndicator/AudioVisualizer 绘制对象复用 |
 | [r14.2.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.2) | 2,886,165 B | 0 B | `XposedHelpers` 反射缓存完整迁移为 `NOT_FOUND` 哨兵，减少缓存命中/写回包装对象 |
 | [r14.2.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.3) | 2,886,165 B | 0 B | ContentObserver / BroadcastReceiver 生命周期治理，减少重复注册与 Handler/Runnable 临时分配 |
+| [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 按开关跳过 `ControlCenterPluginHook` 注册，治理 `BroadcastReceiver` 重复注册，减少功能关闭时的无效 Hook |
 
 r14.2.0 比 r14.0.0 小 15,735 B，比 r14.1.2 小 48,463 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
 
