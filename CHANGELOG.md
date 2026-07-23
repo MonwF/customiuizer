@@ -7,9 +7,28 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.2.2 — 反射缓存哨兵对象优化
+## r14.2.3 — 生命周期与重复注册治理
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
+
+### 监听与调度
+
+- `SystemUI` 自定义磁贴（`custom_5G`、`custom_floatingtime`）和锁屏手电筒入口的 `ContentObserver` 在重复监听/Hook 触发时先注销旧观察者并清理字段，避免同一实例多次注册导致通知重复触发和泄漏。
+- `Various` 的 `AlarmCompatServiceHook` 为 `next_alarm_clock_formatted` 观察者增加防重复注册，重复进入 `onBootPhase` 时不会留下多个 ContentObserver。
+- `BatteryIndicator` 的偏好监听不再每次 `onChange` 创建 `Handler(Looper.getMainLooper())`，改用 `View.post()`；测试动画结束后的延迟 `Runnable` 也复用单一实例，减少短生命周期对象。
+- `WeatherDataController` 的 `TIME_TICK` 广播接收者与延迟刷新 `Handler` 改为进程单例并只在首次 `initContext` 注册，避免时钟控制器重建时重复注册接收者和 Handler 泄漏。
+
+### 构建产物验证
+
+- `versionCode` 121 / `versionName` r14.2.3。
+- APK：`CustoMIUIzer-A14-r14.2.3.apk`，2,886,165 B。
+- SHA-256：`A91192954AE20D10FB5247BA61D9B50DF900060936A90D8FDCCA8DB28F67CEDF`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.2 一致，可直接覆盖升级。
+
+## r14.2.2 — 反射缓存哨兵对象优化
+
+发布日期：2026-07-23。状态：**稳定版，已在新 LSPosed 日志（`LSPosed_2026-07-23T12_31_32.886317`）中确认无 CustoMIUIzer 相关崩溃或异常**。
 
 ### 反射缓存
 

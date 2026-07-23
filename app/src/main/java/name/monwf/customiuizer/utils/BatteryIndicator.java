@@ -14,8 +14,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -101,8 +99,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
             public void onChange(String key) {
                 try {
                     if (!mTesting && key.contains("pref_key_system_batteryindicator")) {
-                        var mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.post(() -> {
+                        post(() -> {
                             updateParameters();
                             update();
                         });
@@ -143,14 +140,16 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
             } else {
                 removeCallbacks(step);
                 mTesting = false;
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateParameters();
-                        update();
-                    }
-                }, 1000);
+                postDelayed(finishTestRunnable, 1000);
             }
+        }
+    };
+
+    private final Runnable finishTestRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateParameters();
+            update();
         }
     };
 

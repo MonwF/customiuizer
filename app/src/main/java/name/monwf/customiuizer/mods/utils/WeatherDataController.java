@@ -15,6 +15,9 @@ public class WeatherDataController {
     public static String weatherInfo = "";
     private static WeakReference weakReferenceContext;
     private static Runnable weakRefrenceRunnable;
+    private static Handler sHandler;
+    private static BroadcastReceiver sTimeTickReceiver;
+    private static boolean sInitialized = false;
 
     public static void refreshWeatherData(boolean forceRefresh) {
         new Thread(new Runnable() {
@@ -56,15 +59,16 @@ public class WeatherDataController {
     public static void initContext(Context mContext, Runnable updateTimeRunnable) {
         weakReferenceContext = new WeakReference(mContext);
         weakRefrenceRunnable = updateTimeRunnable;
-        BroadcastReceiver timeTickReceiver = new BroadcastReceiver() {
-            public void onReceive(final Context context, Intent intent) {
-                refreshWeatherData(false);
-            }
-        };
-        mContext.registerReceiver(timeTickReceiver, new IntentFilter("android.intent.action.TIME_TICK"));
-        Handler mHandler = new Handler(Looper.myLooper());
-        mHandler.postDelayed(() -> {
-            refreshWeatherData(true);
-        }, 1800);
+        if (!sInitialized) {
+            sInitialized = true;
+            sTimeTickReceiver = new BroadcastReceiver() {
+                public void onReceive(final Context context, Intent intent) {
+                    refreshWeatherData(false);
+                }
+            };
+            mContext.registerReceiver(sTimeTickReceiver, new IntentFilter("android.intent.action.TIME_TICK"));
+            sHandler = new Handler(Looper.getMainLooper());
+            sHandler.postDelayed(() -> refreshWeatherData(true), 1800);
+        }
     }
 }

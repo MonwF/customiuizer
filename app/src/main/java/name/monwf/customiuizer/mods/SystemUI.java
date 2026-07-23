@@ -602,6 +602,12 @@ public class SystemUI {
                     if ("custom_5G".equals(tileName)) {
                         Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                         boolean mListening = (boolean) param.getArgs()[0];
+                        ContentResolver resolver = mContext.getContentResolver();
+                        ContentObserver oldObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "tileListener");
+                        if (oldObserver != null) {
+                            resolver.unregisterContentObserver(oldObserver);
+                            XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "tileListener");
+                        }
                         if (mListening) {
                             ContentObserver contentObserver = new ContentObserver(new Handler(mContext.getMainLooper())) {
                                 @Override
@@ -609,13 +615,9 @@ public class SystemUI {
                                     XposedHelpers.callMethod(param.getThisObject(), "refreshState");
                                 }
                             };
-                            mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, contentObserver);
-                            mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("dual_nr_enabled"), false, contentObserver);
+                            resolver.registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, contentObserver);
+                            resolver.registerContentObserver(Settings.Global.getUriFor("dual_nr_enabled"), false, contentObserver);
                             XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "tileListener", contentObserver);
-                        }
-                        else {
-                            ContentObserver contentObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "tileListener");
-                            mContext.getContentResolver().unregisterContentObserver(contentObserver);
                         }
                     }
                     else if ("custom_FPS".equals(tileName)) {
@@ -632,6 +634,12 @@ public class SystemUI {
                     else if ("custom_floatingtime".equals(tileName)) {
                         Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                         boolean mListening = (boolean) param.getArgs()[0];
+                        ContentResolver resolver = mContext.getContentResolver();
+                        ContentObserver oldObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "tileListener");
+                        if (oldObserver != null) {
+                            resolver.unregisterContentObserver(oldObserver);
+                            XposedHelpers.removeAdditionalInstanceField(param.getThisObject(), "tileListener");
+                        }
                         if (mListening) {
                             ContentObserver contentObserver = new ContentObserver(new Handler(mContext.getMainLooper())) {
                                 @Override
@@ -639,12 +647,8 @@ public class SystemUI {
                                     XposedHelpers.callMethod(param.getThisObject(), "refreshState");
                                 }
                             };
-                            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("miui_time_floating_window"), false, contentObserver);
+                            resolver.registerContentObserver(Settings.System.getUriFor("miui_time_floating_window"), false, contentObserver);
                             XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "tileListener", contentObserver);
-                        }
-                        else {
-                            ContentObserver contentObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "tileListener");
-                            mContext.getContentResolver().unregisterContentObserver(contentObserver);
                         }
                     }
 
@@ -3200,6 +3204,10 @@ public class SystemUI {
                 protected void after(AfterHookCallback param) throws Throwable {
                     Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                     ContentResolver resolver = mContext.getContentResolver();
+                    ContentObserver oldObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(param.getThisObject(), "torchListener");
+                    if (oldObserver != null) {
+                        resolver.unregisterContentObserver(oldObserver);
+                    }
                     ContentObserver torchObserver = new ContentObserver(new Handler()) {
                         @Override
                         public void onChange(boolean selfChange) {
@@ -3208,6 +3216,7 @@ public class SystemUI {
                         }
                     };
                     resolver.registerContentObserver(Settings.Global.getUriFor("torch_state"), false, torchObserver);
+                    XposedHelpers.setAdditionalInstanceField(param.getThisObject(), "torchListener", torchObserver);
                 }
             });
         }

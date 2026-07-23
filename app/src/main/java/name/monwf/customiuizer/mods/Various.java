@@ -1301,6 +1301,10 @@ public class Various {
 										{ return XposedHelpers.throwOrReturn(throwable, result); }
 									}
 									ContentResolver resolver = mContext.getContentResolver();
+									ContentObserver oldObserver = (ContentObserver) XposedHelpers.getAdditionalInstanceField(thisObject, "mNextAlarmObserver");
+									if (oldObserver != null) {
+										resolver.unregisterContentObserver(oldObserver);
+									}
 									ContentObserver alarmObserver = new ContentObserver(new Handler()) {
 										@Override
 										public void onChange(boolean selfChange) {
@@ -1309,6 +1313,7 @@ public class Various {
 										}
 									};
 									alarmObserver.onChange(false);
+									XposedHelpers.setAdditionalInstanceField(thisObject, "mNextAlarmObserver", alarmObserver);
 									resolver.registerContentObserver(Settings.System.getUriFor("next_alarm_clock_formatted"), false, alarmObserver);
 
 				} catch (Throwable t) {
