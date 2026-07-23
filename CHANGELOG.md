@@ -30,7 +30,7 @@
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.2.9 一致，可直接覆盖升级。
 
-## r14.2.9 — 生命周期与绘制热路径
+## r14.2.9 — 生命周期与绘制热路径（合并 r14.2.8-r14.2.9）
 
 发布日期：2026-07-23。状态：**稳定版，LSPosed 日志（`LSPosed_2026-07-23T21_52_34.250866`）确认无 CustoMIUIzer 相关崩溃或异常**。
 
@@ -51,11 +51,9 @@
 - APK：`CustoMIUIzer-A14-r14.2.9.apk`，2,886,165 B。
 - SHA-256：`dabc71b2e5b5353f03ddf2ba513567888b6f87fc8f71994c3122dc3304cf6e10`。
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.8 一致，可直接覆盖升级。
+- 签名证书与 r14.2.7 一致，可直接覆盖升级。
 
-## r14.2.8 — 深入优化与无效代码清理
-
-发布日期：2026-07-23。状态：**稳定版，首轮完整重启后 LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
+### r14.2.8 累积变更
 
 ### 热路径与偏好监听
 
@@ -66,17 +64,9 @@
 
 - 移除 `GlobalActions.mSBReceiver` `OpenVolumeDialog` 分支内被错误嵌套、永远不会执行的 `ToggleZenMode` / `ToggleNightMode` 子分支；这两个动作已由顶层分支正确处理。
 
-### 构建产物验证
-
-- `versionCode` 126 / `versionName` r14.2.8。
-- APK：`CustoMIUIzer-A14-r14.2.8.apk`，2,886,169 B。
-- SHA-256：`28630DF069EE8786E0A22767E0E2D38BECF351B92409E62CB37D559B0CF74792`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.7 一致，可直接覆盖升级。
-
 ## r14.2.7 — 功能关闭零成本与生命周期治理
 
-发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
+发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。（r14.2.5 与 r14.2.6 因状态栏过渡异常已回退并删除 tag/release，r14.2.7 为 r14.2.4 之后的下一个稳定版本）
 
 ### 按开关减少无效 Hook 与监听
 
@@ -96,7 +86,7 @@
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.2.4 一致，可直接覆盖升级。
 
-## r14.2.4 — 关闭时零成本与接收者防重注册
+## r14.2.4 — 关闭时零成本与接收者防重注册（合并 r14.2.1-r14.2.4）
 
 发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
 
@@ -112,47 +102,9 @@
 - APK：`CustoMIUIzer-A14-r14.2.4.apk`，2,886,165 B。
 - SHA-256：`24A22518B29F9714012E01A1B81BEA4905B58492FE31478F7D5A8228BA9EABE6`。
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.3 一致，可直接覆盖升级。
+- 签名证书与 r14.2.0 一致，可直接覆盖升级。
 
-## r14.2.3 — 生命周期与重复注册治理
-
-发布日期：2026-07-23。状态：**稳定版，已在新 LSPosed 日志（`LSPosed_2026-07-23T14_06_59.179485`）中确认无 CustoMIUIzer 相关崩溃或异常**。
-
-### 监听与调度
-
-- `SystemUI` 自定义磁贴（`custom_5G`、`custom_floatingtime`）和锁屏手电筒入口的 `ContentObserver` 在重复监听/Hook 触发时先注销旧观察者并清理字段，避免同一实例多次注册导致通知重复触发和泄漏。
-- `Various` 的 `AlarmCompatServiceHook` 为 `next_alarm_clock_formatted` 观察者增加防重复注册，重复进入 `onBootPhase` 时不会留下多个 ContentObserver。
-- `BatteryIndicator` 的偏好监听不再每次 `onChange` 创建 `Handler(Looper.getMainLooper())`，改用 `View.post()`；测试动画结束后的延迟 `Runnable` 也复用单一实例，减少短生命周期对象。
-- `WeatherDataController` 的 `TIME_TICK` 广播接收者与延迟刷新 `Handler` 改为进程单例并只在首次 `initContext` 注册，避免时钟控制器重建时重复注册接收者和 Handler 泄漏。
-
-### 构建产物验证
-
-- `versionCode` 121 / `versionName` r14.2.3。
-- APK：`CustoMIUIzer-A14-r14.2.3.apk`，2,886,165 B。
-- SHA-256：`A91192954AE20D10FB5247BA61D9B50DF900060936A90D8FDCCA8DB28F67CEDF`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.2 一致，可直接覆盖升级。
-
-## r14.2.2 — 反射缓存哨兵对象优化
-
-发布日期：2026-07-23。状态：**稳定版，已在新 LSPosed 日志（`LSPosed_2026-07-23T12_31_32.886317`）中确认无 CustoMIUIzer 相关崩溃或异常**。
-
-### 反射缓存
-
-- `XposedHelpers` 的 `fieldCache` / `methodCache` / `constructorCache` / `classCache` 将值类型由 `Optional<T>` 改为 `Object`，使用单例 `NOT_FOUND` 哨兵对象表示“未找到”，避免每次缓存命中或写回时创建 `Optional` 实例与 `orElseThrow` lambda 捕获对象。
-- `findClass` / `findClassIfExists`、`findField` / `findFieldIfExists`、`findMethodExact` / `findMethodBestMatch`、`findConstructorExact` / `findConstructorBestMatch` 保持显式 `get`/`put` 流程；未命中时存入哨兵，`findClassIfExists` / `find*IfExists` 仍返回 `null`。
-
-### 构建产物验证
-
-- `versionCode` 120 / `versionName` r14.2.2。
-- APK：`CustoMIUIzer-A14-r14.2.2.apk`，2,886,165 B。
-- SHA-256：`EB7017ADD589D8C5E7699823F3E3B1FFC0AD6A5AD428867F669D861E6E8BDBE9`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.1 一致，可直接覆盖升级。
-
-## r14.2.1 — 热路径缓存与绘制分配优化
-
-发布日期：2026-07-23。状态：**稳定版，已完成目标设备安装、完整重启与日志验证；LSPosed 日志中未出现 CustoMIUIzer 相关崩溃或异常**。
+### r14.2.1 累积变更
 
 ### 偏好读取与反射缓存
 
@@ -166,13 +118,21 @@
 - `BatteryIndicator` 复用 `ArgbEvaluator`、`mRainbowColors` / `mRainbowPositions` 数组、`RoundRectShape` 与 `ShapeDrawable.ShaderFactory` 实例；彩虹模式不再每次重绘时创建 `float[]` 与匿名 `ShaderFactory`。
 - `AudioVisualizer` 复用单个 `float[3]` 计算 `Color.HSVToColor`，并避免 `DashPathEffect` 的临时 `float[]`；减少随机颜色与彩虹色条更新时的分配。
 
-### 构建产物验证
+### r14.2.2 累积变更
 
-- `versionCode` 119 / `versionName` r14.2.1。
-- APK：`CustoMIUIzer-A14-r14.2.1.apk`，2,886,165 B。
-- SHA-256：`3bb44898fa184419e7b92780d40668edf8c89904962619d46e270bec4599e144`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.2.0 一致，可直接覆盖升级。
+### 反射缓存
+
+- `XposedHelpers` 的 `fieldCache` / `methodCache` / `constructorCache` / `classCache` 将值类型由 `Optional<T>` 改为 `Object`，使用单例 `NOT_FOUND` 哨兵对象表示“未找到”，避免每次缓存命中或写回时创建 `Optional` 实例与 `orElseThrow` lambda 捕获对象。
+- `findClass` / `findClassIfExists`、`findField` / `findFieldIfExists`、`findMethodExact` / `findMethodBestMatch`、`findConstructorExact` / `findConstructorBestMatch` 保持显式 `get`/`put` 流程；未命中时存入哨兵，`findClassIfExists` / `find*IfExists` 仍返回 `null`。
+
+### r14.2.3 累积变更
+
+### 监听与调度
+
+- `SystemUI` 自定义磁贴（`custom_5G`、`custom_floatingtime`）和锁屏手电筒入口的 `ContentObserver` 在重复监听/Hook 触发时先注销旧观察者并清理字段，避免同一实例多次注册导致通知重复触发和泄漏。
+- `Various` 的 `AlarmCompatServiceHook` 为 `next_alarm_clock_formatted` 观察者增加防重复注册，重复进入 `onBootPhase` 时不会留下多个 ContentObserver。
+- `BatteryIndicator` 的偏好监听不再每次 `onChange` 创建 `Handler(Looper.getMainLooper())`，改用 `View.post()`；测试动画结束后的延迟 `Runnable` 也复用单一实例，减少短生命周期对象。
+- `WeatherDataController` 的 `TIME_TICK` 广播接收者与延迟刷新 `Handler` 改为进程单例并只在首次 `initContext` 注册，避免时钟控制器重建时重复注册接收者和 Handler 泄漏。
 
 ## r14.2.0 — Hook 热路径与调度架构优化
 
@@ -241,7 +201,7 @@
 - 签名证书 SHA-256：`3061a3da1c2fc46b44e215d024b1bfe3a012cb4d70b90b0214fa9fc896cef60d`，与 r14.1.3 一致，可直接覆盖升级。
 - 目标设备实机与最终日志验证通过，可作为 r14.2.0 正式发布产物。
 
-## r14.1.3 — 稳定性修复、轻量化与资源治理
+## r14.1.3 — 稳定性修复、轻量化与资源治理（合并 r14.1.0-r14.1.3）
 
 发布日期：2026-07-23。状态：**稳定版，已完成目标设备实机验证**。
 
@@ -302,33 +262,27 @@
 - APK：`CustoMIUIzer-A14-r14.1.3.apk`，2,886,250 B。
 - SHA-256：`17d1f71607e06e5beb7939c17819932e558bd34c622f369ea87bebfe7b0eba57`。
 
-## r14.1.2 — 可回退的实机基线
+### r14.1.0 累积变更
 
-发布日期：2026-07-22。
+- 让 `MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
+- 首批迁移 `GlobalActions` 与 `Controls`；其他模块暂由兼容层承接。
+- 保留旧 Hook 的可变参数、提前返回、结果替换、异常传播与后置回调语义。
+- 建立逐模块迁移、构建、重启、回归验证流程，避免一次性重写整个 Hook 层。
 
-- 恢复到用户确认可打开应用、重启后可正常 Hook 的 Devin 最终构建，作为 r14.1.3 开发的干净基线。
-- 固定 API 101 混合架构边界：`GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生拦截器，SystemUI 保留兼容层。
-- 保持普通应用启动链与 Hook API 隔离，避免 AndroidX 初始化直接加载仅存在于注入环境的类型。
-- `versionCode 116`，APK 2,934,628 B。
-- SHA-256：`a46acee41da42c618ee0f23468bb37574faedbfb4f9a5df6b26b678106dd32ea`。
-
-## r14.1.1 — API 101 分模块迁移与边界确认
-
-发布日期：2026-07-21。
+### r14.1.1 累积变更
 
 - 将 `Launcher`、`System`、`Various` 分模块迁移至 `intercept(Chain)`，每步执行重启验证。
 - `SystemUI` 全量迁移后出现重启失效，因此回退到兼容层；这一实机结论成为后续版本的稳定性边界。
 - `HookBuilder` 显式使用 `ExceptionMode.PASSTHROUGH`，保持被 Hook 方法的异常传播语义。
 - 完成 clean build、zipalign 与 APK v2 签名验证。
 
-## r14.1.0 — 原生 API 101 迁移起点
+### r14.1.2 累积变更
 
-发布日期：2026-07-20。
-
-- 让 `MethodHook` 直接实现 `XposedInterface.Hooker`，使用 `intercept(Chain)` 调度。
-- 首批迁移 `GlobalActions` 与 `Controls`；其他模块暂由兼容层承接。
-- 保留旧 Hook 的可变参数、提前返回、结果替换、异常传播与后置回调语义。
-- 建立逐模块迁移、构建、重启、回归验证流程，避免一次性重写整个 Hook 层。
+- 恢复到用户确认可打开应用、重启后可正常 Hook 的 Devin 最终构建，作为 r14.1.3 开发的干净基线。
+- 固定 API 101 混合架构边界：`GlobalActions`、`Controls`、`Launcher`、`System`、`Various` 使用原生拦截器，SystemUI 保留兼容层。
+- 保持普通应用启动链与 Hook API 隔离，避免 AndroidX 初始化直接加载仅存在于注入环境的类型。
+- `versionCode 116`，APK 2,934,628 B。
+- SHA-256：`a46acee41da42c618ee0f23468bb37574faedbfb4f9a5df6b26b678106dd32ea`。
 
 ## r14.0.0 — Android 14 / API 101 独立版本线
 
