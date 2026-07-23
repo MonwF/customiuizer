@@ -17,3 +17,11 @@ app/standalone/*
 app/develop/
 .idea/.name
 .idea/copilot/
+
+# Temporary local analysis artifacts and build outputs at repo root
+/.vscode/
+/*.apk
+/*.py
+/*.log
+/gradle_*.txt
+/log_summary*.txt
