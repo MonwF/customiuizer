@@ -653,6 +653,27 @@ public class GlobalActions {
         });
     }
 
+    private static final String[] customActionKeys = {
+        "controls_backlong", "controls_homelong", "controls_menulong",
+        "controls_powerdt",
+        "controls_fsg_assist_left", "controls_fsg_assist_right",
+        "controls_fsg_swipeandstop",
+        "controls_navbarleft", "controls_navbarleftlong",
+        "controls_navbarright", "controls_navbarrightlong",
+        "launcher_swipedown", "launcher_swipeup", "launcher_swipedown2", "launcher_swipeup2",
+        "launcher_swipeleft", "launcher_swiperight",
+        "launcher_doubletap", "launcher_pinch", "launcher_shake", "launcher_spread",
+        "system_statusbarcontrols", "system_statusbarcontrols_longpress",
+        "system_lockscreenshortcuts_left", "system_lockscreenshortcuts_right"
+    };
+
+    public static boolean hasCustomActions() {
+        for (String key : customActionKeys) {
+            if (MainModule.mPrefs.getInt(key + "_action", 1) > 1) return true;
+        }
+        return false;
+    }
+
     public static void setupGlobalActions(XposedModuleInterface.SystemServerStartingParam lpparam) {
         ModuleHelper.hookAllMethods("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "initInternal", new MethodHook() {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")

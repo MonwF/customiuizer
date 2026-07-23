@@ -108,7 +108,7 @@ public class MainModule extends XposedModule {
         ModuleHelper.currentPackageName = "android";
         initPrefs();
         PackagePermissions.hook(lpparam);
-        GlobalActions.setupGlobalActions(lpparam);
+        if (GlobalActions.hasCustomActions()) GlobalActions.setupGlobalActions(lpparam);
 
         if (mPrefs.getBoolean("system_screenshot_overlay")) {
             System.TempHideOverlayAppHook(lpparam);
@@ -257,7 +257,7 @@ public class MainModule extends XposedModule {
 
             ModuleHelper.findAndHookMethod("com.android.systemui.SystemUIInitializer", lpparam.getClassLoader(),
                 "init", boolean.class, initStatusBarHook);
-            GlobalActions.setupStatusBar(lpparam);
+            if (GlobalActions.hasCustomActions()) GlobalActions.setupStatusBar(lpparam);
 
             if (currentTime - restartTime < 10000) {
                 return;
@@ -613,7 +613,7 @@ public class MainModule extends XposedModule {
             if (mPrefs.getInt("launcher_dock_topmargin", 0) > 0) Launcher.DockMarginTopHook(lpparam);
             if (mPrefs.getInt("launcher_dock_bottommargin", 0) > 0) Launcher.DockMarginBottomHook(lpparam);
             if (mPrefs.getInt("launcher_dock_height", 60) > 60) Launcher.DockHeightHook(lpparam);
-            Launcher.setupLauncher(lpparam);
+            if (mPrefs.getBoolean("launcher_privacyapps_gest")) Launcher.setupLauncher(lpparam);
             watchPreferenceChange();
         }
 

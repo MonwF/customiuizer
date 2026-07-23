@@ -3230,7 +3230,7 @@ public class SystemUI {
                     if (oldObserver != null) {
                         resolver.unregisterContentObserver(oldObserver);
                     }
-                    ContentObserver torchObserver = new ContentObserver(new Handler()) {
+                    ContentObserver torchObserver = new ContentObserver(new Handler(mContext.getMainLooper())) {
                         @Override
                         public void onChange(boolean selfChange) {
                             if (selfChange) return;

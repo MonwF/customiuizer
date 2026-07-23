@@ -1305,7 +1305,7 @@ public class Various {
 									if (oldObserver != null) {
 										resolver.unregisterContentObserver(oldObserver);
 									}
-									ContentObserver alarmObserver = new ContentObserver(new Handler()) {
+									ContentObserver alarmObserver = new ContentObserver(new Handler(mContext.getMainLooper())) {
 										@Override
 										public void onChange(boolean selfChange) {
 											if (selfChange) return;

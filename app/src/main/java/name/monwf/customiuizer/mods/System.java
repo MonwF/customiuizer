@@ -1201,15 +1201,20 @@ public class System {
 
                                         initSecondTicker(thisObject);
             		                Context mContext = (Context) XposedHelpers.getObjectField(thisObject, "mContext");
-            		                IntentFilter timeSetIntent = new IntentFilter();
-            		                timeSetIntent.addAction("android.intent.action.TIME_SET");
-            		                BroadcastReceiver mUpdateTimeReceiver = new BroadcastReceiver() {
-            		                    @Override
-            		                    public void onReceive(Context context, Intent intent) {
-                                                initSecondTicker(thisObject);
-            		                    }
-            		                };
-            		                mContext.registerReceiver(mUpdateTimeReceiver, timeSetIntent);
+            		                if (getShowSeconds() || getCCShowSeconds()) {
+            		                    BroadcastReceiver oldReceiver = (BroadcastReceiver) XposedHelpers.getAdditionalInstanceField(thisObject, "customiuizer_timeSetReceiver");
+            		                    if (oldReceiver != null) try { mContext.unregisterReceiver(oldReceiver); } catch (Throwable ignore) {}
+            		                    BroadcastReceiver mUpdateTimeReceiver = new BroadcastReceiver() {
+            		                        @Override
+            		                        public void onReceive(Context context, Intent intent) {
+                                                    initSecondTicker(thisObject);
+            		                        }
+            		                    };
+            		                    XposedHelpers.setAdditionalInstanceField(thisObject, "customiuizer_timeSetReceiver", mUpdateTimeReceiver);
+            		                    IntentFilter timeSetIntent = new IntentFilter();
+            		                    timeSetIntent.addAction("android.intent.action.TIME_SET");
+            		                    mContext.registerReceiver(mUpdateTimeReceiver, timeSetIntent);
+            		                }
 
             	} catch (Throwable t) {
             		XposedHelpers.log(t);

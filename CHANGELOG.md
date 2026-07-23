@@ -7,9 +7,31 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.2.4 — 关闭时零成本与接收者防重注册
+## r14.2.7 — 功能关闭零成本与生命周期治理
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
+
+### 按开关减少无效 Hook 与监听
+
+- `GlobalActions.hasCustomActions()` 集中判断是否存在任何自定义动作；未配置任何自定义动作时，`MainModule` 不再调用 `GlobalActions.setupGlobalActions` 和 `GlobalActions.setupStatusBar`，避免在 `system_server` 和 `com.android.systemui` 中注册 `mSBReceiver`、自由窗口/分屏/自动亮度控制器的 Hook。
+- `MainModule` 仅在 `launcher_privacyapps_gest` 开启时调用 `Launcher.setupLauncher`，避免为所有桌面进程注册 `FETCHAPPCONFIG` / `PUSHAPPCONFIG` 广播接收者。
+
+### 生命周期与异常边界
+
+- `SystemUI` 手电筒状态 `ContentObserver` 与 `Various` 下一闹钟 `ContentObserver` 改为 `new Handler(mContext.getMainLooper())`，不再依赖当前线程 Looper，防止在后台线程创建时崩溃。
+- `System.java` 秒级时钟刷新 `TIME_SET` 广播接收者改为用 `AdditionalInstanceField` 保存旧实例并先注销再注册，且仅在真正启用秒针显示时才注册，避免 `MiuiStatusBarClockController` 重建时累积多个接收者。
+
+### 构建产物验证
+
+- `versionCode` 125 / `versionName` r14.2.7。
+- APK：`CustoMIUIzer-A14-r14.2.7.apk`，2,886,165 B。
+- SHA-256：`75FA704A6D07880EE7BA4221A6E687FFCF9BDFCF571FFDB5E0F557713D9806FA`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.4 一致，可直接覆盖升级。
+
+## r14.2.4 — 关闭时零成本与接收者防重注册
+
+发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
 
 ### 按开关减少无效 Hook 与监听
 

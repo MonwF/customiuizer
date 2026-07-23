@@ -14,8 +14,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | r14.2.4 |
-| 上一稳定版 | r14.2.3 |
+| 当前稳定版 | r14.2.7 |
+| 上一稳定版 | r14.2.4 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -23,7 +23,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.4 已按以往发布格式完成构建、签名、单元测试与 `assembleRelease`，并已发布。实机完整重启验证待完成后更新为稳定状态；r14.2.3 在目标设备 LSPosed 日志中未出现本模块相关崩溃或异常。
+r14.2.7 已按以往发布格式完成构建、签名、单元测试与 `assembleRelease`，并已发布。实机完整重启验证待完成后更新为稳定状态；r14.2.4 在 LSPosed 日志中未出现本模块相关崩溃或异常。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -60,6 +60,13 @@ r14.2.4 已按以往发布格式完成构建、签名、单元测试与 `assembl
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
+
+## r14.2.7 优化重点
+
+- `GlobalActions.hasCustomActions()` 集中判断是否存在任何自定义动作；未配置时 `MainModule` 不再调用 `setupGlobalActions` / `setupStatusBar`，避免在 `system_server` 和 `SystemUI` 中注册 `mSBReceiver`、自由窗口/分屏/自动亮度控制器 Hook。
+- `MainModule` 仅在 `launcher_privacyapps_gest` 开启时调用 `Launcher.setupLauncher`，避免为所有桌面进程注册隐私应用配置广播接收者。
+- `SystemUI` 手电筒与 `Various` 下一闹钟 `ContentObserver` 改为 `new Handler(mContext.getMainLooper())`，不再依赖当前线程 Looper。
+- `System.java` 秒级时钟刷新 `TIME_SET` 广播接收者改为先注销旧实例再注册，且仅在启用秒针显示时才注册。
 
 ## r14.2.4 优化重点
 
@@ -105,6 +112,7 @@ r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块
 | [r14.2.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.2) | 2,886,165 B | 0 B | `XposedHelpers` 反射缓存完整迁移为 `NOT_FOUND` 哨兵，减少缓存命中/写回包装对象 |
 | [r14.2.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.3) | 2,886,165 B | 0 B | ContentObserver / BroadcastReceiver 生命周期治理，减少重复注册与 Handler/Runnable 临时分配 |
 | [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 按开关跳过 `ControlCenterPluginHook` 注册，治理 `BroadcastReceiver` 重复注册，减少功能关闭时的无效 Hook |
+| [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 按自定义动作开关跳过 `GlobalActions` 接收者与控制器 Hook；治理 `ContentObserver` / `TIME_SET` 接收者生命周期 |
 
 r14.2.0 比 r14.0.0 小 15,735 B，比 r14.1.2 小 48,463 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
 
