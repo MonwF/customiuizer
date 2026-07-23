@@ -45,7 +45,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,10 +64,11 @@ public final class XposedHelpers {
     private XposedHelpers() {
     }
 
-    private static final ConcurrentHashMap<MemberCacheKey.Field, Optional<Field>> fieldCache = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<MemberCacheKey.Method, Optional<Method>> methodCache = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<MemberCacheKey.Constructor, Optional<Constructor<?>>> constructorCache = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<ClassCacheKey, Optional<Class<?>>> classCache = new ConcurrentHashMap<>();
+    private static final Object NOT_FOUND = new Object();
+    private static final ConcurrentHashMap<MemberCacheKey.Field, Object> fieldCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<MemberCacheKey.Method, Object> methodCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<MemberCacheKey.Constructor, Object> constructorCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ClassCacheKey, Object> classCache = new ConcurrentHashMap<>();
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
@@ -284,7 +284,9 @@ public final class XposedHelpers {
      * @throws ClassNotFoundError In case the class was not found.
      */
     public static Class<?> findClass(String className, ClassLoader classLoader) {
-        return findClassOptional(className, classLoader).orElseThrow(() -> new ClassNotFoundError(new ClassNotFoundException(className)));
+        Class<?> c = findClassInternal(className, classLoader);
+        if (c == null) throw new ClassNotFoundError(new ClassNotFoundException(className));
+        return c;
     }
 
     /**
@@ -296,25 +298,23 @@ public final class XposedHelpers {
      * @return A reference to the class, or {@code null} if it doesn't exist.
      */
     public static Class<?> findClassIfExists(String className, ClassLoader classLoader) {
-        return findClassOptional(className, classLoader).orElse(null);
+        return findClassInternal(className, classLoader);
     }
 
-    private static Optional<Class<?>> findClassOptional(String className, ClassLoader classLoader) {
+    private static Class<?> findClassInternal(String className, ClassLoader classLoader) {
         ClassLoader effectiveLoader = classLoader != null ? classLoader : moduleInst.getClass().getClassLoader();
         ClassCacheKey key = new ClassCacheKey(effectiveLoader, className);
-        Optional<Class<?>> cached = classCache.get(key);
+        Object cached = classCache.get(key);
         if (cached != null) {
-            return cached;
+            return cached == NOT_FOUND ? null : (Class<?>) cached;
         }
         try {
             Class<?> c = ClassUtils.getClass(effectiveLoader, className, false);
-            Optional<Class<?>> result = Optional.of(c);
-            classCache.put(key, result);
-            return result;
+            classCache.put(key, c);
+            return c;
         } catch (ClassNotFoundException e) {
-            Optional<Class<?>> result = Optional.empty();
-            classCache.put(key, result);
-            return result;
+            classCache.put(key, NOT_FOUND);
+            return null;
         }
     }
 
@@ -329,19 +329,19 @@ public final class XposedHelpers {
     public static Field findField(Class<?> clazz, String fieldName) {
         MemberCacheKey.Field key = new MemberCacheKey.Field(clazz, fieldName);
 
-        Optional<Field> cached = fieldCache.get(key);
+        Object cached = fieldCache.get(key);
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchFieldError(key.toString()));
+            if (cached == NOT_FOUND) throw new NoSuchFieldError(key.toString());
+            return (Field) cached;
         }
 
         try {
             Field newField = findFieldRecursiveImpl(clazz, fieldName);
             newField.setAccessible(true);
-            Optional<Field> result = Optional.of(newField);
-            fieldCache.put(key, result);
+            fieldCache.put(key, newField);
             return newField;
         } catch (NoSuchFieldException e) {
-            fieldCache.put(key, Optional.empty());
+            fieldCache.put(key, NOT_FOUND);
             throw new NoSuchFieldError(key.toString());
         }
     }
@@ -498,19 +498,19 @@ public final class XposedHelpers {
     public static Method findMethodExact(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, true);
 
-        Optional<Method> cached = methodCache.get(key);
+        Object cached = methodCache.get(key);
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Method) cached;
         }
 
         try {
             Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
             method.setAccessible(true);
-            Optional<Method> result = Optional.of(method);
-            methodCache.put(key, result);
+            methodCache.put(key, method);
             return method;
         } catch (NoSuchMethodException e) {
-            methodCache.put(key, Optional.empty());
+            methodCache.put(key, NOT_FOUND);
             throw new NoSuchMethodError(key.toString());
         }
     }
@@ -580,9 +580,10 @@ public final class XposedHelpers {
         // then find the best match
         MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, false);
 
-        Optional<Method> cached = methodCache.get(key);
+        Object cached = methodCache.get(key);
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Method) cached;
         }
 
         Method bestMatch = null;
@@ -614,9 +615,11 @@ public final class XposedHelpers {
         if (bestMatch != null) {
             bestMatch.setAccessible(true);
         }
-        Optional<Method> result = bestMatch != null ? Optional.of(bestMatch) : Optional.empty();
-        methodCache.put(key, result);
-        return result.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        methodCache.put(key, bestMatch != null ? bestMatch : NOT_FOUND);
+        if (bestMatch != null) {
+            return bestMatch;
+        }
+        throw new NoSuchMethodError(key.toString());
     }
 
     /**
@@ -795,19 +798,19 @@ public final class XposedHelpers {
     public static Constructor<?> findConstructorExact(Class<?> clazz, Class<?>... parameterTypes) {
         MemberCacheKey.Constructor key = new MemberCacheKey.Constructor(clazz, parameterTypes, true);
 
-        Optional<Constructor<?>> cached = constructorCache.get(key);
+        Object cached = constructorCache.get(key);
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Constructor<?>) cached;
         }
 
         try {
             Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
-            Optional<Constructor<?>> result = Optional.of(constructor);
-            constructorCache.put(key, result);
+            constructorCache.put(key, constructor);
             return constructor;
         } catch (NoSuchMethodException e) {
-            constructorCache.put(key, Optional.empty());
+            constructorCache.put(key, NOT_FOUND);
             throw new NoSuchMethodError(key.toString());
         }
     }
@@ -869,9 +872,10 @@ public final class XposedHelpers {
         // then find the best match
         MemberCacheKey.Constructor key = new MemberCacheKey.Constructor(clazz, parameterTypes, false);
 
-        Optional<Constructor<?>> cached = constructorCache.get(key);
+        Object cached = constructorCache.get(key);
         if (cached != null) {
-            return cached.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Constructor<?>) cached;
         }
 
         Constructor<?> bestMatch = null;
@@ -895,9 +899,11 @@ public final class XposedHelpers {
         if (bestMatch != null) {
             bestMatch.setAccessible(true);
         }
-        Optional<Constructor<?>> result = bestMatch != null ? Optional.of(bestMatch) : Optional.empty();
-        constructorCache.put(key, result);
-        return result.orElseThrow(() -> new NoSuchMethodError(key.toString()));
+        constructorCache.put(key, bestMatch != null ? bestMatch : NOT_FOUND);
+        if (bestMatch != null) {
+            return bestMatch;
+        }
+        throw new NoSuchMethodError(key.toString());
     }
 
     /**

@@ -7,9 +7,26 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.2.1 — 热路径缓存与绘制分配优化
+## r14.2.2 — 反射缓存哨兵对象优化
 
 发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
+
+### 反射缓存
+
+- `XposedHelpers` 的 `fieldCache` / `methodCache` / `constructorCache` / `classCache` 将值类型由 `Optional<T>` 改为 `Object`，使用单例 `NOT_FOUND` 哨兵对象表示“未找到”，避免每次缓存命中或写回时创建 `Optional` 实例与 `orElseThrow` lambda 捕获对象。
+- `findClass` / `findClassIfExists`、`findField` / `findFieldIfExists`、`findMethodExact` / `findMethodBestMatch`、`findConstructorExact` / `findConstructorBestMatch` 保持显式 `get`/`put` 流程；未命中时存入哨兵，`findClassIfExists` / `find*IfExists` 仍返回 `null`。
+
+### 构建产物验证
+
+- `versionCode` 120 / `versionName` r14.2.2。
+- APK：`CustoMIUIzer-A14-r14.2.2.apk`，2,886,165 B。
+- SHA-256：`EB7017ADD589D8C5E7699823F3E3B1FFC0AD6A5AD428867F669D861E6E8BDBE9`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.1 一致，可直接覆盖升级。
+
+## r14.2.1 — 热路径缓存与绘制分配优化
+
+发布日期：2026-07-23。状态：**稳定版，已完成目标设备安装、完整重启与日志验证；LSPosed 日志中未出现 CustoMIUIzer 相关崩溃或异常**。
 
 ### 偏好读取与反射缓存
 
