@@ -14,8 +14,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | r14.2.8 |
-| 上一稳定版 | r14.2.7 |
+| 当前稳定版 | r14.2.9 |
+| 上一稳定版 | r14.2.8 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -23,7 +23,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.8 已按以往发布格式完成构建、签名、单元测试与 `assembleRelease`，为当前候选版；实机完整重启验证待完成后更新为稳定状态。r14.2.7 已发布，首轮重启 LSPosed 日志未出现本模块相关崩溃或异常。r14.2.4 在 LSPosed 日志中未出现本模块相关崩溃或异常。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.2.9 已按以往发布格式完成构建、签名、单元测试与 `assembleRelease`，为当前候选版；实机完整重启验证待完成后更新为稳定状态。r14.2.8 已发布，首轮重启 LSPosed 日志未出现本模块相关崩溃或异常。r14.2.7 与 r14.2.4 在 LSPosed 日志中未出现本模块相关崩溃或异常。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -60,6 +60,12 @@ r14.2.8 已按以往发布格式完成构建、签名、单元测试与 `assembl
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
+
+## r14.2.9 优化重点
+
+- `StepCounterController.initContext` 静态持有 `TIME_TICK` 接收者，SystemUI 重建时先注销旧接收者再注册新接收者；`Handler` 改用 `mContext.getMainLooper()`；`removeStepViewByTag` 改用 `removeIf` 避免并发修改。
+- `BatteryIndicator.updateDisplaySize` 缓存 `mDensity` 与 `mStatusBarHeight`，`updateDrawable` 绘制时不再重复查询 `Resources`。
+- `BatteryIndicator.updateParameters` 移除每次调用新建的 `Matrix` 对象。
 
 ## r14.2.8 优化重点
 
@@ -118,6 +124,7 @@ r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块
 | [r14.2.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.2) | 2,886,165 B | 0 B | `XposedHelpers` 反射缓存完整迁移为 `NOT_FOUND` 哨兵，减少缓存命中/写回包装对象 |
 | [r14.2.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.3) | 2,886,165 B | 0 B | ContentObserver / BroadcastReceiver 生命周期治理，减少重复注册与 Handler/Runnable 临时分配 |
 | [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 按开关跳过 `ControlCenterPluginHook` 注册，治理 `BroadcastReceiver` 重复注册，减少功能关闭时的无效 Hook |
+| [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | -4 B | 修复 `StepCounterController` 接收者生命周期；`BatteryIndicator` 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配 |
 | [r14.2.8](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.8) | 2,886,169 B | +4 B | 偏好监听避免 `getAll()` 全量复制；按具体动作码 gate 控制器子 Hook；清理 `OpenVolumeDialog` 内失效嵌套分支 |
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 按自定义动作开关跳过 `GlobalActions` 接收者与控制器 Hook；治理 `ContentObserver` / `TIME_SET` 接收者生命周期 |
 
