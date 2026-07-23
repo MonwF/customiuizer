@@ -65,6 +65,8 @@ public class AudioVisualizer extends View {
 	private final int[] mRainbowVertical = new int[mBandsNum];
 	private final float[] mPositions = new float[mBandsNum];
 	private final Path mLinePath = new Path();
+	private final float[] mHsv = new float[3];
+	private final float[] mDashIntervals = new float[2];
 	public boolean showOnCustom;
 	private int animDur;
 	private int transparency;
@@ -90,7 +92,10 @@ public class AudioVisualizer extends View {
 	};
 
 	int getRandomColor() {
-		return Color.HSVToColor(new float[] {(float)(Math.random() * 360f), (float)(0.5f + Math.random() * 0.5f), (float)(0.75f + Math.random() * 0.25f) });
+		mHsv[0] = (float)(Math.random() * 360f);
+		mHsv[1] = (float)(0.5f + Math.random() * 0.5f);
+		mHsv[2] = (float)(0.75f + Math.random() * 0.25f);
+		return Color.HSVToColor(mHsv);
 	}
 
 	enum BarStyle {
@@ -491,13 +496,18 @@ public class AudioVisualizer extends View {
 
 	private void updateRainbowColors() {
 		float jump = 300f / (float)mBandsNum;
-		for (int i = 0; i < mRainbow.length; i++)
-			mRainbow[i] = Color.HSVToColor(transparency, new float[]{jump * i, 1.0f, 1.0f});
+		mHsv[1] = 1.0f;
+		mHsv[2] = 1.0f;
+		for (int i = 0; i < mRainbow.length; i++) {
+			mHsv[0] = jump * i;
+			mRainbow[i] = Color.HSVToColor(transparency, mHsv);
+		}
 
 		for (int i = 0; i < mRainbowVertical.length; i++) {
 			float h = 140 + jump * i;
 			if (h > 360) h -= 360;
-			mRainbowVertical[i] = Color.HSVToColor(transparency, new float[]{h, 1.0f, 1.0f});
+			mHsv[0] = h;
+			mRainbowVertical[i] = Color.HSVToColor(transparency, mHsv);
 		}
 	}
 
@@ -517,10 +527,14 @@ public class AudioVisualizer extends View {
 			mPaint.setPathEffect(null);
 			mPaint.setStrokeCap(Paint.Cap.ROUND);
 		} else if (barStyle == BarStyle.DASHED) {
-			mPaint.setPathEffect(new DashPathEffect(new float[]{4 * mDensity, 2 * mDensity}, 0));
+			mDashIntervals[0] = 4 * mDensity;
+			mDashIntervals[1] = 2 * mDensity;
+			mPaint.setPathEffect(new DashPathEffect(mDashIntervals, 0));
 			mPaint.setStrokeCap(Paint.Cap.BUTT);
 		} else if (barStyle == BarStyle.CIRCLES) {
-			mPaint.setPathEffect(new DashPathEffect(new float[]{1.0f, mPaint.getStrokeWidth() + mDensity}, 0));
+			mDashIntervals[0] = 1.0f;
+			mDashIntervals[1] = mPaint.getStrokeWidth() + mDensity;
+			mPaint.setPathEffect(new DashPathEffect(mDashIntervals, 0));
 			mPaint.setStrokeCap(Paint.Cap.ROUND);
 		} else if (barStyle == BarStyle.LINE) {
 			mPaint.setPathEffect(new CornerPathEffect(18 * mDensity));

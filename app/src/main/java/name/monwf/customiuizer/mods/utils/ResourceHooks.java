@@ -82,8 +82,7 @@ public class ResourceHooks {
 						if (mContext != null) {
 							Resources modRes = ModuleHelper.getModuleRes(mContext);
 							if (modRes != null) {
-								Object[] argsArr = XposedHelpers.getArgsArray(args);
-								Object value = getModuleResValue(modRes, method, (int) replacement.mValue, argsArr);
+								Object value = getModuleResValue(modRes, method, (int) replacement.mValue, args);
 								if (value != null) {
 									skipValue = value;
 									shouldSkip = true;
@@ -99,8 +98,7 @@ public class ResourceHooks {
 						if (mContext != null) {
 							Resources modRes = ModuleHelper.getModuleRes(mContext);
 							if (modRes != null) {
-								Object[] argsArr = XposedHelpers.getArgsArray(args);
-								Object value = getModuleResValue(modRes, method, modResId, argsArr);
+								Object value = getModuleResValue(modRes, method, modResId, args);
 								if (value != null) {
 									skipValue = value;
 									shouldSkip = true;
@@ -294,7 +292,7 @@ public class ResourceHooks {
 		}
 	}
 
-	private Object getModuleResValue(Resources modRes, String method, int modResId, Object[] args) {
+	private Object getModuleResValue(Resources modRes, String method, int modResId, List<Object> args) {
 		switch (method) {
 			case "getText":
 				return modRes.getText(modResId);
@@ -303,10 +301,14 @@ public class ResourceHooks {
 			case "getLayout":
 				return modRes.getLayout(modResId);
 			case "getDrawableForDensity":
-				return modRes.getDrawableForDensity(modResId, (int) args[1], (Resources.Theme) args[2]);
+				return modRes.getDrawableForDensity(modResId, (int) args.get(1), (Resources.Theme) args.get(2));
 			default:
 				return null;
 		}
+	}
+
+	private Object getModuleResValue(Resources modRes, String method, int modResId, Object[] args) {
+		return getModuleResValue(modRes, method, modResId, java.util.Arrays.asList(args));
 	}
 
 	private Object getFakeResource(Resources modRes, String method, Object[] args) {

@@ -7,6 +7,30 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.2.1 — 热路径缓存与绘制分配优化
+
+发布日期：2026-07-23。状态：**候选发布版，构建产物通过测试与打包，实机验证待用户完成后正式发布**。
+
+### 偏好读取与反射缓存
+
+- `PrefMap.getStringAsInt` 增加解析后整数值缓存，命中时直接返回并在 `put`/`remove` 时失效；避免高频 Hook 读取同一字符串键时重复 `Integer.parseInt`。
+- `XposedHelpers` 的 `findField` / `findMethodExact` / `findMethodBestMatch` / `findConstructorExact` / `findConstructorBestMatch` 缓存从 `computeIfAbsent` 改为显式 `get`/`put`，消除每次缓存查找时 lambda 与 `Optional` 捕获对象的分配。
+- `ResourceHooks.mReplaceHook` 不再调用 `XposedHelpers.getArgsArray(args)` 构造完整 `Object[]`，直接按 `List<Object>` 下标读取所需参数，减少资源重定向路径上的短命数组。
+- `ModuleHelper.getDepInstance` 缓存键由 `className + "@" + identityHashCode(classLoader)` 改为解析后的 `Class<?>`，避免字符串拼接与哈希计算。
+
+### 绘制与颜色计算
+
+- `BatteryIndicator` 复用 `ArgbEvaluator`、`mRainbowColors` / `mRainbowPositions` 数组、`RoundRectShape` 与 `ShapeDrawable.ShaderFactory` 实例；彩虹模式不再每次重绘时创建 `float[]` 与匿名 `ShaderFactory`。
+- `AudioVisualizer` 复用单个 `float[3]` 计算 `Color.HSVToColor`，并避免 `DashPathEffect` 的临时 `float[]`；减少随机颜色与彩虹色条更新时的分配。
+
+### 构建产物验证
+
+- `versionCode` 119 / `versionName` r14.2.1。
+- APK：`CustoMIUIzer-A14-r14.2.1.apk`，2,886,165 B。
+- SHA-256：`3bb44898fa184419e7b92780d40668edf8c89904962619d46e270bec4599e144`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.2.0 一致，可直接覆盖升级。
+
 ## r14.2.0 — Hook 热路径与调度架构优化
 
 发布日期：2026-07-23。状态：**稳定版，已完成目标设备安装、完整重启、功能与日志验证**。

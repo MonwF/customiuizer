@@ -23,7 +23,9 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.2.0 已完成安装、完整重启、常用功能与 LSPosed 日志验证。最终启动周期内没有本模块异常，也没有应用、SystemUI 或桌面的崩溃、ANR 与进程死亡。
+r14.2.0 已完成安装、完整重启、常用功能与 LSPosed 日志验证。正式版启动周期内，模块在 9 个目标进程中全部加载成功，未发现本模块 Hook 失败、异常、ANR，也没有应用、SystemUI 或桌面的崩溃与进程重启。
+
+覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
 ## 与参考版本的区别
 
@@ -59,7 +61,7 @@ r14.2.0 已完成安装、完整重启、常用功能与 LSPosed 日志验证。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
 
-## r14.2.0 摘要
+## r14.2.0 优化重点
 
 - 偏好键在加载时一次规范化，高频 Hook 读取不再反复拼接 `pref_key_` 或重复查表。
 - API 101 兼容层按需生成参数数组；清除 164 处无效/无改写参数复制和 116 次无效对象读取。
@@ -68,7 +70,39 @@ r14.2.0 已完成安装、完整重启、常用功能与 LSPosed 日志验证。
 - 修复音量面板模糊参数的动态更新键不匹配，并加强偏好观察者的并发安全。
 - 保持 r14.1.3 已验证的 API 101 混合架构、SystemUI 空值保护、独立包名与无网络权限边界。
 
-完整版本记录和相对 r14.1.3 的静态性能评估见 [CHANGELOG.md](CHANGELOG.md)。
+r14.1.3 主要解决线程、缓存、图像处理、音频计算与无关资源占用，属于宏观资源优化；r14.2.0 则继续治理偏好读取、Hook 参数、反射、无效分支和线程调度，重点是减少长期运行热路径上的短期对象、重复计算与跨线程唤醒。r14.2.0 的目标不是明显缩小 APK，而是在不改变已验证兼容边界的前提下进一步收紧执行成本。
+
+### 模块加载实测
+
+以下数据来自同一设备的 Vector/LSPosed 日志，只统计 `name.monwf.customiuizer.r14` 从开始加载到报告成功的时间：
+
+| 版本与启动周期 | 样本数 | 中位数 | 平均值 | 范围 |
+|---|---:|---:|---:|---:|
+| r14.1.3 第一次启动 | 8 | 11.5 ms | 18.9 ms | 5–51 ms |
+| r14.1.3 第二次启动 | 9 | 8 ms | 15.7 ms | 5–37 ms |
+| r14.2.0 正式版 | 9 | 8 ms | 22.8 ms | 5–81 ms |
+
+r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块入口有显著提速。平均值和长尾会受到目标进程启动负载影响；本版收益主要发生在加载完成后的高频 Hook 与长期运行阶段。
+
+## 版本演进与静态对比
+
+| 版本 | APK 大小 | 相对上一版 | 主要变化与性能定位 |
+|---|---:|---:|---|
+| [上游 v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) | 2,785,364 B | Android 14 基线 | 上游最后阶段的 Android 14 功能参考；API 100，保留联网权限和原版支持资源 |
+| [r14.0.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.0.0) | 2,901,900 B | +116,536 B | 建立独立 Android 14/API 101 版本线，加入类、方法、参数、资源与主题缓存 |
+| [r14.1.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.0) | 2,901,856 B | −44 B | 建立原生 API 101 `intercept(Chain)` 架构，优先迁移全局操作与控制模块 |
+| [r14.1.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.1) | 2,934,624 B | +32,768 B | 扩大原生拦截迁移范围，并通过实机故障确认 SystemUI 兼容层边界 |
+| [r14.1.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.2) | 2,934,628 B | +4 B | 隔离普通应用启动与 Xposed 类型，恢复稳定混合架构；以可靠性为主 |
+| [r14.1.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.3) | 2,886,250 B | −48,378 B | 有界线程池、受限图标缓存、FFT/Bitmap/GC 优化，并移除支持页面和网络权限；资源收益最大 |
+| [r14.2.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.0) | 2,886,165 B | −85 B | 优化偏好热路径、Hook 参数、反射、并发可见性与秒钟调度；长期运行细节最完整 |
+
+r14.2.0 比 r14.0.0 小 15,735 B，比 r14.1.2 小 48,463 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
+
+上游最新的 [v25.09.25](https://github.com/MonwF/customiuizer/releases/tag/v25.09.25) 已转向 Android 15 / HyperOS 2、目标 SDK 35，不能与本项目在 Android 14 上直接进行运行性能比较；本项目的有效上游基线仍是 v24.10.12。
+
+综合来看，r14.1.3 是实际资源治理幅度最大的一版，r14.2.0 是热路径和并发细节最完整的一版，r14.1.2 则是关键稳定性节点。具体耗电改善仍需在相同设备、相同功能开关和使用场景下通过 Perfetto 或 Batterystats 长时间对照，不能仅凭 APK 大小或 LSPosed 加载日志量化。
+
+完整版本记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 构建
 

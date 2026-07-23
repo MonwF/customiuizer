@@ -16,6 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class PrefMap extends ConcurrentHashMap<String, Object> {
     private static final String STORAGE_PREFIX = "pref_key_";
 
+    private final ConcurrentHashMap<String, CachedInt> parsedIntCache = new ConcurrentHashMap<>();
+
+    private static final class CachedInt {
+        final String raw;
+        final int value;
+
+        CachedInt(String raw, int value) {
+            this.raw = raw;
+            this.value = value;
+        }
+    }
+
     private static String normalizeStorageKey(String key) {
         return key.startsWith(STORAGE_PREFIX) ? key.substring(STORAGE_PREFIX.length()) : key;
     }
@@ -26,7 +38,9 @@ public final class PrefMap extends ConcurrentHashMap<String, Object> {
 
     @Override
     public Object put(String key, Object value) {
-        return super.put(normalizeStorageKey(key), value);
+        String normalized = normalizeStorageKey(key);
+        parsedIntCache.remove(normalized);
+        return super.put(normalized, value);
     }
 
     @Override
@@ -36,9 +50,12 @@ public final class PrefMap extends ConcurrentHashMap<String, Object> {
 
     @Override
     public Object remove(Object key) {
-        return key instanceof String
-            ? super.remove(normalizeStorageKey((String) key))
-            : null;
+        if (key instanceof String) {
+            String normalized = normalizeStorageKey((String) key);
+            parsedIntCache.remove(normalized);
+            return super.remove(normalized);
+        }
+        return null;
     }
 
     public int getInt(String key, int defaultValue) {
@@ -58,7 +75,17 @@ public final class PrefMap extends ConcurrentHashMap<String, Object> {
 
     public int getStringAsInt(String key, int defaultValue) {
         Object value = getValue(key);
-        return value == null ? defaultValue : Integer.parseInt((String) value);
+        if (value == null) return defaultValue;
+        if (value instanceof Number) return ((Number) value).intValue();
+
+        String raw = (String) value;
+        String normalized = normalizeStorageKey(key);
+        CachedInt cached = parsedIntCache.get(normalized);
+        if (cached != null && cached.raw.equals(raw)) return cached.value;
+
+        int parsed = Integer.parseInt(raw);
+        parsedIntCache.put(normalized, new CachedInt(raw, parsed));
+        return parsed;
     }
 
     @SuppressWarnings("unchecked")

@@ -65,7 +65,7 @@ public class ModuleHelper {
         ActivityThreadClass = null;
     }
 
-    private static final ConcurrentHashMap<String, Object> depInstanceCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, Object> depInstanceCache = new ConcurrentHashMap<>();
     private static Class<?> DependencyClass;
     private static java.lang.reflect.Method DependencyGetMethod;
 
@@ -345,17 +345,18 @@ public class ModuleHelper {
     }
 
     public static Object getDepInstance(ClassLoader classLoader, String className) {
-        String key = className + "@" + System.identityHashCode(classLoader);
-        Object cached = depInstanceCache.get(key);
-        if (cached != null) return cached;
         try {
+            Class<?> clazz = findClass(className, classLoader);
+            Object cached = depInstanceCache.get(clazz);
+            if (cached != null) return cached;
+
             if (DependencyClass == null || DependencyClass.getClassLoader() != classLoader) {
                 DependencyClass = findClass("com.android.systemui.Dependency", classLoader);
                 DependencyGetMethod = DependencyClass.getDeclaredMethod("get", Class.class);
                 DependencyGetMethod.setAccessible(true);
             }
-            Object instance = DependencyGetMethod.invoke(null, findClass(className, classLoader));
-            if (instance != null) depInstanceCache.put(key, instance);
+            Object instance = DependencyGetMethod.invoke(null, clazz);
+            if (instance != null) depInstanceCache.put(clazz, instance);
             return instance;
         } catch (Throwable t) {
             log(t);

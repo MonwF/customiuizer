@@ -57,6 +57,17 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
     private int mTintColor = Color.argb(153, 0, 0, 0);
     private Object mStatusBar = null;
 
+    private final ArgbEvaluator mArgbEvaluator = new ArgbEvaluator();
+    private final int[] mRainbowColors = new int[15];
+    private final float[] mRainbowPositions = new float[15];
+    private final float[] mHsv = new float[3];
+    private final float[] mCornerRadii = new float[8];
+    private final RectShape mRectShape = new RectShape();
+    private RoundRectShape mRoundRectShape;
+    private ShapeDrawable.ShaderFactory mRainbowShaderFactory;
+    private int mShapeHeight = -1;
+    private boolean mShapeRounded = false;
+
     enum ColorMode {
         DUMMY, DISCRETE, GRADUAL, RAINBOW
     }
@@ -309,6 +320,23 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
         matrix.setTranslate(0, 0);
         matrix.setScale(1, 1);
         this.setImageMatrix(new Matrix());
+        if (mColorMode == ColorMode.RAINBOW) {
+            updateRainbowColors();
+        }
+    }
+
+    private void updateRainbowColors() {
+        int steps = mRainbowColors.length;
+        float jump = 300f / (float) steps;
+        for (int i = 0; i < steps; i++) {
+            mRainbowPositions[i] = i / (float)(steps - 1);
+            float c = (mCentered ? 240 : 0) + jump * i;
+            if (c > 360) c -= 360;
+            mHsv[0] = c;
+            mHsv[1] = 1.0f;
+            mHsv[2] = 1.0f;
+            mRainbowColors[i] = Color.HSVToColor(255, mHsv);
+        }
     }
 
     protected void updateDrawable() {
@@ -346,30 +374,34 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
             int mDisplayPadding = Math.round(mPadding / 100f * this.mDisplayWidth);
 
             if (mColorMode == ColorMode.GRADUAL) {
-                color = level <= this.mLowLevel || (!this.mTesting && (this.mIsBeingCharged || this.mIsPowerSave || this.mIsExtremePowerSave)) ? color : (int)new ArgbEvaluator().evaluate(1f - (level - this.mLowLevel) / (100f - this.mLowLevel), color, mLowColor);
+                color = level <= this.mLowLevel || (!this.mTesting && (this.mIsBeingCharged || this.mIsPowerSave || this.mIsExtremePowerSave)) ? color : (int) mArgbEvaluator.evaluate(1f - (level - this.mLowLevel) / (100f - this.mLowLevel), color, mLowColor);
             } else if (mColorMode == ColorMode.RAINBOW) {
-                int steps = 15;
-                float jump = 300f / (float)steps;
-                float[] pos = new float[steps];
-                int[] rainbow = new int[steps];
-                for (int i = 0; i < steps; i++) {
-                    pos[i] = i / (float)(steps - 1);
-                    float c = (mCentered ? 240 : 0) + jump * i;
-                    if (c > 360) c -= 360;
-                    rainbow[i] = Color.HSVToColor(255, new float[]{ c, 1.0f, 1.0f});
+                if (mRainbowShaderFactory == null) {
+                    mRainbowShaderFactory = new ShapeDrawable.ShaderFactory() {
+                        @Override
+                        public Shader resize(int width, int height) {
+                            if (mCentered)
+                                return new LinearGradient(width / 2f - (mDisplayWidth - mDisplayPadding * 2) / 2f, height / 2f, (mDisplayWidth - mDisplayPadding * 2), height / 2f, mRainbowColors, mRainbowPositions, Shader.TileMode.CLAMP);
+                            else
+                                return new LinearGradient(0, height / 2f, (mDisplayWidth - mDisplayPadding * 2), height / 2f, mRainbowColors, mRainbowPositions, Shader.TileMode.CLAMP);
+                        }
+                    };
                 }
-                shape.setShaderFactory(new ShapeDrawable.ShaderFactory() {
-                    @Override
-                    public Shader resize(int width, int height) {
-                        if (mCentered)
-                            return new LinearGradient(width / 2f - (mDisplayWidth - mDisplayPadding * 2) / 2f, height / 2f, (mDisplayWidth - mDisplayPadding * 2), height / 2f, rainbow, pos, Shader.TileMode.CLAMP);
-                        else
-                            return new LinearGradient(0, height / 2f, (mDisplayWidth - mDisplayPadding * 2), height / 2f, rainbow, pos, Shader.TileMode.CLAMP);
-                    }
-                });
+                shape.setShaderFactory(mRainbowShaderFactory);
             }
             paint.setColor(color);
-            shape.setShape(mRounded ? new RoundRectShape(new float[] { mHeight, mHeight, mHeight, mHeight, mHeight, mHeight, mHeight, mHeight }, null, null) : new RectShape());
+            if (mRounded) {
+                if (!mShapeRounded || mHeight != mShapeHeight) {
+                    java.util.Arrays.fill(mCornerRadii, mHeight);
+                    mRoundRectShape = new RoundRectShape(mCornerRadii, null, null);
+                    mShapeHeight = mHeight;
+                    mShapeRounded = true;
+                }
+                shape.setShape(mRoundRectShape);
+            } else {
+                shape.setShape(mRectShape);
+                mShapeRounded = false;
+            }
 
             int mWidth = Math.round((this.mDisplayWidth - mDisplayPadding * 2) * level / 100f);
             float mDensity = getResources().getDisplayMetrics().density;
