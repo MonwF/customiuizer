@@ -121,7 +121,7 @@ public class SystemUI {
     private final static int textIconTagId = ResourceHooks.getFakeResId("text_icon_tag");
     private final static int viewInitedTag = ResourceHooks.getFakeResId("view_inited_tag");
     public static void setupStatusBar(Context mContext) {
-        Settings.System.putLong(mContext.getContentResolver(), "systemui_restart_time", java.lang.System.currentTimeMillis());
+        Helpers.getSystemSharedPrefs(mContext).edit().putLong("systemui_restart_time", java.lang.System.currentTimeMillis()).apply();
         if (!hasStatusBarModifications()) return;
         statusbarTextIconLayoutResId = MainModule.resHooks.addFakeResource("statusbar_text_icon", R.layout.statusbar_text_icon, "layout");
         if (MainModule.mPrefs.getBoolean("system_statusbar_topmargin")) {

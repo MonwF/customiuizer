@@ -7,6 +7,25 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.6.0
+
+发布日期：2026-07-24。状态：**候选版，D 类废弃 API / 权限迁移；构建产物通过 `assembleRelease` 待验证；实机验证待补充**。 
+
+### D 类废弃 API / 权限迁移
+
+- **Settings.System 自定义键迁移到应用 SharedPreferences**：`last_music_paused_time`（`GlobalActions` 写 / 读）、`systemui_restart_time`（`SystemUI` 写 / `MainModule` 读）、`dark_mode_enable_by_setting`（`GlobalActions` 写）统一使用 `Helpers.getSystemSharedPrefs()`，避免继续写入 `Settings.System`。
+- **PendingIntent flag 兼容**：源码中当前未出现模块自身构造的 `PendingIntent.get*()` 调用，已在 `Helpers` 新增 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent`，后续新增 PendingIntent 时统一补齐 `FLAG_IMMUTABLE` / `FLAG_MUTABLE`。
+- **通知渠道与权限声明**：`MainApplication.onCreate` 创建默认 `NotificationChannel`（ID `customiuizer_default`，低重要性）；`AndroidManifest.xml` 补齐 `WAKE_LOCK` 与 `POST_NOTIFICATIONS` 权限。
+
+### 构建产物验证
+
+- `versionCode` 160 / `versionName` r14.6.0。
+- 签名证书与 r14.5.0 一致；包名不变，可直接覆盖升级。
+
+### 实机验证
+
+- 待完整重启后补充 LSPosed 日志与功能回归结果；因涉及 Settings 键迁移与权限声明，需逐项 ROM 验证。
+
 ## r14.5.0
 
 发布日期：2026-07-24。状态：**稳定版，构建产物通过 `assembleRelease`，完整重启后日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`**。

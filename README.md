@@ -16,7 +16,7 @@
 |---|---|
 | 当前稳定版 | r14.5.0 |
 | 上一稳定版 | r14.3.1 |
-| 当前候选版 | 无 |
+| 当前候选版 | r14.6.0 |
 | 应用名 | 米客 A14 |
 | 包名 | `tv.withaibuild.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -25,7 +25,7 @@
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 | 包名变更记录 | 已完成：源码目录/Java 包名/清单/Gradle 全量迁移至 `tv.withaibuild.customiuizer.r14` |
 
-r14.5.0 已完成构建、签名、包名迁移与完整重启验证，为当前推荐稳定版；因包名已变更，升级前请先卸载旧包名模块并重新启用作用域。r14.3.1 为上一稳定版，该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.5.0 已完成构建、签名、包名迁移与完整重启验证，为当前推荐稳定版；因包名已变更，升级前请先卸载旧包名模块并重新启用作用域。r14.6.0 为当前候选版，正在进行 D 类废弃 API / 权限迁移（Settings.System 自定义键迁移、PendingIntent flag 兼容辅助、通知渠道与权限声明），实机验证待补充。r14.3.1 为上一稳定版，该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -140,6 +140,7 @@ r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15
 | [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 热路径缓存、反射哨兵、生命周期治理、无效 Hook 与 BroadcastReceiver 防重注册（含 r14.2.1-r14.2.3 累积） |
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期与秒针接收者治理 |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
+| [r14.6.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.0) | 2,900,237 B | +13,864 B | D 类废弃 API / 权限迁移：Settings.System 自定义键迁移、PendingIntent flag 兼容辅助、通知渠道与 WAKE_LOCK/POST_NOTIFICATIONS 权限声明（候选版，实机验证待补充） |
 | [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 2,886,373 B | +208 B | 包名迁移至 `tv.withaibuild.customiuizer.r14`，包含 A/B/C 静态清理、生命周期加固与 `getResId()` 热路径缓存（稳定版，已通过完整重启验证，日志无模块相关 AndroidRuntime/FATAL/am_crash/am_anr） |
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 在 r14.3.0 功能关闭零成本与 WeatherDataController 线程治理基础上，修复锁屏充电数据去重、lint 清理与依赖更新 |
 

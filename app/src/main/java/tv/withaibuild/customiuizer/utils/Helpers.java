@@ -32,6 +32,8 @@ import android.os.IBinder;
 import android.os.PowerManager.WakeLock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.app.PendingIntent;
+import android.content.SharedPreferences;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -162,6 +164,32 @@ public class Helpers {
 
     public static boolean isNightMode(Context context) {
         return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    private static SharedPreferences systemSharedPrefs;
+    public static synchronized SharedPreferences getSystemSharedPrefs(Context context) {
+        if (systemSharedPrefs == null) {
+            try {
+                Context moduleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
+                systemSharedPrefs = moduleContext.getSharedPreferences("customiuizer_system", Context.MODE_PRIVATE);
+            } catch (Throwable t) {
+                XposedHelpers.log(t);
+                systemSharedPrefs = context.getSharedPreferences("customiuizer_system", Context.MODE_PRIVATE);
+            }
+        }
+        return systemSharedPrefs;
+    }
+
+    public static PendingIntent getMutableActivityPendingIntent(Context context, int requestCode, Intent intent) {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) flags |= PendingIntent.FLAG_MUTABLE;
+        return PendingIntent.getActivity(context, requestCode, intent, flags);
+    }
+
+    public static PendingIntent getImmutableActivityPendingIntent(Context context, int requestCode, Intent intent) {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+        return PendingIntent.getActivity(context, requestCode, intent, flags);
     }
 
     public static boolean isDeviceEncrypted(Context context) {
