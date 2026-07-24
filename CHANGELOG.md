@@ -9,7 +9,7 @@
 
 ## r14.5.0
 
-发布日期：2026-07-24。状态：**候选版，构建产物通过 `assembleRelease`，完整重启后日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`**。
+发布日期：2026-07-24。状态：**稳定版，构建产物通过 `assembleRelease`，完整重启后日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`**。
 
 ### 包名与工程结构迁移
 
