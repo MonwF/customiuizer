@@ -7,9 +7,9 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.5.0 — 包名迁移至 tv.withaibuild.customiuizer.r14
+## r14.5.0
 
-发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 / r14.4.0 升级；实机验证待补充**。
+发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 升级；实机验证待补充**。
 
 ### 包名与工程结构迁移
 
@@ -17,27 +17,6 @@
 - 所有 Java `package`/`import`、XML 组件 `android:name`、Preference 屏幕 `class`、Shortcuts `targetClass`/`targetPackage`、Tasker 组件、`proguard-rules.pro` 的 keep 规则统一替换为 `tv.withaibuild.customiuizer`。
 - `app/build.gradle`：`namespace` 与 `applicationId` 同步改为 `tv.withaibuild.customiuizer` / `tv.withaibuild.customiuizer.r14`；`versionCode` 150 / `versionName` r14.5.0。
 - `META-INF/xposed/java_init.list` 入口类改为 `tv.withaibuild.customiuizer.MainModule`。
-
-### 继承 r14.4.0 的 A/B/C 优化
-
-- **A 类静态清理**：`String.format(Locale.US, ...)` / `toLowerCase(Locale.ROOT)`、`SharedPreferences.apply()`、`new Handler(Looper.getMainLooper())`。
-- **B 类生命周期加固**：缺少导出标志的 `registerReceiver(..., IntentFilter)` 补齐 `RECEIVER_EXPORTED` / `RECEIVER_NOT_EXPORTED`。
-- **C 类性能缓存**：`Helpers.getResId()` 缓存；`System.java` / `SystemUI.java` 收敛高频 `getIdentifier()`。
-
-### 构建产物验证
-
-- `versionCode` 150 / `versionName` r14.5.0。
-- APK：`CustoMIUIzer-A14-r14.5.0.apk`，2,886,373 bytes，SHA-256: `DCB9EBC4BBE7AEE721B58F83B5371E1030AD7CAB0C4FE6CC4EAD900C420E8C93`。
-- 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.3.1 / r14.4.0 一致，包名不同不能覆盖安装旧包名版本，需先卸载旧模块并重新启用作用域。
-
-### 实机验证
-
-- 待构建完成后补充完整重启日志与功能回归结果。
-
-## r14.4.0 — A/B/C 静态清理、生命周期加固与资源 ID 热路径缓存
-
-发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 升级；实机验证待补充**。
 
 ### A 类静态清理
 
@@ -61,10 +40,10 @@
 
 ### 构建产物验证
 
-- `versionCode` 140 / `versionName` r14.4.0。
-- APK：`CustoMIUIzer-A14-r14.4.0.apk`，2,886,165 bytes，SHA-256: `568F2C4F6DCBD50F0DE05743834DE048F5246F9BFCE025B0BE3C01251625F360`。
+- `versionCode` 150 / `versionName` r14.5.0。
+- APK：`CustoMIUIzer-A14-r14.5.0.apk`，2,886,373 bytes，SHA-256: `DCB9EBC4BBE7AEE721B58F83B5371E1030AD7CAB0C4FE6CC4EAD900C420E8C93`。
 - 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.3.1 一致，可直接覆盖升级。
+- 签名证书与 r14.3.1 一致，包名不同不能覆盖安装旧包名版本，需先卸载旧模块并重新启用作用域。
 
 ### 实机验证
 
