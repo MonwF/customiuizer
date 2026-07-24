@@ -1284,6 +1284,14 @@ public class System {
             	return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
+        final ThreadLocal<StringBuilder> clockFormatBuilder = new ThreadLocal<StringBuilder>() {
+            @Override
+            protected StringBuilder initialValue() { return new StringBuilder(32); }
+        };
+        final ThreadLocal<StringBuilder> clockTextBuilder = new ThreadLocal<StringBuilder>() {
+            @Override
+            protected StringBuilder initialValue() { return new StringBuilder(32); }
+        };
         MethodHook updateTimeHook = new MethodHook(XposedInterface.PRIORITY_HIGHEST) {
             @Override
                         public Object intercept(XposedInterface.Chain chain) throws Throwable {
@@ -1350,7 +1358,10 @@ public class System {
             		                        int fmtResId = Helpers.getResId(mContext.getResources(), fmt, "string", "com.android.systemui");
             		                        timeFmt = mContext.getString(fmtResId);
             		                        if (showSeconds) {
-            		                            timeFmt = timeFmt.replaceFirst(":mm", ":mm:ss");
+            		                            int mmIdx = timeFmt.indexOf(":mm");
+            		                            if (mmIdx >= 0) {
+            		                                timeFmt = timeFmt.substring(0, mmIdx) + ":mm:ss" + timeFmt.substring(mmIdx + 3);
+            		                            }
             		                        }
             		                        String hourStr = "h";
             		                        if (is24) {
@@ -1359,16 +1370,22 @@ public class System {
             		                        if (hourIn2d) {
             		                            hourStr = hourStr + hourStr;
             		                        }
-            		                        timeFmt = timeFmt.replaceFirst("h+:", hourStr + ":");
+            		                        int colonIdx = timeFmt.indexOf(':');
+            		                        if (colonIdx > 0) {
+            		                            timeFmt = hourStr + timeFmt.substring(colonIdx);
+            		                        }
             		                    }
             		                }
             		                if (timeFmt != null) {
             		                    if (enableWeatherParam) {
             		                        String weatherInfo = WeatherDataController.weatherInfo;
-            		                        timeFmt = timeFmt.replace("tq", weatherInfo);
+            		                        if (weatherInfo != null) timeFmt = timeFmt.replace("tq", weatherInfo);
             		                    }
-            		                    StringBuilder formatSb = new StringBuilder(timeFmt);
-            		                    StringBuilder textSb = new StringBuilder();
+            		                    StringBuilder formatSb = clockFormatBuilder.get();
+            		                    formatSb.setLength(0);
+            		                    formatSb.append(timeFmt);
+            		                    StringBuilder textSb = clockTextBuilder.get();
+            		                    textSb.setLength(0);
             		                    XposedHelpers.callMethod(mCalendar, "format", mContext, textSb, formatSb);
             		                    clock.setText(textSb.toString());
             		                    { skipped = true; result = null; throwable = null; }

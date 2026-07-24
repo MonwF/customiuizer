@@ -1116,9 +1116,9 @@ public class SystemUI {
             MainModule.resHooks.setThemeValueReplacement("com.android.systemui", "dimen", "status_bar_mobile_type_middle_to_strength_start", -0.4f);
         }
 
-        HashMap<String, Integer> dualSignalResMap = new HashMap<String, Integer>();
-        String[] colorModeList = {"", "dark", "tint"};
-        String selectedIconStyle = MainModule.mPrefs.getString("system_statusbar_dualsimin2rows_style", "");
+        final String[] colorModeList = {"", "dark", "tint"};
+        final int[][][] fakeSignalResIds = new int[2][6][3];
+        final String selectedIconStyle = MainModule.mPrefs.getString("system_statusbar_dualsimin2rows_style", "");
 
         ModuleHelper.findAndHookMethod("com.android.systemui.SystemUIApplication", lpparam.getClassLoader(), "onCreate", new MethodHook() {
             private boolean isHooked = false;
@@ -1130,11 +1130,12 @@ public class SystemUI {
                     Resources modRes = ModuleHelper.getModuleRes(mContext);
                     for (int slot = 1; slot <= 2; slot++) {
                         for (int lvl = 0; lvl <= 5; lvl++) {
-                            for (String colorMode : colorModeList) {
+                            for (int c = 0; c < colorModeList.length; c++) {
+                                String colorMode = colorModeList[c];
                                 if (!selectedIconStyle.equals("theme") || !colorMode.equals("tint") ) {
                                     String dualIconResName = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.isEmpty() ? ("_" + colorMode) : "") + (!selectedIconStyle.isEmpty() ? ("_" + selectedIconStyle) : "");
                                     int iconResId = Helpers.getResId(modRes, dualIconResName, "drawable", Helpers.modulePkg);
-                                    dualSignalResMap.put(dualIconResName, MainModule.resHooks.addFakeResource(dualIconResName, iconResId, "drawable"));
+                                    fakeSignalResIds[slot - 1][lvl][c] = MainModule.resHooks.addFakeResource(dualIconResName, iconResId, "drawable");
                                 }
                             }
                         }
@@ -1237,23 +1238,17 @@ public class SystemUI {
                 boolean mUseTint = XposedHelpers.getBooleanField(param.getThisObject(), "mUseTint");
                 Object mSmallRoaming = XposedHelpers.getObjectField(param.getThisObject(), "mSmallRoaming");
                 Object mMobile = XposedHelpers.getObjectField(param.getThisObject(), "mMobile");
-                String colorMode = "";
+                int colorIdx;
                 if (mUseTint && !selectedIconStyle.equals("theme")) {
-                    colorMode = "_tint";
+                    colorIdx = 2;
+                } else if (!mLight) {
+                    colorIdx = 1;
+                } else {
+                    colorIdx = 0;
                 }
-                else if (!mLight) {
-                    colorMode = "_dark";
-                }
-                String iconStyle = "";
-                if (!selectedIconStyle.isEmpty()) {
-                    iconStyle = "_" + selectedIconStyle;
-                }
-                String sim1IconId = "statusbar_signal_1_" + mainLevel + colorMode + iconStyle;
-                String sim2IconId = "statusbar_signal_2_" + subLevel + colorMode + iconStyle;
-                Integer sim1ResId = dualSignalResMap.get(sim1IconId);
-                Integer sim2ResId = dualSignalResMap.get(sim2IconId);
-                if (sim1ResId == null || sim1ResId == 0 || sim2ResId == null || sim2ResId == 0
-                    || mMobile == null || mSmallRoaming == null) return;
+                int sim1ResId = fakeSignalResIds[0][mainLevel][colorIdx];
+                int sim2ResId = fakeSignalResIds[1][subLevel][colorIdx];
+                if (sim1ResId == 0 || sim2ResId == 0 || mMobile == null || mSmallRoaming == null) return;
                 XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
                 XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
             }

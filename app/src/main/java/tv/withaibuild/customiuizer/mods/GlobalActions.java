@@ -34,6 +34,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.MiuiMultiWindowUtils;
+import android.util.SparseBooleanArray;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
@@ -651,25 +652,43 @@ public class GlobalActions {
         "system_lockscreenshortcuts_left", "system_lockscreenshortcuts_right"
     };
 
-    public static boolean hasCustomActions() {
-        for (String key : customActionKeys) {
-            if (MainModule.mPrefs.getInt(key + "_action", 1) > 1) return true;
+    private static volatile SparseBooleanArray customActionCodeMap = null;
+    private static volatile SparseBooleanArray customToggleMap = null;
+    private static volatile boolean customActionsReady = false;
+
+    private static void ensureCustomActionMaps() {
+        if (customActionsReady) return;
+        synchronized (GlobalActions.class) {
+            if (customActionsReady) return;
+            SparseBooleanArray actionMap = new SparseBooleanArray();
+            SparseBooleanArray toggleMap = new SparseBooleanArray();
+            for (String key : customActionKeys) {
+                int action = MainModule.mPrefs.getInt(key + "_action", 1);
+                if (action > 1) actionMap.put(action, true);
+                if (action == 10) {
+                    int toggle = MainModule.mPrefs.getInt(key + "_toggle", 0);
+                    if (toggle > 0) toggleMap.put(toggle, true);
+                }
+            }
+            customActionCodeMap = actionMap;
+            customToggleMap = toggleMap;
+            customActionsReady = true;
         }
-        return false;
+    }
+
+    public static boolean hasCustomActions() {
+        ensureCustomActionMaps();
+        return customActionCodeMap.size() > 0;
     }
 
     public static boolean hasActionCode(int code) {
-        for (String key : customActionKeys) {
-            if (MainModule.mPrefs.getInt(key + "_action", 1) == code) return true;
-        }
-        return false;
+        ensureCustomActionMaps();
+        return customActionCodeMap.get(code);
     }
 
     public static boolean hasToggle(int what) {
-        for (String key : customActionKeys) {
-            if (MainModule.mPrefs.getInt(key + "_action", 1) == 10 && MainModule.mPrefs.getInt(key + "_toggle", 0) == what) return true;
-        }
-        return false;
+        ensureCustomActionMaps();
+        return customToggleMap.get(what);
     }
 
     public static void setupGlobalActions(XposedModuleInterface.SystemServerStartingParam lpparam) {
