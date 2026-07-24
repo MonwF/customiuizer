@@ -23,6 +23,7 @@
 | Hook 接口 | libxposed API 101 |
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
+| 下一版规划 | **r14.5.0**：包名 `name.monwf.customiuizer.r14` → `tv.withaibuild.customiuizer.r14`；仍保持 `米客 A14` / HyperOS 1 / Android 14 / libxposed API 101 |
 
 r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版。该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
