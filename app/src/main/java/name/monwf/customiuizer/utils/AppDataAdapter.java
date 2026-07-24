@@ -245,7 +245,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 	private class ItemFilter extends Filter {
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			String filterString = constraint.toString().toLowerCase();
+			String filterString = constraint.toString().toLowerCase(Locale.ROOT);
 			FilterResults results = new FilterResults();
 
 			int count = originalAppList.size();
@@ -254,8 +254,8 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if (aType == AppHelper.AppAdapterType.Activities && filterableData.actName.toLowerCase().contains(filterString)) nlist.add(filterableData);
-				else if ((aType == AppHelper.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if (aType == AppHelper.AppAdapterType.Activities && filterableData.actName.toLowerCase(Locale.ROOT).contains(filterString)) nlist.add(filterableData);
+				else if ((aType == AppHelper.AppAdapterType.Standalone && filterableData.pkgName.equals("") && filterableData.actName.equals("")) || filterableData.label.toLowerCase(Locale.ROOT).contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;

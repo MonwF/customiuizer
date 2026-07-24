@@ -65,6 +65,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import java.util.concurrent.ConcurrentHashMap;
 import miui.util.HapticFeedbackUtil;
 import name.monwf.customiuizer.BuildConfig;
 import name.monwf.customiuizer.PrefsProvider;
@@ -1082,4 +1083,15 @@ public class Helpers {
         return lerp(f, f2, constrain(norm <= R ? sq(norm / R) : exp((norm - C) / A) + B, 0.0f, 12.0f) / 12.0f);
     }
 
+    private static final ConcurrentHashMap<String, Integer> resIdCache = new ConcurrentHashMap<>();
+
+    public static int getResId(Resources res, String name, String defType, String defPackage) {
+        if (res == null || name == null || defType == null || defPackage == null) return 0;
+        String key = defPackage + ":" + defType + "/" + name;
+        Integer cached = resIdCache.get(key);
+        if (cached != null) return cached;
+        int id = res.getIdentifier(name, defType, defPackage);
+        resIdCache.put(key, id);
+        return id;
+    }
 }

@@ -97,7 +97,7 @@ public class Controls {
 					final Object thisObject = chain.getThisObject();
 
 									Context mContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
-									mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+									mContext.registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON), Context.RECEIVER_NOT_EXPORTED);
 
 				} catch (Throwable t) {
 					XposedHelpers.log(t);

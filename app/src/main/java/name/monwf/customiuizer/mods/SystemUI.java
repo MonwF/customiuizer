@@ -366,7 +366,7 @@ public class SystemUI {
                                             rawCurr = Math.abs(rawCurr);
                                         }
                                         if (Math.abs(rawCurr) > 999) {
-                                            currVal = String.format("%.2f", rawCurr / 1000f);
+                                            currVal = String.format(Locale.US, "%.2f", rawCurr / 1000f);
                                             preferred = "A";
                                         } else {
                                             currVal = String.valueOf(rawCurr);
@@ -382,7 +382,7 @@ public class SystemUI {
                                         if (!TextUtils.isEmpty(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW"))) {
                                             voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
                                         }
-                                        simpleWatt = String.format(Locale.getDefault(), "%.2f", Math.abs(voltVal * rawCurr) / 1000);
+                                        simpleWatt = String.format(Locale.US, "%.2f", Math.abs(voltVal * rawCurr) / 1000);
                                     }
                                     if (opt == 1) {
                                         String splitChar = mPrefs.getBoolean("system_statusbar_batterytempandcurrent_singlerow") ? " " : "\n";
@@ -413,8 +413,8 @@ public class SystemUI {
                                 if (showDeviceTemp && props != null && cpuProps != null) {
                                     int batteryTempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
                                     int cpuTempVal = Integer.parseInt(cpuProps);
-                                    String simpleBatteryTemp = String.format(Locale.getDefault(), "%.1f", batteryTempVal / 10f);
-                                    String simpleCpuTemp = String.format(Locale.getDefault(), "%.1f", cpuTempVal / 1000f);
+                                    String simpleBatteryTemp = String.format(Locale.US, "%.1f", batteryTempVal / 10f);
+                                    String simpleCpuTemp = String.format(Locale.US, "%.1f", cpuTempVal / 1000f);
                                     int opt = mPrefs.getStringAsInt("system_statusbar_showdevicetemperature_content", 1);
                                     boolean hideUnit = mPrefs.getBoolean("system_statusbar_showdevicetemperature_hideunit");
                                     String tempUnit = hideUnit ? "" : "℃";
@@ -466,7 +466,7 @@ public class SystemUI {
         }
         TextView iconTextView = getIconTextView(iconView);
         Resources res = mContext.getResources();
-        int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
+        int styleId = Helpers.getResId(res, "TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
         iconTextView.setTextAppearance(styleId);
         String subKey = "";
         if (iconType == 91) {
@@ -538,7 +538,7 @@ public class SystemUI {
                 if (!isListened) {
                     isListened = true;
                     Context mContext = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
-                    int stockTilesResId = mContext.getResources().getIdentifier("miui_quick_settings_tiles_stock", "string", lpparam.getPackageName());
+                    int stockTilesResId = Helpers.getResId(mContext.getResources(), "miui_quick_settings_tiles_stock", "string", lpparam.getPackageName());
                     String stockTiles = mContext.getString(stockTilesResId);
                     if (enable5G) {
                         stockTiles = stockTiles  + ",custom_5G";
@@ -870,7 +870,7 @@ public class SystemUI {
                     firstRight.addView(child, 0);
                 }
 
-                int resSystemIconsId = sbView.getResources().getIdentifier("system_icons", "id", lpparam.getPackageName());
+                int resSystemIconsId = Helpers.getResId(sbView.getResources(), "system_icons", "id", lpparam.getPackageName());
                 rightLayout.setId(resSystemIconsId);
 
                 boolean showBatteryDetail = MainModule.mPrefs.getBoolean("system_statusbar_batterytempandcurrent");
@@ -907,7 +907,7 @@ public class SystemUI {
                             Object networkSpeedState = param.getArgs()[0];
                             if (networkSpeedView == null) {
                                 Context mContext = secondRight.getContext();
-                                int layoutResId = mContext.getResources().getIdentifier("network_speed", "layout", "com.android.systemui");
+                                int layoutResId = Helpers.getResId(mContext.getResources(), "network_speed", "layout", "com.android.systemui");
                                 networkSpeedView = LayoutInflater.from(mContext).inflate(layoutResId, (ViewGroup) null);
                                 secondRight.addView(networkSpeedView, 0, new LinearLayout.LayoutParams(-2, -2));
                                 Object DarkIconDispatcher = ModuleHelper.getDepInstance(lpparam.getClassLoader(), "com.android.systemui.plugins.DarkIconDispatcher");
@@ -955,7 +955,7 @@ public class SystemUI {
 
     private static void initDigitalSignalView(Context mContext, TextView digitalTextView) {
         Resources res = mContext.getResources();
-        int styleId = res.getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
+        int styleId = Helpers.getResId(res, "TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
         digitalTextView.setTextAppearance(styleId);
         String subKey = "mobile_digital_signal";
         float fontSize = MainModule.mPrefs.getInt("system_statusbar_" + subKey + "_fontsize", 26) * 0.5f;
@@ -1133,7 +1133,7 @@ public class SystemUI {
                             for (String colorMode : colorModeList) {
                                 if (!selectedIconStyle.equals("theme") || !colorMode.equals("tint") ) {
                                     String dualIconResName = "statusbar_signal_" + slot + "_" + lvl + (!colorMode.isEmpty() ? ("_" + colorMode) : "") + (!selectedIconStyle.isEmpty() ? ("_" + selectedIconStyle) : "");
-                                    int iconResId = modRes.getIdentifier(dualIconResName, "drawable", Helpers.modulePkg);
+                                    int iconResId = Helpers.getResId(modRes, dualIconResName, "drawable", Helpers.modulePkg);
                                     dualSignalResMap.put(dualIconResName, MainModule.resHooks.addFakeResource(dualIconResName, iconResId, "drawable"));
                                 }
                             }
@@ -1153,13 +1153,13 @@ public class SystemUI {
                     isHooked = true;
                     Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                     Resources res = mContext.getResources();
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_0", "drawable", lpparam.getPackageName()), 0);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_1", "drawable", lpparam.getPackageName()), 1);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_2", "drawable", lpparam.getPackageName()), 2);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_3", "drawable", lpparam.getPackageName()), 3);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_4", "drawable", lpparam.getPackageName()), 4);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_5", "drawable", lpparam.getPackageName()), 5);
-                    signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_null", "drawable", lpparam.getPackageName()), 6);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_0", "drawable", lpparam.getPackageName()), 0);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_1", "drawable", lpparam.getPackageName()), 1);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_2", "drawable", lpparam.getPackageName()), 2);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_3", "drawable", lpparam.getPackageName()), 3);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_4", "drawable", lpparam.getPackageName()), 4);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_5", "drawable", lpparam.getPackageName()), 5);
+                    signalResToLevelMap.put(Helpers.getResId(res, "stat_sys_signal_null", "drawable", lpparam.getPackageName()), 6);
                 }
                 List<?> iconStates = (List<?>) param.getArgs()[1];
                 if (iconStates.size() == 2) {
@@ -1541,7 +1541,7 @@ public class SystemUI {
                             sbView.setPadding(0, topPadding, 0, bottomPadding);
                             View focusedNotifView = sbView.findViewWithTag("focused_notif_view");
                             if (focusedNotifView == null) {
-                                int focusedNotifViewResId = sbView.getResources().getIdentifier("focused_notif_view", "id", "com.android.systemui");
+                                int focusedNotifViewResId = Helpers.getResId(sbView.getResources(), "focused_notif_view", "id", "com.android.systemui");
                                 if (focusedNotifViewResId > 0) {
                                     focusedNotifView = sbView.findViewById(focusedNotifViewResId);
                                     focusedNotifView.setTag("focused_notif_view");
@@ -1626,7 +1626,7 @@ public class SystemUI {
                 f /= 1024.0f;
             }
             char pre = modRes.getString(R.string.speedunits).charAt(expIndex);
-            return (f < 100.0f ? String.format("%.1f", f) : String.format("%.0f", f)) + String.format("%s" + unitSuffix, pre);
+            return (f < 100.0f ? String.format(Locale.US, "%.1f", f) : String.format(Locale.US, "%.0f", f)) + String.format(Locale.US, "%s" + unitSuffix, pre);
         } catch (Throwable t) {
             XposedHelpers.log(t);
             return "";
@@ -1818,7 +1818,7 @@ public class SystemUI {
                     if (!"slot_text_icon".equals(speedView.getTag())) {
                         TextView numberView = getIconTextView(speedView);
                         TextView unitView = (TextView)XposedHelpers.getObjectField(speedView, "mNetworkSpeedUnitText");
-                        int styleId = speedView.getResources().getIdentifier("TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
+                        int styleId = Helpers.getResId(speedView.getResources(), "TextAppearance.StatusBar.Clock", "style", "com.android.systemui");
                         numberView.setTextAppearance(styleId);
                         int speedStyle = MainModule.mPrefs.getStringAsInt("system_detailednetspeed_style", 1);
                         if (speedStyle == 1) {
@@ -2098,7 +2098,7 @@ public class SystemUI {
             protected void after(final AfterHookCallback param) throws Throwable {
                 ViewGroup headerView = (ViewGroup) XposedHelpers.callMethod(param.getThisObject(), "getView");
                 if (hideOperator || hideDelimiter) {
-                    int resId = headerView.getResources().getIdentifier("header_carrier_view", "id", "miui.systemui.plugin");
+                    int resId = Helpers.getResId(headerView.getResources(), "header_carrier_view", "id", "miui.systemui.plugin");
                     TextView mCarrierText = headerView.findViewById(resId);
                     if (hideOperator) {
                         mCarrierText.setText("");
@@ -2149,7 +2149,7 @@ public class SystemUI {
                         stepView = new TextView(headerView.getContext());
                         stepView.setId(stepViewId);
                         Resources res = headerView.getResources();
-                        int styleId = res.getIdentifier("TextAppearance.Header.Text", "style", "miui.systemui.plugin");
+                        int styleId = Helpers.getResId(res, "TextAppearance.Header.Text", "style", "miui.systemui.plugin");
                         stepView.setTextAppearance(styleId);
                         stepView.setTag(tag);
                         headerView.addView(stepView);
@@ -2170,9 +2170,9 @@ public class SystemUI {
                         Class<?> ConstraintSetClass = pluginLoader.loadClass("androidx.constraintlayout.widget.ConstraintSet");
                         Object constraintSet = XposedHelpers.newInstance(ConstraintSetClass);
                         XposedHelpers.callMethod(constraintSet, "clone", headerView);
-                        int carrierId = headerView.getResources().getIdentifier("header_carrier_view", "id", "miui.systemui.plugin");
-                        int iconsId = headerView.getResources().getIdentifier("header_status_bar_icons", "id", "miui.systemui.plugin");
-                        int dimId = headerView.getResources().getIdentifier("header_carrier_vertical_mode_margin_bottom", "dimen", "miui.systemui.plugin");
+                        int carrierId = Helpers.getResId(headerView.getResources(), "header_carrier_view", "id", "miui.systemui.plugin");
+                        int iconsId = Helpers.getResId(headerView.getResources(), "header_status_bar_icons", "id", "miui.systemui.plugin");
+                        int dimId = Helpers.getResId(headerView.getResources(), "header_carrier_vertical_mode_margin_bottom", "dimen", "miui.systemui.plugin");
                         int marginBottom = headerView.getResources().getDimensionPixelSize(dimId);
                         XposedHelpers.callMethod(constraintSet, "connect", stepViewId, 4, iconsId, 3, marginBottom);
                         XposedHelpers.callMethod(constraintSet, "connect", stepViewId, 7, carrierId, 6, (int)Helpers.dp2px(4));
@@ -2231,7 +2231,7 @@ public class SystemUI {
             @Override
             protected void after(AfterHookCallback param) throws Throwable {
                 FrameLayout thisView = (FrameLayout) param.getThisObject();
-                int resId = thisView.getResources().getIdentifier("icon_frame", "id", "miui.systemui.plugin");
+                int resId = Helpers.getResId(thisView.getResources(), "icon_frame", "id", "miui.systemui.plugin");
                 View iconFrame = thisView.findViewById(resId);
                 int iconSize = (int) Helpers.dp2px(68f * iconScaleRatio);
                 iconFrame.getLayoutParams().width = iconSize;
@@ -2278,7 +2278,7 @@ public class SystemUI {
                 }
                 else {
                     horizontalMainPanel.addView(leftMainPanel, 0);
-                    int marginId = horizontalMainPanel.getResources().getIdentifier("control_center_horizontal_margin_center", "dimen", "miui.systemui.plugin");
+                    int marginId = Helpers.getResId(horizontalMainPanel.getResources(), "control_center_horizontal_margin_center", "dimen", "miui.systemui.plugin");
                     int marginEnd = horizontalMainPanel.getResources().getDimensionPixelSize(marginId);
                     XposedHelpers.setObjectField(param.getThisObject(), "panelMargin", marginEnd);
                     ViewGroup.LayoutParams layoutParams = leftMainPanel.getLayoutParams();
@@ -2525,9 +2525,9 @@ public class SystemUI {
             protected void after(final AfterHookCallback param) throws Throwable {
                 Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                 String[] mTimeSegmentTitle = new String[11];
-                int timerOffId = mContext.getResources().getIdentifier("timer_off", "string", "miui.systemui.plugin");
-                int minuteId = mContext.getResources().getIdentifier("timer_30_minutes", "string", "miui.systemui.plugin");
-                int hourId = mContext.getResources().getIdentifier("timer_1_hour", "string", "miui.systemui.plugin");
+                int timerOffId = Helpers.getResId(mContext.getResources(), "timer_off", "string", "miui.systemui.plugin");
+                int minuteId = Helpers.getResId(mContext.getResources(), "timer_30_minutes", "string", "miui.systemui.plugin");
+                int hourId = Helpers.getResId(mContext.getResources(), "timer_1_hour", "string", "miui.systemui.plugin");
                 mTimeSegmentTitle[0] = mContext.getResources().getString(timerOffId);
                 mTimeSegmentTitle[1] = mContext.getResources().getString(minuteId, 30);
                 mTimeSegmentTitle[2] = mContext.getResources().getString(hourId, 1);
@@ -2551,12 +2551,12 @@ public class SystemUI {
                 Object mTimerSeekbarWidth = ModuleHelper.getObjectFieldSilently(param.getThisObject(), "mTimerSeekbarWidth");
                 int seekbarWidthResId;
                 if (ModuleHelper.NOT_EXIST_SYMBOL.equals(mTimerSeekbarWidth)) {
-                    seekbarWidthResId = mContext.getResources().getIdentifier("miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin");
+                    seekbarWidthResId = Helpers.getResId(mContext.getResources(), "miui_volume_timer_seelbar_width", "dimen", "miui.systemui.plugin");
                 }
                 else {
                     seekbarWidthResId = (int) mTimerSeekbarWidth;
                 }
-                int mTimerSeekbarMarginLeft = mContext.getResources().getIdentifier("miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin");
+                int mTimerSeekbarMarginLeft = Helpers.getResId(mContext.getResources(), "miui_volume_timer_seekbar_margin_left", "dimen", "miui.systemui.plugin");
                 float seekWidth = mContext.getResources().getDimension(seekbarWidthResId);
                 int marginLeft = mContext.getResources().getDimensionPixelSize(mTimerSeekbarMarginLeft);
                 int seg = (int) XposedHelpers.getObjectField(param.getThisObject(), "mDeterminedSegment");
@@ -2654,7 +2654,7 @@ public class SystemUI {
                 Context mContext = ((View)param.getThisObject()).getContext();
                 Resources res = mContext.getResources();
                 if (sbHeight == -1) {
-                    sbHeight = res.getDimensionPixelSize(res.getIdentifier("status_bar_height_default", "dimen", "android"));
+                    sbHeight = res.getDimensionPixelSize(Helpers.getResId(res, "status_bar_height_default", "dimen", "android"));
                 }
                 MotionEvent event = (MotionEvent)param.getArgs()[0];
                 Object mDisplayManager;
@@ -2809,7 +2809,7 @@ public class SystemUI {
             @Override
             protected void after(final AfterHookCallback param) throws Throwable {
                 Context mContext = (Context) XposedHelpers.callMethod(param.getThisObject(), "getApplicationContext");
-                int dimenResId = mContext.getResources().getIdentifier("status_bar_padding_top", "dimen", lpparam.getPackageName());
+                int dimenResId = Helpers.getResId(mContext.getResources(), "status_bar_padding_top", "dimen", lpparam.getPackageName());
                 statusBarPaddingTop[0] = mContext.getResources().getDimensionPixelSize(dimenResId);
             }
         });

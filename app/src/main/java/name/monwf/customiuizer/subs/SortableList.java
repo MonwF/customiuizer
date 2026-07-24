@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import java.util.Locale;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.SubFragment;
 import name.monwf.customiuizer.utils.AppHelper;
@@ -147,7 +148,7 @@ public class SortableList extends SubFragment {
 	}
 
 	private String createNewUUID() {
-		return UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
+		return UUID.randomUUID().toString().replaceAll("-", "").toLowerCase(Locale.ROOT);
 	}
 
 	private void createNewItem(String uuid) {

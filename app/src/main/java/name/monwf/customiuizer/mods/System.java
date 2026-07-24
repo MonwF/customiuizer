@@ -269,10 +269,10 @@ public class System {
             		                Collections.shuffle(mRandomViews);
 
             		                View pinview = (View)thisObject;
-            		                ViewGroup row1 = pinview.findViewById(pinview.getResources().getIdentifier("row1", "id", "com.android.systemui"));
-            		                ViewGroup row2 = pinview.findViewById(pinview.getResources().getIdentifier("row2", "id", "com.android.systemui"));
-            		                ViewGroup row3 = pinview.findViewById(pinview.getResources().getIdentifier("row3", "id", "com.android.systemui"));
-            		                ViewGroup row4 = pinview.findViewById(pinview.getResources().getIdentifier("row4", "id", "com.android.systemui"));
+            		                ViewGroup row1 = pinview.findViewById(Helpers.getResId(pinview.getResources(), "row1", "id", "com.android.systemui"));
+            		                ViewGroup row2 = pinview.findViewById(Helpers.getResId(pinview.getResources(), "row2", "id", "com.android.systemui"));
+            		                ViewGroup row3 = pinview.findViewById(Helpers.getResId(pinview.getResources(), "row3", "id", "com.android.systemui"));
+            		                ViewGroup row4 = pinview.findViewById(Helpers.getResId(pinview.getResources(), "row4", "id", "com.android.systemui"));
 
             		                row1.removeAllViews();
             		                row2.removeAllViews();
@@ -799,7 +799,7 @@ public class System {
             		Object thisObject = chain.getThisObject();
 
             		                View view = (View) XposedHelpers.getObjectField(thisObject, "mView");
-            		                int btnId = view.getResources().getIdentifier("btn_delete", "id", "com.android.settings");
+            		                int btnId = Helpers.getResId(view.getResources(), "btn_delete", "id", "com.android.settings");
             		                Button button = view.findViewById(btnId);
             		                button.setText(titleId);
 
@@ -1214,7 +1214,7 @@ public class System {
             		                    XposedHelpers.setAdditionalInstanceField(thisObject, "customiuizer_timeSetReceiver", mUpdateTimeReceiver);
             		                    IntentFilter timeSetIntent = new IntentFilter();
             		                    timeSetIntent.addAction("android.intent.action.TIME_SET");
-            		                    mContext.registerReceiver(mUpdateTimeReceiver, timeSetIntent);
+            		                    mContext.registerReceiver(mUpdateTimeReceiver, timeSetIntent, Context.RECEIVER_NOT_EXPORTED);
             		                }
 
             	} catch (Throwable t) {
@@ -1245,10 +1245,10 @@ public class System {
 
             		                final TextView clock = (TextView)thisObject;
             		                if (args.length != 3) { return XposedHelpers.throwOrReturn(throwable, result); }
-            		                int clockId = clock.getResources().getIdentifier("clock", "id", "com.android.systemui");
-            		                int bigClockId = clock.getResources().getIdentifier("big_time", "id", "com.android.systemui");
-            		                int dateClockId = clock.getResources().getIdentifier("date_time", "id", "com.android.systemui");
-            		                int horizDateClockId = clock.getResources().getIdentifier("horizontal_date_time", "id", "com.android.systemui");
+            		                int clockId = Helpers.getResId(clock.getResources(), "clock", "id", "com.android.systemui");
+            		                int bigClockId = Helpers.getResId(clock.getResources(), "big_time", "id", "com.android.systemui");
+            		                int dateClockId = Helpers.getResId(clock.getResources(), "date_time", "id", "com.android.systemui");
+            		                int horizDateClockId = Helpers.getResId(clock.getResources(), "horizontal_date_time", "id", "com.android.systemui");
             		                int thisClockId = clock.getId();
             		                if (clockId == thisClockId) {
             		                    ModuleHelper.setViewInfo(clock, "clockName", "clock");
@@ -1347,7 +1347,7 @@ public class System {
             		                        else {
             		                            fmt = "fmt_time_12hour_minute";
             		                        }
-            		                        int fmtResId = mContext.getResources().getIdentifier(fmt, "string", "com.android.systemui");
+            		                        int fmtResId = Helpers.getResId(mContext.getResources(), fmt, "string", "com.android.systemui");
             		                        timeFmt = mContext.getString(fmtResId);
             		                        if (showSeconds) {
             		                            timeFmt = timeFmt.replaceFirst(":mm", ":mm:ss");
@@ -1917,9 +1917,9 @@ public class System {
             	try {
 
             		                Resources res = Resources.getSystem();
-            		                int minBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMinimum", "integer", "android"));
-            		                int maxBrightnessLevel = res.getInteger(res.getIdentifier("config_screenBrightnessSettingMaximum", "integer", "android"));
-            		                int backlightBit = res.getInteger(res.getIdentifier("config_backlightBit", "integer", "android.miui"));
+            		                int minBrightnessLevel = res.getInteger(Helpers.getResId(res, "config_screenBrightnessSettingMinimum", "integer", "android"));
+            		                int maxBrightnessLevel = res.getInteger(Helpers.getResId(res, "config_screenBrightnessSettingMaximum", "integer", "android"));
+            		                int backlightBit = res.getInteger(Helpers.getResId(res, "config_backlightBit", "integer", "android.miui"));
             		                backlightMaxLevel = (1 << backlightBit) - 1;
             		                mMinimumBacklight = (minBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
             		                mMaximumBacklight = (maxBrightnessLevel - 1) * 1.0f / (backlightMaxLevel - 1);
@@ -2388,8 +2388,8 @@ public class System {
             		                    Object inflationProgress = result;
             		                    Context mContext = (Context) args[args.length - 1];
             		                    if (titleResId == 0) {
-            		                        titleResId = mContext.getResources().getIdentifier("title", "id", "com.android.systemui");
-            		                        subTextResId = mContext.getResources().getIdentifier("text", "id", "com.android.systemui");
+            		                        titleResId = Helpers.getResId(mContext.getResources(), "title", "id", "com.android.systemui");
+            		                        subTextResId = Helpers.getResId(mContext.getResources(), "text", "id", "com.android.systemui");
             		                    }
             		                    List<String> contents = List.of("newPublicView", "newContentView", "newExpandedView");
             		                    for (String contentType:contents) {
@@ -2577,7 +2577,7 @@ public class System {
             		                    mMenuContainer.addView(finalMForceCloseBtn);
             		                }
             		                mMenuContainer.addView(mOpenFwBtn);
-            		                int titleId = mContext.getResources().getIdentifier("modal_menu_title", "id", "com.android.systemui");
+            		                int titleId = Helpers.getResId(mContext.getResources(), "modal_menu_title", "id", "com.android.systemui");
             		                int panelWidth = mContext.getResources().getDisplayMetrics().widthPixels;
             		                int menuWidth = (panelWidth / mMenuItems.size()) - (menuMargin * 2);
             		                mMenuItems.forEach(new Consumer() {
@@ -3101,8 +3101,8 @@ public class System {
             		                if (mContext == null || mAimPackageName == null) { return XposedHelpers.throwOrReturn(throwable, result); }
             		                Set<String> selectedApps = MainModule.mPrefs.getStringSet("system_cleanshare_apps");
             		                View mRootView = (View)XposedHelpers.getObjectField(thisObject, "mRootView");
-            		                int appResId1 = mContext.getResources().getIdentifier("app1", "id", "android.miui");
-            		                int appResId2 = mContext.getResources().getIdentifier("app2", "id", "android.miui");
+            		                int appResId1 = Helpers.getResId(mContext.getResources(), "app1", "id", "android.miui");
+            		                int appResId2 = Helpers.getResId(mContext.getResources(), "app2", "id", "android.miui");
             		                boolean removeOriginal = selectedApps.contains(mAimPackageName) || selectedApps.contains(mAimPackageName + "|0");
             		                boolean removeDual = selectedApps.contains(mAimPackageName + "|999");
             		                View originalApp = mRootView.findViewById(appResId1);
@@ -3260,8 +3260,8 @@ public class System {
             		                Pair<Boolean, Boolean> isRemove = isRemoveApp(true, mContext, mAimPackageName, selectedApps, mimeType);
 
             		                View mRootView = (View)XposedHelpers.getObjectField(thisObject, "mRootView");
-            		                int appResId1 = mContext.getResources().getIdentifier("app1", "id", "android.miui");
-            		                int appResId2 = mContext.getResources().getIdentifier("app2", "id", "android.miui");
+            		                int appResId1 = Helpers.getResId(mContext.getResources(), "app1", "id", "android.miui");
+            		                int appResId2 = Helpers.getResId(mContext.getResources(), "app2", "id", "android.miui");
             		                View originalApp = mRootView.findViewById(appResId1);
             		                View dualApp = mRootView.findViewById(appResId2);
             		                if (isRemove.first) dualApp.performClick();
@@ -3570,7 +3570,7 @@ public class System {
             		                audioViz.setClickable(false);
             		                visFrame.addView(audioViz);
             		                visFrame.setClickable(false);
-            		                View themebkg = mNotificationPanel.findViewById(mContext.getResources().getIdentifier("keyguard_background_layer", "id", lpparam.getPackageName()));
+            		                View themebkg = mNotificationPanel.findViewById(Helpers.getResId(mContext.getResources(), "keyguard_background_layer", "id", lpparam.getPackageName()));
 
             		                int order = 0;
             		                if (themebkg != null) order = Math.max(order, mNotificationPanel.indexOfChild(themebkg));
@@ -3972,7 +3972,7 @@ public class System {
                 		Object thisObject = chain.getThisObject();
 
                 		                    ViewGroup mSystemIconsContainer = (ViewGroup) XposedHelpers.getObjectField(thisObject, "mSystemIconsContainer");
-                		                    int batteryResId = mSystemIconsContainer.getResources().getIdentifier("battery", "id", "com.android.systemui");
+                		                    int batteryResId = Helpers.getResId(mSystemIconsContainer.getResources(), "battery", "id", "com.android.systemui");
                 		                    View mBatteryView = mSystemIconsContainer.findViewById(batteryResId);
                 		                    mBatteryView.setTag(batteryId, true);
 
@@ -4083,7 +4083,7 @@ public class System {
             		                    public void onReceive(Context context, Intent intent) {
             		                        updateAlarmVisibility(thisObject);
             		                    }
-            		                }, filter);
+            		                }, filter, Context.RECEIVER_NOT_EXPORTED);
 
             		                Object mNextAlarmCallback = XposedHelpers.getObjectField(thisObject, "mNextAlarmCallback");
             		                ModuleHelper.findAndHookMethod(mNextAlarmCallback.getClass(), "onAlarmChanged", boolean.class, new MethodHook() {
@@ -5501,12 +5501,12 @@ public class System {
             		                    }
             		                    if (props != null) {
             		                        float currVal = Math.abs(Integer.parseInt(props.getProperty("POWER_SUPPLY_CURRENT_NOW")) / 1000f / 1000f);
-            		                        if (showCurr) values.add(String.format(Locale.getDefault(), "%.2f", currVal) + " A");
+            		                        if (showCurr) values.add(String.format(Locale.US, "%.2f", currVal) + " A");
             		                        float voltVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_VOLTAGE_NOW")) / 1000f / 1000f;
             		                        if (showVolt)
-            		                            values.add(String.format(Locale.getDefault(), "%.1f", voltVal) + " V");
+            		                            values.add(String.format(Locale.US, "%.1f", voltVal) + " V");
             		                        if (showWatt)
-            		                            values.add(String.format(Locale.getDefault(), "%.1f", voltVal * currVal) + " W");
+            		                            values.add(String.format(Locale.US, "%.1f", voltVal * currVal) + " W");
             		                        if (showTemp) {
             		                            int tempVal = Integer.parseInt(props.getProperty("POWER_SUPPLY_TEMP"));
             		                            values.add(Math.round(tempVal / 10f) + " ℃");
@@ -6482,9 +6482,9 @@ public class System {
             		                Context context = (Context) args[0];
             		                Resources resources = context.getResources();
             		                if (mHeadsUpPaddingTop == 0) {
-            		                    int dimId = resources.getIdentifier("heads_up_status_bar_padding", "dimen", "com.android.systemui");
+            		                    int dimId = Helpers.getResId(resources, "heads_up_status_bar_padding", "dimen", "com.android.systemui");
             		                    mHeadsUpPaddingTop = resources.getDimensionPixelSize(dimId);
-            		                    mHeadsUpHeight = resources.getDimensionPixelSize(resources.getIdentifier("notification_max_heads_up_height", "dimen", "com.android.systemui"));
+            		                    mHeadsUpHeight = resources.getDimensionPixelSize(Helpers.getResId(resources, "notification_max_heads_up_height", "dimen", "com.android.systemui"));
             		                }
             		                if (resources.getConfiguration().orientation != 2) {
             		                    int mHeadsUpInset = (int) result;

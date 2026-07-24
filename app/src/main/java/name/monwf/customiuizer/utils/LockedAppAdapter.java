@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.Locale;
 import name.monwf.customiuizer.R;
 
 public class LockedAppAdapter extends BaseAdapter implements Filterable {
@@ -137,7 +138,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 	private class ItemFilter extends Filter {
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			String filterString = constraint.toString().toLowerCase();
+			String filterString = constraint.toString().toLowerCase(Locale.ROOT);
 			FilterResults results = new FilterResults();
 
 			int count = originalAppList.size();
@@ -146,7 +147,7 @@ public class LockedAppAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if (filterableData.label.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if (filterableData.label.toLowerCase(Locale.ROOT).contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;

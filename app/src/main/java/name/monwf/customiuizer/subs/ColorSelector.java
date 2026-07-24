@@ -15,6 +15,7 @@ import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.ColorCircle;
 import name.monwf.customiuizer.utils.Helpers;
 
+import java.util.Locale;
 public class ColorSelector extends SubFragment {
 
 	String key;
@@ -42,7 +43,7 @@ public class ColorSelector extends SubFragment {
 
 	void updateSelColor(int color) {
 		((GradientDrawable) selectedColorView.getBackground()).setColors(color == Color.TRANSPARENT ? new int[]{ Color.WHITE, Color.BLACK } : new int[]{ color, color });
-		selectedColorHint.setText(String.format("#%08X", color));
+		selectedColorHint.setText(String.format(Locale.US, "#%08X", color));
 	}
 
 	@Override

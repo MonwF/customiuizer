@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.IllegalFormatException;
 
+import java.util.Locale;
 import name.monwf.customiuizer.R;
 import name.monwf.customiuizer.utils.AppHelper;
 import name.monwf.customiuizer.utils.Helpers;
@@ -269,9 +270,9 @@ public class SeekBarPreference extends Preference implements PreferenceState {
 			try {
 				if (mUseDisplayDividerValue) {
 					float floatValue = (float)value / (float)mDisplayDividerValue;
-					text = String.format(mFormat, floatValue);
+					text = String.format(Locale.US, mFormat, floatValue);
 				} else {
-					text = String.format(mFormat, value);
+					text = String.format(Locale.US, mFormat, value);
 				}
 			} catch (IllegalFormatException e) {
 				e.printStackTrace();

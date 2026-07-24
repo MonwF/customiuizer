@@ -11,6 +11,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -97,7 +98,7 @@ public class WiFiList extends SubFragment {
 		wifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
 		wifiAdapter1 = new WiFiAdapter(getContext(), true);
 		wifiAdapter2 = new WiFiAdapter(getContext(), false);
-		handler = new Handler();
+		handler = new Handler(Looper.getMainLooper());
 
 		if (getView() != null) {
 			listView1 = getView().findViewById(android.R.id.text1);
@@ -176,7 +177,7 @@ public class WiFiList extends SubFragment {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 		intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-		getActivity().registerReceiver(wifiReceiver, intentFilter);
+		getActivity().registerReceiver(wifiReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
 		handler.postDelayed(getScanResults, 1000);
 	}
 

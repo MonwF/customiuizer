@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         alert.setTitle(R.string.reset_settings);
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                AppHelper.appPrefs.edit().clear().commit();
+                AppHelper.appPrefs.edit().clear().apply();
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle(R.string.reset_settings_done);
                 builder.setCancelable(true);

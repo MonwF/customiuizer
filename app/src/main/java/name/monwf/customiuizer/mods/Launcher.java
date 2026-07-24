@@ -1775,7 +1775,7 @@ public class Launcher {
                 		                                XposedHelpers.log(t);
                 		                            }
                 		                        }
-                		                    }, intentFilter);
+                		                    }, intentFilter, Context.RECEIVER_NOT_EXPORTED);
 
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);

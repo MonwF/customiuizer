@@ -192,7 +192,7 @@ public class GlobalActions {
                     return;
                 }
                 else if (action.equals(ACTION_PREFIX + "ScrollToTop")) {
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -779,7 +779,7 @@ public class GlobalActions {
                                                 }
                                             }
                                         }
-                                    }, intentfilter);
+                                    }, intentfilter, Context.RECEIVER_EXPORTED);
             
                 } catch (Throwable t) {
                     XposedHelpers.log(t);
@@ -850,7 +850,7 @@ public class GlobalActions {
                                     intentfilter.addAction(ACTION_PREFIX + "LaunchIntent");
                                     intentfilter.addAction(ACTION_PREFIX + "SaveLastMusicPausedTime");
 
-                                    mContext.registerReceiver(mSBReceiver, intentfilter);
+                                    mContext.registerReceiver(mSBReceiver, intentfilter, Context.RECEIVER_EXPORTED);
             
                 } catch (Throwable t) {
                     XposedHelpers.log(t);

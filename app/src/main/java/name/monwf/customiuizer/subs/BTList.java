@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,7 @@ public class BTList extends SubFragment {
 
 		btAdapter1 = new BTAdapter(getContext(), true);
 		btAdapter2 = new BTAdapter(getContext(), false);
-		handler = new Handler();
+		handler = new Handler(Looper.getMainLooper());
 
 		if (getView() != null) {
 			listView1 = getView().findViewById(android.R.id.text1);

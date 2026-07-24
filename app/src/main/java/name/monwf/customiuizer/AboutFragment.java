@@ -82,7 +82,7 @@ public class AboutFragment extends SubFragment {
 			TextView version = view.findViewById(R.id.about_version);
 			String versionName = getValidContext().getPackageManager()
 				.getPackageInfo(getValidContext().getPackageName(), 0).versionName;
-			version.setText(String.format(getResources().getString(R.string.about_version), versionName));
+			version.setText(String.format(Locale.US, getResources().getString(R.string.about_version), versionName));
 		} catch (Throwable e) {
 			//Shouldn't happen...
 			e.printStackTrace();

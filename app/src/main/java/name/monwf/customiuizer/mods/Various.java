@@ -352,7 +352,7 @@ public class Various {
 			} else {
 				Toast.makeText(act, ModuleHelper.getModuleRes(act).getString(R.string.disable_app_fail), Toast.LENGTH_LONG).show();
 			}
-			new Handler().postDelayed(act::invalidateOptionsMenu, 500);
+			new Handler(Looper.getMainLooper()).postDelayed(act::invalidateOptionsMenu, 500);
 		} catch (Throwable t) {
 			XposedHelpers.log(t);
 		}
@@ -1204,7 +1204,7 @@ public class Various {
 												Object wk = XposedHelpers.getObjectField(thisObject, finalFieldName);
 												Object frag = XposedHelpers.callMethod(wk, "get");
 												Activity batteryView = (Activity) XposedHelpers.callMethod(frag, "getActivity");
-												int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("temperature", 0) / 10;
+												int temp = batteryView.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"), Context.RECEIVER_NOT_EXPORTED).getIntExtra("temperature", 0) / 10;
 												Object tempPreference = XposedHelpers.callMethod(frag, "findPreference", "reference_current_temp");
 												XposedHelpers.callMethod(tempPreference, "setText", temp + "℃");
 											}

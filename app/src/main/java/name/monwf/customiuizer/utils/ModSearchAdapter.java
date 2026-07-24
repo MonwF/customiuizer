@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.Locale;
 import name.monwf.customiuizer.R;
 
 public class ModSearchAdapter extends BaseAdapter implements Filterable {
@@ -67,7 +68,7 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 
 		ModData ad = getItem(position);
 
-		int start = ad.title.toLowerCase().indexOf(filterString);
+		int start = ad.title.toLowerCase(Locale.ROOT).indexOf(filterString);
 		if (start >= 0) {
 			Spannable spannable = new SpannableString(ad.title);
 			spannable.setSpan(new ForegroundColorSpan(Helpers.markColorVibrant), start, start + filterString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -83,13 +84,13 @@ public class ModSearchAdapter extends BaseAdapter implements Filterable {
 	private class ItemFilter extends Filter {
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			filterString = constraint.toString().toLowerCase();
+			filterString = constraint.toString().toLowerCase(Locale.ROOT);
 			final ArrayList<ModData> nlist = new ArrayList<ModData>();
 
 			for (ModData filterableData: Helpers.allModsList) {
 				if (constraint.toString().equals(Helpers.NEW_MODS_SEARCH_QUERY)) {
 					if (Helpers.newMods.contains(filterableData.key)) nlist.add(filterableData);
-				} else if (filterableData.title.toLowerCase().contains(filterString)) nlist.add(filterableData);
+				} else if (filterableData.title.toLowerCase(Locale.ROOT).contains(filterString)) nlist.add(filterableData);
 			}
 
 			FilterResults results = new FilterResults();

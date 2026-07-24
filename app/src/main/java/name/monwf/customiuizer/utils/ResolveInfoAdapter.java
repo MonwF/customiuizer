@@ -3,6 +3,7 @@ package name.monwf.customiuizer.utils;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.Locale;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -91,7 +92,7 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 	private class ItemFilter extends Filter {
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			String filterString = constraint.toString().toLowerCase();
+			String filterString = constraint.toString().toLowerCase(Locale.ROOT);
 			FilterResults results = new FilterResults();
 
 			int count = originalAppList.size();
@@ -100,7 +101,7 @@ public class ResolveInfoAdapter extends BaseAdapter implements Filterable {
 
 			for (int i = 0; i < count; i++) {
 				filterableData = originalAppList.get(i);
-				if (filterableData.loadLabel(pm).toString().toLowerCase().contains(filterString)) nlist.add(filterableData);
+				if (filterableData.loadLabel(pm).toString().toLowerCase(Locale.ROOT).contains(filterString)) nlist.add(filterableData);
 			}
 
 			results.values = nlist;
