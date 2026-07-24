@@ -49,9 +49,9 @@
 
 - 待构建完成后补充完整重启日志与功能回归结果。
 
-## r14.3.1 — 锁屏充电数据去重、lint 清理与依赖更新
+## r14.3.1
 
-发布日期：2026-07-24。状态：**稳定版，构建产物通过 `assembleRelease`，可直接覆盖 r14.3.0 升级**。
+发布日期：2026-07-24。状态：**稳定版，构建产物通过 `assembleRelease`，可直接覆盖 r14.2.9 及更早版本升级**。
 
 ### 锁屏充电数据
 
@@ -68,23 +68,6 @@
 - `build.gradle`: 升级 `com.github.ben-manes.versions` 插件至 `0.54.0`。
 - `app/build.gradle`: 升级 `kotlin-bom` 至 `2.2.21`。
 
-### 构建产物验证
-
-- `versionCode` 130 / `versionName` r14.3.1。
-- APK：`CustoMIUIzer-A14-r14.3.1.apk`，2,886,165 bytes，SHA-256: `E1ED1FEF9108E9A94D1B532F5B3BCDBD71AF5DC32E610A239CF108A9ABEC57D8`。
-- 通过 `gradlew assembleRelease`；`lintRelease` 0 错误，既有 ROM API 兼容性警告保持。
-- `libxposed` 保持 API 101，未升级到 102，避免运行时兼容风险。
-- 签名证书与 r14.3.0 一致，可直接覆盖升级。
-
-### 实机验证
-
-- `LSPosed_2026-07-24T13_52_32.282030` 完整重启后，`VectorModuleManager` 两次加载 `tv.withaibuild.customiuizer.r14` 分别为 6 ms 与 24 ms，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
-- SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
-
-## r14.3.0 — 功能关闭零成本与线程统一
-
-发布日期：2026-07-23。状态：**稳定版，构建产物、单元测试与实机完整重启均通过，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
-
 ### 减少无效 Hook 与资源替换
 
 - 新增 `SystemUI.hasStatusBarModifications()`，汇总 `setupStatusBar` 中所有资源替换与状态栏文本图标开关条件，包括状态栏边距、控制中心样式、音量计时器、图标大小、步数显示、抽屉日期、点击解锁、锁屏超时、电池/设备温度等。
@@ -99,10 +82,16 @@
 
 ### 构建产物验证
 
-- `versionCode` 129 / `versionName` r14.3.0。
-- APK：`CustoMIUIzer-A14-r14.3.0.apk`，2,886,165 bytes，SHA-256: `4f81ad4528787d9350d5058ac1104be4b57cd44e6b7535705b6700c0ba1316a4`。
-- 通过 `gradlew test` 与 `gradlew assembleRelease`；3 项单元测试通过，`lintRelease` 0 错误、既有 ROM API 兼容性警告保持。
+- `versionCode` 130 / `versionName` r14.3.1。
+- APK：`CustoMIUIzer-A14-r14.3.1.apk`，2,886,165 bytes，SHA-256: `E1ED1FEF9108E9A94D1B532F5B3BCDBD71AF5DC32E610A239CF108A9ABEC57D8`。
+- 通过 `gradlew assembleRelease`；`lintRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- `libxposed` 保持 API 101，未升级到 102，避免运行时兼容风险。
 - 签名证书与 r14.2.9 一致，可直接覆盖升级。
+
+### 实机验证
+
+- `LSPosed_2026-07-24T13_52_32.282030` 完整重启后，`VectorModuleManager` 两次加载 `tv.withaibuild.customiuizer.r14` 分别为 6 ms 与 24 ms，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
+- SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
 
 ## r14.2.9 — 生命周期与绘制热路径（合并 r14.2.8-r14.2.9）
 
