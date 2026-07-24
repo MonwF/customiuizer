@@ -16,7 +16,7 @@
 |---|---|
 | 当前稳定版 | r14.3.1 |
 | 上一稳定版 | r14.3.0 |
-| 当前候选版 | 无 |
+| 当前候选版 | r14.4.0 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -61,6 +61,12 @@ r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
+
+## r14.4.0 优化重点（候选版）
+
+- **A 类静态清理**：统一 `String.format(Locale.US, ...)` 与 `toLowerCase(Locale.ROOT)`，避免默认 locale 影响数值与过滤；`MainActivity` 重置设置改用 `SharedPreferences.apply()`；`new Handler()` 统一改为 `new Handler(Looper.getMainLooper())`。
+- **B 类生命周期加固**：为仍缺少导出标志的 `registerReceiver(receiver, filter)` 调用补全 `Context.RECEIVER_EXPORTED`/`Context.RECEIVER_NOT_EXPORTED`，系统广播使用 `NOT_EXPORTED`，模块自定义广播使用 `EXPORTED`。
+- **C 类性能缓存**：`Helpers.java` 新增线程安全 `getResId()` 缓存；`System.java` 与 `SystemUI.java` 的高频 `getIdentifier()` 调用收敛到 `Helpers.getResId()`，减少状态栏/控制中心初始化与刷新热路径上的重复资源查找。
 
 ## r14.3.1 优化重点
 
@@ -132,6 +138,7 @@ r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期与秒针接收者治理 |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
 | [r14.3.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.0) | 2,886,165 B | 0 B | SystemUI.setupStatusBar 按 `hasStatusBarModifications()` 跳过无效资源替换；WeatherDataController 统一后台执行器并修复接收者生命周期 |
+| [r14.4.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.4.0) | 待构建后补充 | - | A/B/C 静态清理、生命周期加固与 `Helpers.getResId()` 热路径缓存（候选版） |
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 锁屏充电数据去重；lint 清理（Locale、SharedPreferences apply、资源 ID 缓存）；versions 插件与 kotlin-bom 升级 |
 
 r14.3.0 比 r14.0.0 小 15,735 B；r14.1.3 比 r14.0.0 小 15,650 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。

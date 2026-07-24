@@ -7,6 +7,41 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.4.0 — A/B/C 静态清理、生命周期加固与资源 ID 热路径缓存
+
+发布日期：2026-07-24。状态：**候选版，构建与实机验证后更新为稳定版**。
+
+### A 类静态清理
+
+- `AboutFragment`、`System.java`、`SystemUI.java`、`SeekBarPreference`、`ColorSelector` 中的 `String.format(Locale.getDefault(), ...)` / 无 Locale `String.format(...)` 统一指定 `Locale.US`，避免默认 locale 影响数值格式。
+- `AppDataAdapter`、`LockedAppAdapter`、`ModSearchAdapter`、`PrivacyAppAdapter`、`ResolveInfoAdapter`、`SortableList` 的 `String.toLowerCase()` 统一指定 `Locale.ROOT`，保证过滤比较不受 locale 大小写规则影响。
+- `MainActivity` 重置设置弹窗中的 `SharedPreferences.commit()` 改为 `apply()`，避免阻塞 UI 线程。
+- `GlobalActions`、`Various`、`BTList`、`WiFiList` 的 `new Handler()` 改为 `new Handler(Looper.getMainLooper())`，防止在无线程 Looper 的 Hook/后台线程上创建 Handler。
+
+### B 类生命周期加固
+
+- `Controls`、`GlobalActions`、`Launcher`、`System`、`Various`、`WiFiList` 中缺少导出标志的 `registerReceiver(..., IntentFilter)` 调用统一补全 `Context.RECEIVER_EXPORTED` / `Context.RECEIVER_NOT_EXPORTED`。
+- 系统广播（`SCREEN_ON`、`TIME_SET`、`TIME_TICK`、`TIMEZONE_CHANGED`、`LOCALE_CHANGED`、`WifiManager`、`BATTERY_CHANGED` sticky）使用 `RECEIVER_NOT_EXPORTED`。
+- 模块自定义动作广播（`GlobalActions` 自定义 `ACTION_PREFIX` 事件、`FETCHAPPCONFIG`、`PUSHAPPCONFIG`）使用 `RECEIVER_EXPORTED`。
+- 不影响已带 `RECEIVER_*` 标志的现有注册点。
+
+### C 类性能缓存
+
+- `Helpers.java` 新增线程安全的 `getResId(Resources, name, defType, defPackage)` 缓存，使用 `ConcurrentHashMap` 缓存 `Resources.getIdentifier()` 结果。
+- `System.java` 与 `SystemUI.java` 中高频 `getResources().getIdentifier(...)` / `res.getIdentifier(...)` 调用全部收敛到 `Helpers.getResId()`，减少 SystemUI/设置进程初始化与状态栏刷新热路径上的重复资源 ID 查找。
+- 缓存键包含包名、资源类型与资源名，命中时直接返回缓存整型 ID；参数任一为空时返回 0，避免无效调用。
+
+### 构建产物验证
+
+- `versionCode` 140 / `versionName` r14.4.0。
+- APK：`CustoMIUIzer-A14-r14.4.0.apk`（构建后补充大小与 SHA-256）。
+- 通过 `gradlew assembleRelease`；`lintRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.3.1 一致，可直接覆盖升级。
+
+### 实机验证
+
+- 待构建完成后补充完整重启日志与功能回归结果。
+
 ## r14.3.1 — 锁屏充电数据去重、lint 清理与依赖更新
 
 发布日期：2026-07-24。状态：**稳定版，构建产物通过 `assembleRelease`，可直接覆盖 r14.3.0 升级**。
