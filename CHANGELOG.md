@@ -9,7 +9,7 @@
 
 ## r14.4.0 — A/B/C 静态清理、生命周期加固与资源 ID 热路径缓存
 
-发布日期：2026-07-24。状态：**候选版，构建与实机验证后更新为稳定版**。
+发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 升级；实机验证待补充**。
 
 ### A 类静态清理
 
@@ -34,8 +34,8 @@
 ### 构建产物验证
 
 - `versionCode` 140 / `versionName` r14.4.0。
-- APK：`CustoMIUIzer-A14-r14.4.0.apk`（构建后补充大小与 SHA-256）。
-- 通过 `gradlew assembleRelease`；`lintRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- APK：`CustoMIUIzer-A14-r14.4.0.apk`，2,886,165 bytes，SHA-256: `568F2C4F6DCBD50F0DE05743834DE048F5246F9BFCE025B0BE3C01251625F360`。
+- 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.3.1 一致，可直接覆盖升级。
 
 ### 实机验证
