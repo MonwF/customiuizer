@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +31,6 @@ import tv.withaibuild.customiuizer.mods.utils.ModuleHelper;
 import tv.withaibuild.customiuizer.mods.utils.ResourceHooks;
 import tv.withaibuild.customiuizer.mods.utils.XposedHelpers;
 import tv.withaibuild.customiuizer.utils.PrefMap;
-import tv.withaibuild.customiuizer.utils.Helpers;
 
 public class MainModule extends XposedModule {
 
@@ -261,7 +261,7 @@ public class MainModule extends XposedModule {
         }
         if (pkg.equals("com.android.systemui")) {
             Context mContext = ModuleHelper.findContext(lpparam);
-            long restartTime = Helpers.getSystemSharedPrefs(mContext).getLong("systemui_restart_time", 0L);
+            long restartTime = Settings.System.getLong(mContext.getContentResolver(), "systemui_restart_time", 0L);
             long currentTime = java.lang.System.currentTimeMillis();
             MethodHook initStatusBarHook = new MethodHook() {
                 private boolean isHooked = false;

@@ -166,20 +166,6 @@ public class Helpers {
         return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
-    private static SharedPreferences systemSharedPrefs;
-    public static synchronized SharedPreferences getSystemSharedPrefs(Context context) {
-        if (systemSharedPrefs == null) {
-            try {
-                Context moduleContext = context.createPackageContext(modulePkg, Context.CONTEXT_IGNORE_SECURITY);
-                systemSharedPrefs = moduleContext.getSharedPreferences("customiuizer_system", Context.MODE_PRIVATE);
-            } catch (Throwable t) {
-                XposedHelpers.log(t);
-                systemSharedPrefs = context.getSharedPreferences("customiuizer_system", Context.MODE_PRIVATE);
-            }
-        }
-        return systemSharedPrefs;
-    }
-
     public static PendingIntent getMutableActivityPendingIntent(Context context, int requestCode, Intent intent) {
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) flags |= PendingIntent.FLAG_MUTABLE;

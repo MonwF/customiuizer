@@ -7,6 +7,27 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.6.1
+
+发布日期：2026-07-24。状态：**候选版，r14.6.0 热修复；D 类中 Settings.System 自定义键迁移导致 systemui 启动阶段 Context 无数据目录而崩溃，已回退到 Settings.System；保留 Notification Channel 与权限声明**。
+
+### 修复内容
+
+- **回退 Settings.System 自定义键迁移**：`systemui_restart_time`（`SystemUI` 写 / `MainModule` 读）、`last_music_paused_time`（`GlobalActions` 写 / 读）、`dark_mode_enable_by_setting`（`GlobalActions` 写）恢复使用 `Settings.System`，避免在 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
+- **保留 D 类其余改动**：`MainApplication.onCreate` 默认 `NotificationChannel`（ID `customiuizer_default`）与 `AndroidManifest.xml` 中 `WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明仍保留。
+- **PendingIntent flag 兼容辅助**：`Helpers` 中 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent` 保留，供后续新增 PendingIntent 时使用。
+
+### 构建产物验证
+
+- `versionCode` 161 / `versionName` r14.6.1。
+- APK：CustoMIUIzer-A14-r14.6.1.apk，2,900,233 bytes，SHA-256: 19B259AD6ED44D51C44F0F0D3981A93D8A52CBC6637C1632313A1CE6270B2EEA。
+- 通过 gradlew assembleRelease；lintVitalRelease 0 错误，既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.6.0 一致；包名不变，可覆盖 r14.6.0 升级。
+
+### 实机验证
+
+- 待完整重启后补充 LSPosed 日志与 statusbar/control center 回归结果。
+
 ## r14.6.0
 
 发布日期：2026-07-24。状态：**候选版，D 类废弃 API / 权限迁移；构建产物通过 `assembleRelease` 待验证；实机验证待补充**。 

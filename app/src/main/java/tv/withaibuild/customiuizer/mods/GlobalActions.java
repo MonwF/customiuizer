@@ -331,7 +331,7 @@ public class GlobalActions {
                     XposedHelpers.callMethod(locationController, "setLocationEnabled", !mGpsEnable);
                 }
                 else if (action.equals(ACTION_PREFIX + "ToggleNightMode")) {
-                    Helpers.getSystemSharedPrefs(context).edit().putBoolean("dark_mode_enable_by_setting", true).apply();
+                    Settings.System.putInt(context.getContentResolver(), "dark_mode_enable_by_setting", 1);
                     UiModeManager mUiModeManager = (UiModeManager) context.getSystemService("uimode");
                     boolean nightMode = mUiModeManager.getNightMode() == 2;
                     XposedHelpers.callMethod(mUiModeManager, "setNightModeActivated", !nightMode);
@@ -455,7 +455,7 @@ public class GlobalActions {
                     }
                 }
                 else if (action.equals(ACTION_PREFIX + "SaveLastMusicPausedTime")) {
-                    Helpers.getSystemSharedPrefs(context).edit().putLong("last_music_paused_time", currentTimeMillis()).apply();
+                    Settings.System.putLong(context.getContentResolver(), "last_music_paused_time", currentTimeMillis());
                 }
             } catch (Throwable t) {
                 XposedHelpers.log(t);
@@ -1188,7 +1188,7 @@ public class GlobalActions {
         boolean isAllowed = isMusicActive || isMusicActiveRemotely;
         if (!isAllowed) {
             long mCurrentTime = currentTimeMillis();
-            long mLastPauseTime = Helpers.getSystemSharedPrefs(mContext).getLong("last_music_paused_time", mCurrentTime);
+            long mLastPauseTime = Settings.System.getLong(mContext.getContentResolver(), "last_music_paused_time", mCurrentTime);
             if (mCurrentTime - mLastPauseTime < 10 * 60 * 1000) isAllowed = true;
         }
         return isAllowed;
