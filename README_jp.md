@@ -9,13 +9,13 @@
 
 ## 現在の状態
 
-- 安定版：r14.2.0
-- 前の安定版：r14.1.3
+- 安定版：r14.3.1
+- 前の安定版：r14.3.0
 - パッケージ：`name.monwf.customiuizer.r14`
 - LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
 - リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-r14.2.0 は、インストール、完全再起動、Launcher/SystemUI の主要機能を実機で確認済みです。最終ログに本モジュール由来の例外、アプリ・SystemUI・ランチャーのクラッシュ、ANR、プロセス停止はありません。
+r14.3.1 は現在の安定版です。r14.3.0 をベースにロック画面充電情報の重複排除、lint クリーンアップ、依存関係の更新を含み、ビルド・署名・`assembleRelease` を通過しています。r14.3.0 は実機で完全再起動と Launcher/SystemUI の主要機能を確認済みであり、最終ログに本モジュール由来の例外、クラッシュ、ANR、プロセス停止はありません。
 
 ## 主な変更
 

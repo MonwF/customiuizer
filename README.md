@@ -14,9 +14,9 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | r14.3.0 |
-| 上一稳定版 | r14.2.9 |
-| 当前候选版 | r14.3.1 |
+| 当前稳定版 | r14.3.1 |
+| 上一稳定版 | r14.3.0 |
+| 当前候选版 | 无 |
 | 应用名 | 米客 A14 |
 | 包名 | `name.monwf.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
@@ -24,7 +24,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-r14.3.0 已完成构建、签名、单元测试与 `assembleRelease`，实机完整重启验证已通过，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常，为当前推荐稳定版。r14.3.1 候选发布版已构建并签名，修复锁屏充电数据重复显示问题，实机验证待完成后从候选转正。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版。该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -61,6 +61,12 @@ r14.3.0 已完成构建、签名、单元测试与 `assembleRelease`，实机完
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
+
+## r14.3.1 优化重点
+
+- 修复锁屏充电数据重复显示：`System.ChargingInfoHook` 仅对 `KeyguardIndicationController` 调用路径修改 `ChargeUtils.getChargingHintText` 返回结果；增加 `isChargingInfoHooked` 静态防护；拼接前检查 `hint.contains(info)` 防止重复追加。
+- lint 清理：`PreferenceFragmentBase` 的 `SimpleDateFormat` 指定 `Locale.US`；`AppDataAdapter` 的 `toLowerCase()` 指定 `Locale.ROOT`；`Various` 的 `SharedPreferences.commit()` 改为 `apply()`；`BatteryIndicator` 缓存 `status_bar_height` 资源 ID。
+- 依赖更新：`build.gradle` 升级 `com.github.ben-manes.versions` 插件至 `0.54.0`；`app/build.gradle` 升级 `kotlin-bom` 至 `2.2.21`；`libxposed` 保持 API 101，未升级到 102。
 
 ## r14.3.0 优化重点
 
@@ -110,8 +116,9 @@ r14.1.3 主要解决线程、缓存、图像处理、音频计算与无关资源
 | r14.1.3 第一次启动 | 8 | 11.5 ms | 18.9 ms | 5–51 ms |
 | r14.1.3 第二次启动 | 9 | 8 ms | 15.7 ms | 5–37 ms |
 | r14.2.0 正式版 | 9 | 8 ms | 22.8 ms | 5–81 ms |
+| r14.3.1 完整重启后 | 2 | 15 ms | 15 ms | 6–24 ms |
 
-r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块入口有显著提速。平均值和长尾会受到目标进程启动负载影响；本版收益主要发生在加载完成后的高频 Hook 与长期运行阶段。
+r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15 ms），与 r14.2.0 的 8 ms 中位数相近，日志不能证明模块入口有显著提速。平均值和长尾会受到目标进程启动负载影响；本版收益主要发生在加载完成后的高频 Hook 与长期运行阶段。
 
 ## 版本演进与静态对比
 
@@ -125,6 +132,7 @@ r14.2.0 与稳定后的 r14.1.3 加载中位数相同，日志不能证明模块
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期与秒针接收者治理 |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
 | [r14.3.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.0) | 2,886,165 B | 0 B | SystemUI.setupStatusBar 按 `hasStatusBarModifications()` 跳过无效资源替换；WeatherDataController 统一后台执行器并修复接收者生命周期 |
+| [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 锁屏充电数据去重；lint 清理（Locale、SharedPreferences apply、资源 ID 缓存）；versions 插件与 kotlin-bom 升级 |
 
 r14.3.0 比 r14.0.0 小 15,735 B；r14.1.3 比 r14.0.0 小 15,650 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
 

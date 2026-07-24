@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -145,7 +146,7 @@ public class AppDataAdapter extends BaseAdapter implements Filterable {
 						return 1;
 					return 0;
 				} else if (aType == AppHelper.AppAdapterType.Activities) {
-					return app1.actName.toLowerCase().compareTo(app2.actName.toLowerCase());
+					return app1.actName.toLowerCase(Locale.ROOT).compareTo(app2.actName.toLowerCase(Locale.ROOT));
 				} else return 0;
 			}
 		});

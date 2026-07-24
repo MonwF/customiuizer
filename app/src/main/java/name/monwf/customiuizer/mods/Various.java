@@ -697,7 +697,7 @@ public class Various {
 												int pos = originDockLocation;
 												if (bundle != null) {
 													pos = bundle.getInt("inDirection", 0);
-													view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).commit();
+													view.getContext().getSharedPreferences("sp_video_box", 0).edit().putInt("dock_line_location", pos).apply();
 												}
 												showSideBar(view, pos);
 											}

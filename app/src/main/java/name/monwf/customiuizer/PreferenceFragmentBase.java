@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 
 import name.monwf.customiuizer.mods.GlobalActions;
 import name.monwf.customiuizer.utils.AppHelper;
@@ -349,7 +350,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/octet-stream");
-        intent.putExtra(Intent.EXTRA_TITLE, "pengeek_backup_" + new SimpleDateFormat("MMddHHmmss").format(new java.util.Date()));
+        intent.putExtra(Intent.EXTRA_TITLE, "pengeek_backup_" + new SimpleDateFormat("MMddHHmmss", Locale.US).format(new java.util.Date()));
         startActivityForResult(intent, SAVE_BACKFILE);
     }
 

@@ -12,14 +12,14 @@ Its two defining differences are **libxposed API 101 integration** and ongoing *
 | Item | Value |
 |---|---|
 | App name | 米客 A14 |
-| Stable release | r14.2.0 |
-| Previous stable release | r14.1.3 |
+| Stable release | r14.3.1 |
+| Previous stable release | r14.3.0 |
 | Package | `name.monwf.customiuizer.r14` |
 | Hook API | libxposed API 101 |
 | LSPosed baseline | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c` |
 | Releases | [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-The target device passed installation, a full reboot, and the relevant Launcher/SystemUI checks. The final r14.2.0 logs contain no module-owned exception and no app, SystemUI, or launcher crash, ANR, or process death.
+r14.3.1 is the current stable release. It builds, signs, and passes `assembleRelease` on top of r14.3.0, and includes the lock-screen charging info deduplication, lint cleanups, and dependency updates. r14.3.0 passed a full device reboot and relevant Launcher/SystemUI checks; its final logs contain no module-owned exception and no app, SystemUI, or launcher crash, ANR, or process death.
 
 ## Highlights
 

@@ -43,6 +43,7 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
     private int mGlow = 0;
     private int mTransparency = 0;
     private int mPadding = 0;
+    private int mStatusBarHeightResId = 0;
     private int mVisibility = View.VISIBLE;
     private ColorMode mColorMode = ColorMode.DISCRETE;
     private boolean mTesting = false;
@@ -292,7 +293,8 @@ public class BatteryIndicator extends androidx.appcompat.widget.AppCompatImageVi
     public void updateDisplaySize() {
         this.mDisplayWidth = getMeasuredWidth();
         this.mDensity = getResources().getDisplayMetrics().density;
-        this.mStatusBarHeight = getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
+        if (mStatusBarHeightResId == 0) mStatusBarHeightResId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        this.mStatusBarHeight = getResources().getDimensionPixelSize(mStatusBarHeightResId);
     }
 
     protected void updateParameters() {

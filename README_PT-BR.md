@@ -9,13 +9,13 @@ Suas duas diferenças centrais são a integração com a **API 101 do libxposed*
 
 ## Estado atual
 
-- Versão estável: r14.2.0
-- Versão estável anterior: r14.1.3
+- Versão estável: r14.3.1
+- Versão estável anterior: r14.3.0
 - Pacote: `name.monwf.customiuizer.r14`
 - Base do LSPosed: [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c`
 - Lançamentos: [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 
-O r14.2.0 passou nos testes de instalação, reinicialização completa e nas funções principais do Launcher/SystemUI. Os logs finais não mostram exceções do módulo, crash, ANR ou encerramento do aplicativo, SystemUI ou launcher.
+O r14.3.1 é a versão estável atual. Ele foi construído, assinado e passou no `assembleRelease` com base no r14.3.0, incluindo a desduplicação das informações de carregamento na tela de bloqueio, limpeza de lint e atualização de dependências. O r14.3.0 passou na reinicialização completa e nas funções principais do Launcher/SystemUI; seus logs finais não mostram exceções, crash, ANR ou encerramento do aplicativo, SystemUI ou launcher.
 
 ## Destaques
 
