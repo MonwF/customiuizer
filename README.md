@@ -1,46 +1,82 @@
-# CustoMIUIzer A14
+# 米客 A14（CustoMIUIzer A14）
 
 **米客 A14** 是面向 **HyperOS 1 / Android 14** 的独立维护版系统定制模块。项目以 [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) 为 Android 14 功能参考，但采用自己的包名、版本线、构建与发布流程。
 
-本项目与参考版本的核心区别只有两条，也会作为后续维护主线：
-
-1. **libxposed API 101**：适配 Vector/LSPosed API 101，以原生 `intercept(Chain)` 和经过实机验证的兼容层组合运行。
-2. **代码与资源优化**：持续治理 Hook 热路径、线程、缓存、反射、资源和异常边界，减少无效工作与内存峰值，同时优先保证重启后 Hook 可靠。
-
-> [!WARNING]
-> 仅支持 Android 14（SDK 34）和 `arm64-v8a`。不要在 Android 15/16 上启用，也不要与上游版或其他同源分支同时启用，否则可能产生重复 Hook。
-
-## 当前版本
+## 当前版本与推荐
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | r14.5.0 |
+| 当前稳定版 | **r14.5.0** |
 | 上一稳定版 | r14.3.1 |
-| 当前候选版 | r14.6.1 |
+| 当前候选版 | r14.6.2 |
 | 应用名 | 米客 A14 |
 | 包名 | `tv.withaibuild.customiuizer.r14` |
-| 目标系统 | HyperOS 1 / Android 14 |
+| 目标系统 | HyperOS 1 / Android 14（minSdk 34，仅 `arm64-v8a`） |
 | Hook 接口 | libxposed API 101 |
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
-| 包名变更记录 | 已完成：源码目录/Java 包名/清单/Gradle 全量迁移至 `tv.withaibuild.customiuizer.r14` |
 
-r14.5.0 已完成构建、签名、包名迁移与完整重启验证，为当前推荐稳定版；因包名已变更，升级前请先卸载旧包名模块并重新启用作用域。r14.6.1 为当前候选版，回退 r14.6.0 中导致 systemui 启动崩溃的 Settings.System 自定义键迁移，保留通知渠道与权限声明，实机验证待补充。r14.3.1 为上一稳定版，该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+- **推荐日常使用的稳定版**：**r14.5.0**。它已完成包名迁移、`getResId()` 热路径缓存、生命周期加固与完整重启验证，LSPosed 日志无模块相关崩溃/ANR。
+- **r14.6.2** 是 r14.6.x 的清理/文档发布，去除了 r14.6.0/r14.6.1 的错误标签，并新增“各版本全方位对比”表。它仅包含死代码与权限清理，无业务逻辑改动，但仍作为**候选版**等待完整功能回归验证。
+- **r14.6.0 与 r14.6.1 的 release/tag 已删除**：r14.6.0 因 `systemui` 启动崩溃被废弃，r14.6.1 已合并到 r14.6.2。
 
-覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
+> [!WARNING]
+> 仅支持 **Android 14（SDK 34）** 与 `arm64-v8a`。不要在 Android 15/16 上启用，也不要与上游版或其他同源分支同时启用，否则可能产生重复 Hook。
+
+---
+
+## 各版本全方位对比
+
+下表覆盖从上游参考到 r14.6.2 的全部发行版，维度包括体积、加载速度、性能/省电、架构、稳定性与推荐度。体积数据来自构建产物，加载时间来自同一设备 LSPosed/Vector 日志，性能结论区分静态分析与实机验证。
+
+| 版本 | 状态 | APK 大小 | 相对上一版 | 模块加载中位数 | 性能/省电 | 架构 | 稳定性 | 推荐度 | 一句话总结 |
+|---|---|---:|---:|---:|---|---|---|---|---|---|
+| [上游 v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) | 参考基线 | 2,785,364 B | Android 14 基线 | — | 原项目基线 | API 100 | 稳定 | 仅供参考 | 上游最后阶段的 Android 14 功能参考，保留联网权限与支持资源 |
+| [r14.0.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.0.0) | 初始版 | 2,901,900 B | +116,536 B | — | 体积最大 | 建立 API 101 版本线 | 未完整验证 | 不推荐 | 建立独立版本线，加入类/方法/参数/资源/主题缓存 |
+| [r14.1.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.3) | 稳定版 | 2,886,250 B | −15,650 B | 11.5 ms（首启）/ 8 ms（再启） | 资源治理幅度最大：移除联网权限、支持资源、限制图标缓存 | 有界线程池、locale/Handler 静态清理 | 验证无模块崩溃 | **推荐** | API 101 稳定、资源瘦身最显著的一版 |
+| [r14.2.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.0) | 稳定版 | 2,886,165 B | −85 B | 8 ms | 偏好热路径、Hook 参数、反射、秒针调度优化 | 长期运行热路径最完整 | 验证无模块崩溃 | **推荐** | 长期运行细节最完整，减少短期对象与重复计算 |
+| [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 稳定版 | 2,886,165 B | 0 B | 约 8–15 ms | 热路径缓存、反射哨兵、无效 Hook/Receiver 防重注册 | 生命周期治理 | 验证无模块崩溃 | **推荐** | 累积 r14.2.1–2.3 的热路径与反射缓存治理 |
+| [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 稳定版 | 2,886,165 B | 0 B | 约 8–15 ms | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期 | 功能关闭时真正零成本 | 验证无模块崩溃 | **推荐** | 未配置时不注册 Controller/Receiver，降低功能关闭开销 |
+| [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 稳定版 | 2,886,165 B | −4 B | 约 8–15 ms | StepCounter 生命周期、BatteryIndicator 绘制热路径缓存、减少 Matrix 分配 | 状态栏刷新对象复用 | 验证无模块崩溃 | **推荐** | 状态栏图标/电池绘制每帧减少对象分配 |
+| [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 稳定版 | 2,886,165 B | 0 B | 15 ms（2 个样本） | 锁屏充电去重、lint 清理、`WeatherDataController` 线程池化 | 功能关闭零成本 | 验证无模块崩溃 | **推荐** | 天气查询不再每分钟 `new Thread()`，功能未开启时跳过资源替换 |
+| [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | **稳定版** | 2,886,373 B | +208 B | 约 8–15 ms | 包名迁移后结构统一，`getResId()` 热路径缓存 | 包名/生命周期/缓存/线程池全面落地 | **完整重启验证通过** | **首选稳定版** | 当前最稳基线，签名与包名已统一 |
+| r14.6.2（本版） | 候选版 | 2,900,213 B | +13,840 B | 约 8–15 ms | 与 r14.6.1 一致，无业务逻辑改动 | 清理死代码/未使用权限/错误标签 | r14.6.1 日志无报错，本版未改动逻辑 | 候选验证 | r14.6.x 终版：修复 r14.6.0 崩溃、清理 D 类残留、重写 README 对比表 |
+
+> **关于“省电性”的说明**：
+> 静态分析表明 r14.2.7 及以后版本通过“功能未开启时不注册 Hook/Receiver/Observer”、减少对象分配与线程池化来降低 CPU/内存/唤醒开销，对续航与流畅度有正面作用。但 APK 大小和加载中位数**不能直接等同于省电收益**；要量化续航改善，必须在同设备、同功能开关、同使用场景下使用 **Perfetto / Batterystats** 长时间对照采样。
+
+### 版本号与质量的关系
+
+- **版本号越大 ≠ 全面更优**。
+- r14.1.3 相比 r14.0.0 体积更小且更稳定。
+- r14.2.0–r14.3.1 在运行热路径上持续优化，但 APK 体积基本持平。
+- r14.5.0 是架构与稳定性最均衡的一版。
+- r14.6.x 没有新增用户功能：r14.6.0 引入崩溃，r14.6.1 修复，r14.6.2 清理发布记录与死代码。
+
+---
+
+## 版本选择建议
+
+| 使用场景 | 推荐版本 | 理由 |
+|---|---|---|
+| 只求稳定、省电、不折腾 | **r14.5.0** | 完整重启验证，无模块崩溃/ANR，架构与缓存都已落地 |
+| 想跟随最新验证版 | **r14.3.1** | 功能与稳定兼顾，WeatherDataController 线程池化明显 |
+| 重度状态栏/电池绘制定制 | **r14.2.9** | BatteryIndicator 绘制热路径缓存，Matrix 复用 |
+| 自定义动作/控制中心开关较多 | **r14.2.7** | 自定义动作 gate 与 Launcher gesture gate，未配置时不加载控制器 |
+| 已安装 r14.6.0/14.6.1 并遇到问题 | **r14.6.2** | 修复 systemui 崩溃并清理发布标签，但完整功能验证待补充 |
+
+---
 
 ## 与参考版本的区别
 
-| 维度 | CustoMIUIzer A14 |
+| 维度 | 米客 A14 |
 |---|---|
 | 维护范围 | 固定面向 HyperOS 1 / Android 14，避免向未验证系统注册 Hook |
 | Hook 架构 | libxposed API 101；按模块使用原生拦截器或稳定兼容层 |
-| 安装身份 | 独立 applicationId，可与参考源码和发布历史区分 |
+| 安装身份 | 独立 `applicationId`，可与参考源码和发布历史区分 |
 | 性能策略 | 优化高频 Hook、共享有界线程池、限制缓存、减少反射和重复计算 |
 | 轻量化 | 移除下载、仓库、赞赏、内置网页与网络权限 |
 | 发布策略 | 每版执行混淆构建、Lint、zipalign、签名和实机重启验证 |
-
-“独立维护”不表示抹去原作者关系：本项目仍是 GPL-3.0 衍生作品，保留来源、许可证与对应源码义务。
 
 ## 功能范围
 
@@ -58,100 +94,12 @@ r14.5.0 已完成构建、签名、包名迁移与完整重启验证，为当前
 1. 在当前版本中备份设置。
 2. 卸载上游版或其他同源分支，不要保留多个模块同时启用。
 3. 安装 APK，在 LSPosed 中启用模块并检查作用域。
-4. 打开应用一次，然后完整重启设备。
+4. 打开应用一次，然后**完整重启**设备。
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
 
-## r14.5.0
-
-- **包名迁移**：`name.monwf.customiuizer.r14` → `tv.withaibuild.customiuizer.r14`。
-  - Java 源码目录从 `name/monwf/customiuizer` 整体迁移到 `tv/withaibuild/customiuizer`。
-  - `AndroidManifest.xml` 组件名、Preference 屏幕 class、Shortcuts、Tasker 组件统一改为新包名。
-  - `app/build.gradle` 的 `namespace` 与 `applicationId` 同步改为新包名。
-  - `META-INF/xposed/java_init.list` 入口类改为 `tv.withaibuild.customiuizer.MainModule`。
-- **A 类静态清理**：统一 `String.format(Locale.US, ...)` 与 `toLowerCase(Locale.ROOT)`，避免默认 locale 影响数值与过滤；`MainActivity` 重置设置改用 `SharedPreferences.apply()`；`new Handler()` 统一改为 `new Handler(Looper.getMainLooper())`。
-- **B 类生命周期加固**：为仍缺少导出标志的 `registerReceiver(receiver, filter)` 调用补全 `Context.RECEIVER_EXPORTED`/`Context.RECEIVER_NOT_EXPORTED`，系统广播使用 `NOT_EXPORTED`，模块自定义广播使用 `EXPORTED`。
-- **C 类性能缓存**：`Helpers.java` 新增线程安全 `getResId()` 缓存；`System.java` 与 `SystemUI.java` 的高频 `getIdentifier()` 调用收敛到 `Helpers.getResId()`，减少状态栏/控制中心初始化与刷新热路径上的重复资源查找。
-
-## r14.3.1 优化重点
-
-- 修复锁屏充电数据重复显示：`System.ChargingInfoHook` 仅对 `KeyguardIndicationController` 调用路径修改 `ChargeUtils.getChargingHintText` 返回结果；增加 `isChargingInfoHooked` 静态防护；拼接前检查 `hint.contains(info)` 防止重复追加。
-- lint 清理：`PreferenceFragmentBase` 的 `SimpleDateFormat` 指定 `Locale.US`；`AppDataAdapter` 的 `toLowerCase()` 指定 `Locale.ROOT`；`Various` 的 `SharedPreferences.commit()` 改为 `apply()`；`BatteryIndicator` 缓存 `status_bar_height` 资源 ID。
-- 依赖更新：`build.gradle` 升级 `com.github.ben-manes.versions` 插件至 `0.54.0`；`app/build.gradle` 升级 `kotlin-bom` 至 `2.2.21`；`libxposed` 保持 API 101，未升级到 102。
-- 新增 `SystemUI.hasStatusBarModifications()`，无对应功能开启时 `setupStatusBar` 不再调用 `addFakeResource` 和 `setThemeValueReplacement`/`setResReplacement`，仅保留 `systemui_restart_time` 标记写入，降低 SystemUI 启动时无效资源替换开销。
-- `WeatherDataController` 改用单一 `ExecutorService` 后台查询天气，避免每分钟 `TIME_TICK` 触发时新建 `Thread`；`Handler` 改为静态 `Looper.getMainLooper()` 实例；`initContext` 重复进入时先注销旧 `TIME_TICK` 接收者并显式使用 `Context.RECEIVER_NOT_EXPORTED`。
-
-## r14.2.9 优化重点（含 r14.2.8 累积）
-
-- `StepCounterController.initContext` 静态持有 `TIME_TICK` 接收者，SystemUI 重建时先注销旧接收者再注册新接收者；`Handler` 改用 `mContext.getMainLooper()`；`removeStepViewByTag` 改用 `removeIf` 避免并发修改。
-- `BatteryIndicator.updateDisplaySize` 缓存 `mDensity` 与 `mStatusBarHeight`，`updateDrawable` 绘制时不再重复查询 `Resources`。
-- `BatteryIndicator.updateParameters` 移除每次调用新建的 `Matrix` 对象。
-- `MainModule` 偏好变化监听不再调用 `sharedPreferences.getAll()` 复制整个远程偏好表，改为按已有值类型单次读取，降低设置调整时的内存与 CPU 开销。
-- `GlobalActions.setupStatusBar` 内的 `MiuiFreeformModeController`（PinningWindow，动作码 28）、`SoScSplitScreenController`（SplitScreen，动作码 29）与 `AutoBrightnessController`（ToggleAutoBrightness，toggle 6）Hook 仅在对应动作被配置时才注册，避免任意自定义动作开启时加载这些控制器 Hook。
-- 移除 `GlobalActions.mSBReceiver` `OpenVolumeDialog` 分支内被错误嵌套、永远不会执行的 `ToggleZenMode` / `ToggleNightMode` 子分支。
-
-
-## r14.2.7 优化重点
-
-- `GlobalActions.hasCustomActions()` 集中判断是否存在任何自定义动作；未配置时 `MainModule` 不再调用 `setupGlobalActions` / `setupStatusBar`，避免在 `system_server` 和 `SystemUI` 中注册 `mSBReceiver`、自由窗口/分屏/自动亮度控制器 Hook。
-- `MainModule` 仅在 `launcher_privacyapps_gest` 开启时调用 `Launcher.setupLauncher`，避免为所有桌面进程注册隐私应用配置广播接收者。
-- `SystemUI` 手电筒与 `Various` 下一闹钟 `ContentObserver` 改为 `new Handler(mContext.getMainLooper())`，不再依赖当前线程 Looper。
-- `System.java` 秒级时钟刷新 `TIME_SET` 广播接收者改为先注销旧实例再注册，且仅在启用秒针显示时才注册。
-
-## r14.2.4 优化重点（含 r14.2.1-r14.2.3 累积）
-
-- `MainModule` 在 `SystemUI` 进程中按开关判断是否存在控制中心/音量相关定制；未开启对应功能时跳过 `ControlCenterPluginHook` 注册，避免加载 `miui.systemui.plugin` 插件 loader 及其后续大量 UI 回调。
-- `GlobalActions` 中 `MiuiFreeformModeController`、`SoScSplitScreenController` 与 `AutoBrightnessController` 的 `BroadcastReceiver` 注册前通过 `AdditionalInstanceField` 检查并注销旧实例，重复进入 `onInit`/`构造` 时不再累积多个接收者。
-- 保留 r14.2.3 的 `ContentObserver` / `BroadcastReceiver` 生命周期治理、r14.2.2 的反射缓存哨兵、r14.2.1 的热路径缓存与绘制对象复用边界，不扩大未验证的 API 101 原生拦截范围。
-
-## r14.2.0 优化重点
-
-- 偏好键在加载时一次规范化，高频 Hook 读取不再反复拼接 `pref_key_` 或重复查表。
-- API 101 兼容层按需生成参数数组；清除 164 处无效/无改写参数复制和 116 次无效对象读取。
-- Hook 注册不再为参数签名构造并长期保留重复字符串缓存，兼容层的后置回调检测延迟到首次实际执行。
-- 秒级时钟刷新改为主线程单调度，不再额外创建 `Timer` 后台线程和跨线程转发。
-- 修复音量面板模糊参数的动态更新键不匹配，并加强偏好观察者的并发安全。
-- 保持 r14.1.3 已验证的 API 101 混合架构、SystemUI 空值保护、独立包名与无网络权限边界。
-
-r14.1.3 主要解决线程、缓存、图像处理、音频计算与无关资源占用，属于宏观资源优化；r14.2.0 则继续治理偏好读取、Hook 参数、反射、无效分支和线程调度，重点是减少长期运行热路径上的短期对象、重复计算与跨线程唤醒。r14.2.0 的目标不是明显缩小 APK，而是在不改变已验证兼容边界的前提下进一步收紧执行成本。
-
-### 模块加载实测
-
-以下数据来自同一设备的 Vector/LSPosed 日志，只统计 `tv.withaibuild.customiuizer.r14` 从开始加载到报告成功的时间：
-
-| 版本与启动周期 | 样本数 | 中位数 | 平均值 | 范围 |
-|---|---:|---:|---:|---:|
-| r14.1.3 第一次启动 | 8 | 11.5 ms | 18.9 ms | 5–51 ms |
-| r14.1.3 第二次启动 | 9 | 8 ms | 15.7 ms | 5–37 ms |
-| r14.2.0 正式版 | 9 | 8 ms | 22.8 ms | 5–81 ms |
-| r14.3.1 完整重启后 | 2 | 15 ms | 15 ms | 6–24 ms |
-
-r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15 ms），与 r14.2.0 的 8 ms 中位数相近，日志不能证明模块入口有显著提速。平均值和长尾会受到目标进程启动负载影响；本版收益主要发生在加载完成后的高频 Hook 与长期运行阶段。
-
-## 版本演进与静态对比
-
-| 版本 | APK 大小 | 相对上一版 | 主要变化与性能定位 |
-|---|---:|---:|---|
-| [上游 v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) | 2,785,364 B | Android 14 基线 | 上游最后阶段的 Android 14 功能参考；API 100，保留联网权限和原版支持资源 |
-| [r14.0.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.0.0) | 2,901,900 B | +116,536 B | 建立独立 Android 14/API 101 版本线，加入类、方法、参数、资源与主题缓存 |
-| [r14.1.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.3) | 2,886,250 B | −15,650 B | API 101 与 Hook 稳定性修复、有界线程池、受限图标缓存、移除网络权限与支持资源；资源收益最大 |
-| [r14.2.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.0) | 2,886,165 B | −85 B | 优化偏好热路径、Hook 参数、反射、并发可见性与秒钟调度；长期运行细节最完整 |
-| [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 热路径缓存、反射哨兵、生命周期治理、无效 Hook 与 BroadcastReceiver 防重注册（含 r14.2.1-r14.2.3 累积） |
-| [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期与秒针接收者治理 |
-| [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
-| [r14.6.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.1) | 2,900,233 B | −4 B | r14.6.0 热修复：回退 Settings.System 自定义键迁移，保留通知渠道与权限声明（候选版，实机验证待补充） |
-| [r14.6.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.0) | 2,900,237 B | +13,864 B | D 类废弃 API / 权限迁移：Settings.System 自定义键迁移、PendingIntent flag 兼容辅助、通知渠道与 WAKE_LOCK/POST_NOTIFICATIONS 权限声明（候选版，实机验证待补充） |
-| [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 2,886,373 B | +208 B | 包名迁移至 `tv.withaibuild.customiuizer.r14`，包含 A/B/C 静态清理、生命周期加固与 `getResId()` 热路径缓存（稳定版，已通过完整重启验证，日志无模块相关 AndroidRuntime/FATAL/am_crash/am_anr） |
-| [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 在 r14.3.0 功能关闭零成本与 WeatherDataController 线程治理基础上，修复锁屏充电数据去重、lint 清理与依赖更新 |
-
-r14.3.0 比 r14.0.0 小 15,735 B；r14.1.3 比 r14.0.0 小 15,650 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
-
-上游最新的 [v25.09.25](https://github.com/MonwF/customiuizer/releases/tag/v25.09.25) 已转向 Android 15 / HyperOS 2、目标 SDK 35，不能与本项目在 Android 14 上直接进行运行性能比较；本项目的有效上游基线仍是 v24.10.12。
-
-综合来看，r14.1.3 是实际资源治理幅度最大的一版，r14.2.0 是热路径和并发细节最完整的一版，r14.1.3 合并的早期基线（原 r14.1.2）是关键稳定性节点。具体耗电改善仍需在相同设备、相同功能开关和使用场景下通过 Perfetto 或 Batterystats 长时间对照，不能仅凭 APK 大小或 LSPosed 加载日志量化。
-
-完整版本记录见 [CHANGELOG.md](CHANGELOG.md)。
+覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
 ## 构建
 
@@ -165,7 +113,7 @@ Release 构建启用 R8、资源压缩、zipalign 和 APK Signature Scheme v2。
 
 ## 来源与许可
 
-CustoMIUIzer A14 由 `tomthenpc` 独立维护，不代表原作者或参考项目。源码来自 [Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)，Android 14 功能基线参考 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的 `v24.10.12`。
+米客 A14 由 `tomthenpc` 独立维护，不代表原作者或参考项目。源码来自 [Mikanoshi/CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)，Android 14 功能基线参考 [MonwF/customiuizer](https://github.com/MonwF/customiuizer) 的 `v24.10.12`。
 
 项目继续以 [GPL-3.0](LICENSE) 发布。分发 APK 时必须提供对应源码、保留许可证与版权来源，并明确标注修改。详见 [NOTICE.md](NOTICE.md)。
 

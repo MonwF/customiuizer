@@ -7,45 +7,39 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.6.1
+## r14.6.2
 
-发布日期：2026-07-24。状态：**候选版，r14.6.0 热修复；D 类中 Settings.System 自定义键迁移导致 systemui 启动阶段 Context 无数据目录而崩溃，已回退到 Settings.System；保留 Notification Channel 与权限声明**。
+发布日期：2026-07-24。状态：**候选版（r14.6.x 终版；合并 r14.6.0/14.6.1 历史、清理死代码与发布标签；无业务逻辑改动）**。
 
-### 修复内容
+### r14.6.x 演进
 
-- **回退 Settings.System 自定义键迁移**：`systemui_restart_time`（`SystemUI` 写 / `MainModule` 读）、`last_music_paused_time`（`GlobalActions` 写 / 读）、`dark_mode_enable_by_setting`（`GlobalActions` 写）恢复使用 `Settings.System`，避免在 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
-- **保留 D 类其余改动**：`MainApplication.onCreate` 默认 `NotificationChannel`（ID `customiuizer_default`）与 `AndroidManifest.xml` 中 `WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明仍保留。
-- **PendingIntent flag 兼容辅助**：`Helpers` 中 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent` 保留，供后续新增 PendingIntent 时使用。
-
-### 构建产物验证
-
-- `versionCode` 161 / `versionName` r14.6.1。
-- APK：CustoMIUIzer-A14-r14.6.1.apk，2,900,233 bytes，SHA-256: 19B259AD6ED44D51C44F0F0D3981A93D8A52CBC6637C1632313A1CE6270B2EEA。
-- 通过 gradlew assembleRelease；lintVitalRelease 0 错误，既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.6.0 一致；包名不变，可覆盖 r14.6.0 升级。
-
-### 实机验证
-
-- 待完整重启后补充 LSPosed 日志与 statusbar/control center 回归结果。
-
-## r14.6.0
-
-发布日期：2026-07-24。状态：**候选版，D 类废弃 API / 权限迁移；构建产物通过 `assembleRelease` 待验证；实机验证待补充**。 
-
-### D 类废弃 API / 权限迁移
-
-- **Settings.System 自定义键迁移到应用 SharedPreferences**：`last_music_paused_time`（`GlobalActions` 写 / 读）、`systemui_restart_time`（`SystemUI` 写 / `MainModule` 读）、`dark_mode_enable_by_setting`（`GlobalActions` 写）统一使用 `Helpers.getSystemSharedPrefs()`，避免继续写入 `Settings.System`。
-- **PendingIntent flag 兼容**：源码中当前未出现模块自身构造的 `PendingIntent.get*()` 调用，已在 `Helpers` 新增 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent`，后续新增 PendingIntent 时统一补齐 `FLAG_IMMUTABLE` / `FLAG_MUTABLE`。
-- **通知渠道与权限声明**：`MainApplication.onCreate` 创建默认 `NotificationChannel`（ID `customiuizer_default`，低重要性）；`AndroidManifest.xml` 补齐 `WAKE_LOCK` 与 `POST_NOTIFICATIONS` 权限。
+- **r14.6.0 原始尝试**：
+  - D 类废弃 API/权限迁移：将 `Settings.System` 自定义键（`systemui_restart_time`、`last_music_paused_time`、`dark_mode_enable_by_setting`）迁移到模块 `SharedPreferences`；新增 `Helpers.getSystemSharedPrefs()`。
+  - PendingIntent flag 兼容辅助：在 `Helpers` 中新增 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent`。
+  - 通知渠道：`MainApplication.onCreate` 创建默认低重要性 `NotificationChannel`（ID `customiuizer_default`）。
+  - 权限声明：`AndroidManifest.xml` 新增 `WAKE_LOCK` 与 `POST_NOTIFICATIONS`。
+- **r14.6.1 热修复**：
+  - 回退 `Settings.System` 自定义键迁移，恢复使用 `Settings.System`；移除 `Helpers.getSystemSharedPrefs()`，避免 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
+  - 保留通知渠道、`WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明、PendingIntent flag 兼容辅助。
+  - LSPosed 日志（`LSPosed_2026-07-24T23_06_27.328222`）确认无模块相关报错。
+- **r14.6.2 清理与发布**：
+  - 删除 GitHub `r14.6.0` 和 `r14.6.1` release 与 tag（两个版本均已废弃或合并）。
+  - 合并 r14.6.0/14.6.1 变更记录到本版本。
+  - 移除 `Helpers.java` 中未使用的 `android.content.SharedPreferences` 导入。
+  - 移除 `AndroidManifest.xml` 中未使用的 `POST_NOTIFICATIONS` 权限声明；`WAKE_LOCK` 仍保留（`Controls.java` 实际使用 `WakeLock`）。
+  - 重写 `README.md`，新增“各版本全方位对比”表。
 
 ### 构建产物验证
 
-- `versionCode` 160 / `versionName` r14.6.0。
-- 签名证书与 r14.5.0 一致；包名不变，可直接覆盖升级。
+- `versionCode` 162 / `versionName` r14.6.2。
+- APK：`CustoMIUIzer-A14-r14.6.2.apk`，2,900,213 bytes，SHA-256: `065C43CD00A199A8363D1AD0D6F296270C32A645230113EC4DFF5AF5754ECA18`。
+- 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.5.0 一致；包名不变，可覆盖安装。
 
 ### 实机验证
 
-- 待完整重启后补充 LSPosed 日志与功能回归结果；因涉及 Settings 键迁移与权限声明，需逐项 ROM 验证。
+- LSPosed 日志（r14.6.1 测试）无模块相关报错；r14.6.2 仅含文档/死代码/权限清理，未改动业务逻辑，预计行为与 r14.6.1 一致。
+- 完整重启后 statusbar / control center / 锁屏 / 天气 / 电池指示器等功能回归测试待补充。
 
 ## r14.5.0
 
