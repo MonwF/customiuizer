@@ -25,7 +25,7 @@
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 | 包名变更记录 | 已完成：源码目录/Java 包名/清单/Gradle 全量迁移至 `tv.withaibuild.customiuizer.r14` |
 
-r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版。该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
+r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版。r14.5.0 已完成包名迁移与完整重启验证，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；因包名已变更，升级前请先卸载旧包名模块并重新启用作用域。该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
 覆盖安装后、完整重启前，旧 SystemUI 进程可能因热加载新模块产生一次性 Hook 失败记录；完整重启后不再复现，不属于正式启动故障。因此升级模块后必须完整重启设备，不能只重启桌面或 SystemUI。
 
@@ -140,7 +140,7 @@ r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15
 | [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 2,886,165 B | 0 B | 热路径缓存、反射哨兵、生命周期治理、无效 Hook 与 BroadcastReceiver 防重注册（含 r14.2.1-r14.2.3 累积） |
 | [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 2,886,165 B | 0 B | 自定义动作 gate、Launcher gesture gate、ContentObserver/Handler 生命周期与秒针接收者治理 |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
-| [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 2,886,373 B | +208 B | 包名迁移至 `tv.withaibuild.customiuizer.r14`，包含 A/B/C 静态清理、生命周期加固与 `getResId()` 热路径缓存（候选版） |
+| [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 2,886,373 B | +208 B | 包名迁移至 `tv.withaibuild.customiuizer.r14`，包含 A/B/C 静态清理、生命周期加固与 `getResId()` 热路径缓存（候选版，已通过完整重启验证，日志无模块相关 AndroidRuntime/FATAL/am_crash/am_anr） |
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 在 r14.3.0 功能关闭零成本与 WeatherDataController 线程治理基础上，修复锁屏充电数据去重、lint 清理与依赖更新 |
 
 r14.3.0 比 r14.0.0 小 15,735 B；r14.1.3 比 r14.0.0 小 15,650 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。

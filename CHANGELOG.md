@@ -9,7 +9,7 @@
 
 ## r14.5.0
 
-发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 升级；实机验证待补充**。
+发布日期：2026-07-24。状态：**候选版，构建产物通过 `assembleRelease`，完整重启后日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`**。
 
 ### 包名与工程结构迁移
 
@@ -47,7 +47,8 @@
 
 ### 实机验证
 
-- 待构建完成后补充完整重启日志与功能回归结果。
+- `LSPosed_2026-07-24T21_24_25.003081` 完整重启后，`VectorModuleService` 已向 `tv.withaibuild.customiuizer.r14` 发送模块 binder，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
+- SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
 
 ## r14.3.1
 
