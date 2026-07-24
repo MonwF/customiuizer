@@ -1,0 +1,1923 @@
+/*
+ * This file is from LSPosed.
+ *
+ * LSPosed is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LSPosed is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LSPosed.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2020 EdXposed Contributors
+ * Copyright (C) 2021 LSPosed Contributors
+ */
+package tv.withaibuild.customiuizer.mods.utils;
+
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.MemberUtilsX;
+import org.luckypray.dexkit.DexKitBridge;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import io.github.libxposed.api.XposedInterface;
+import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
+import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.MethodHook;
+
+
+/**
+ * Helpers that simplify hooking and calling methods/constructors, getting and settings fields, ...
+ */
+public final class XposedHelpers {
+    public static XposedInterface moduleInst;
+    public static DexKitBridge bridge;
+    private static final String TAG = "LSPosed-Bridge";
+    private XposedHelpers() {
+    }
+
+    private static final Object NOT_FOUND = new Object();
+    private static final ConcurrentHashMap<MemberCacheKey.Field, Object> fieldCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<MemberCacheKey.Method, Object> methodCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<MemberCacheKey.Constructor, Object> constructorCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ClassCacheKey, Object> classCache = new ConcurrentHashMap<>();
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+
+    /** Returns the hooked method arguments as an array. */
+    public static Object[] getArgsArray(XposedInterface.Chain chain) {
+        return chain.getArgs().toArray(EMPTY_OBJECT_ARRAY);
+    }
+
+    /** Returns the supplied argument list as an array. */
+    public static Object[] getArgsArray(List<Object> args) {
+        return args.toArray(EMPTY_OBJECT_ARRAY);
+    }
+
+    /** If {@code throwable} is set, throws it; otherwise returns {@code result}. */
+    public static Object throwOrReturn(Throwable throwable, Object result) throws Throwable {
+        if (throwable != null) throw throwable;
+        return result;
+    }
+
+    /** If {@code throwable} is set, throws it; otherwise proceeds to the next hook/original method. */
+    public static Object proceedOrThrow(XposedInterface.Chain chain, Object[] args, Throwable throwable) throws Throwable {
+        if (throwable != null) throw throwable;
+        return chain.proceed(args);
+    }
+
+    /** If {@code throwable} is set, throws it; otherwise proceeds with the current arguments. */
+    public static Object proceedOrThrow(XposedInterface.Chain chain, Throwable throwable) throws Throwable {
+        if (throwable != null) throw throwable;
+        return chain.proceed();
+    }
+
+    private static final WeakHashMap<Object, HashMap<String, Object>> additionalFields = new WeakHashMap<>();
+
+    /**
+     * Note that we use object key instead of string here, because string calculation will lose all
+     * the benefits of 'HashMap', this is basically the solution of performance traps.
+     * <p>
+     * So in fact we only need to use the structural comparison results of the reflection object.
+     *
+     * @see <a href="https://github.com/RinOrz/LSPosed/blob/a44e1f1cdf0c5e5ebfaface828e5907f5425df1b/benchmark/src/result/ReflectionCacheBenchmark.json">benchmarks for ART</a>
+     * @see <a href="https://github.com/meowool-catnip/cloak/blob/main/api/src/benchmark/kotlin/com/meowool/cloak/ReflectionObjectAccessTests.kt#L37-L65">benchmarks for JVM</a>
+     */
+    private abstract static class MemberCacheKey {
+        private final int hash;
+
+        protected MemberCacheKey(int hash) {
+            this.hash = hash;
+        }
+
+        @Override
+        public abstract boolean equals(@Nullable Object obj);
+
+        @Override
+        public final int hashCode() {
+            return hash;
+        }
+
+        static final class Constructor extends MemberCacheKey {
+            private final Class<?> clazz;
+            private final Class<?>[] parameters;
+            private final boolean isExact;
+
+            public Constructor(Class<?> clazz, Class<?>[] parameters, boolean isExact) {
+                super(31 * Objects.hash(clazz, isExact) + Arrays.hashCode(parameters));
+                this.clazz = clazz;
+                this.parameters = parameters;
+                this.isExact = isExact;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (!(o instanceof Constructor)) return false;
+                Constructor that = (Constructor) o;
+                return isExact == that.isExact && Objects.equals(clazz, that.clazz) && Arrays.equals(parameters, that.parameters);
+            }
+
+            @NonNull
+            @Override
+            public String toString() {
+                String str = clazz.getName() + getParametersString(parameters);
+                if (isExact) {
+                    return str + "#exact";
+                } else {
+                    return str;
+                }
+            }
+        }
+
+        static final class Field extends MemberCacheKey {
+            private final Class<?> clazz;
+            private final String name;
+
+            public Field(Class<?> clazz, String name) {
+                super(Objects.hash(clazz, name));
+                this.clazz = clazz;
+                this.name = name;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (!(o instanceof Field)) return false;
+                Field field = (Field) o;
+                return Objects.equals(clazz, field.clazz) && Objects.equals(name, field.name);
+            }
+
+            @NonNull
+            @Override
+            public String toString() {
+                return clazz.getName() + "#" + name;
+            }
+        }
+
+        static final class Method extends MemberCacheKey {
+            private final Class<?> clazz;
+            private final String name;
+            private final Class<?>[] parameters;
+            private final boolean isExact;
+
+            public Method(Class<?> clazz, String name, Class<?>[] parameters, boolean isExact) {
+                super(31 * Objects.hash(clazz, name, isExact) + Arrays.hashCode(parameters));
+                this.clazz = clazz;
+                this.name = name;
+                this.parameters = parameters;
+                this.isExact = isExact;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (!(o instanceof Method)) return false;
+                Method method = (Method) o;
+                return isExact == method.isExact && Objects.equals(clazz, method.clazz) && Objects.equals(name, method.name) && Arrays.equals(parameters, method.parameters);
+            }
+
+            @NonNull
+            @Override
+            public String toString() {
+                String str = clazz.getName() + '#' + name + getParametersString(parameters);
+                if (isExact) {
+                    return str + "#exact";
+                } else {
+                    return str;
+                }
+            }
+        }
+    }
+
+    private static final class ClassCacheKey {
+        private final ClassLoader classLoader;
+        private final String className;
+        private final int hash;
+
+        ClassCacheKey(ClassLoader classLoader, String className) {
+            this.classLoader = classLoader;
+            this.className = className;
+            this.hash = Objects.hash(System.identityHashCode(classLoader), className);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ClassCacheKey)) return false;
+            ClassCacheKey that = (ClassCacheKey) o;
+            return classLoader == that.classLoader && Objects.equals(className, that.className);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public String toString() {
+            return className + "@" + System.identityHashCode(classLoader);
+        }
+    }
+
+    public static void log(String line) {
+        Log.i(TAG, "[Pengeek] " + line);
+    }
+
+    public static void log(Throwable t) {
+        String logStr = Log.getStackTraceString(t);
+        Log.e(TAG, "[Pengeek] " + logStr);
+    }
+
+    public static void log(String mod, String line) {
+        Log.i(TAG, "[Pengeek][" + mod + "] " + line);
+    }
+
+    public static void log(String mod, Throwable t) {
+        String logStr = Log.getStackTraceString(t);
+        Log.e(TAG, "[Pengeek][" + mod + "] " + logStr);
+    }
+
+    /**
+     * Look up a class with the specified class loader.
+     *
+     * <p>There are various allowed syntaxes for the class name, but it's recommended to use one of
+     * these:
+     * <ul>
+     *   <li>{@code java.lang.String}
+     *   <li>{@code java.lang.String[]} (array)
+     *   <li>{@code android.app.ActivityThread.ResourcesKey}
+     *   <li>{@code android.app.ActivityThread$ResourcesKey}
+     * </ul>
+     *
+     * @param className   The class name in one of the formats mentioned above.
+     * @param classLoader The class loader.
+     * @return A reference to the class.
+     * @throws ClassNotFoundError In case the class was not found.
+     */
+    public static Class<?> findClass(String className, ClassLoader classLoader) {
+        Class<?> c = findClassInternal(className, classLoader);
+        if (c == null) throw new ClassNotFoundError(new ClassNotFoundException(className));
+        return c;
+    }
+
+    /**
+     * Look up and return a class if it exists.
+     * Like {@link #findClass}, but doesn't throw an exception if the class doesn't exist.
+     *
+     * @param className   The class name.
+     * @param classLoader The class loader, or {@code null} for the boot class loader.
+     * @return A reference to the class, or {@code null} if it doesn't exist.
+     */
+    public static Class<?> findClassIfExists(String className, ClassLoader classLoader) {
+        return findClassInternal(className, classLoader);
+    }
+
+    private static Class<?> findClassInternal(String className, ClassLoader classLoader) {
+        ClassLoader effectiveLoader = classLoader != null ? classLoader : moduleInst.getClass().getClassLoader();
+        ClassCacheKey key = new ClassCacheKey(effectiveLoader, className);
+        Object cached = classCache.get(key);
+        if (cached != null) {
+            return cached == NOT_FOUND ? null : (Class<?>) cached;
+        }
+        try {
+            Class<?> c = ClassUtils.getClass(effectiveLoader, className, false);
+            classCache.put(key, c);
+            return c;
+        } catch (ClassNotFoundException e) {
+            classCache.put(key, NOT_FOUND);
+            return null;
+        }
+    }
+
+    /**
+     * Look up a field in a class and set it to accessible.
+     *
+     * @param clazz     The class which either declares or inherits the field.
+     * @param fieldName The field name.
+     * @return A reference to the field.
+     * @throws NoSuchFieldError In case the field was not found.
+     */
+    public static Field findField(Class<?> clazz, String fieldName) {
+        MemberCacheKey.Field key = new MemberCacheKey.Field(clazz, fieldName);
+
+        Object cached = fieldCache.get(key);
+        if (cached != null) {
+            if (cached == NOT_FOUND) throw new NoSuchFieldError(key.toString());
+            return (Field) cached;
+        }
+
+        try {
+            Field newField = findFieldRecursiveImpl(clazz, fieldName);
+            newField.setAccessible(true);
+            fieldCache.put(key, newField);
+            return newField;
+        } catch (NoSuchFieldException e) {
+            fieldCache.put(key, NOT_FOUND);
+            throw new NoSuchFieldError(key.toString());
+        }
+    }
+
+    /**
+     * Look up and return a field if it exists.
+     * Like {@link #findField}, but doesn't throw an exception if the field doesn't exist.
+     *
+     * @param clazz     The class which either declares or inherits the field.
+     * @param fieldName The field name.
+     * @return A reference to the field, or {@code null} if it doesn't exist.
+     */
+    public static Field findFieldIfExists(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName);
+        } catch (NoSuchFieldError e) {
+            return null;
+        }
+    }
+
+    private static Field findFieldRecursiveImpl(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            while (true) {
+                clazz = clazz.getSuperclass();
+                if (clazz == null || clazz.equals(Object.class))
+                    break;
+
+                try {
+                    return clazz.getDeclaredField(fieldName);
+                } catch (NoSuchFieldException ignored) {
+                }
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the first field of the given type in a class.
+     * Might be useful for Proguard'ed classes to identify fields with unique types.
+     *
+     * @param clazz The class which either declares or inherits the field.
+     * @param type  The type of the field.
+     * @return A reference to the first field of the given type.
+     * @throws NoSuchFieldError In case no matching field was not found.
+     */
+    public static Field findFirstFieldByExactType(Class<?> clazz, Class<?> type) {
+        Class<?> clz = clazz;
+        do {
+            for (Field field : clz.getDeclaredFields()) {
+                if (field.getType() == type) {
+                    field.setAccessible(true);
+                    return field;
+                }
+            }
+        } while ((clz = clz.getSuperclass()) != null);
+
+        throw new NoSuchFieldError("Field of type " + type.getName() + " in class " + clazz.getName());
+    }
+
+    /**
+     * Look up a method and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
+     * for details.
+     */
+    public static CustomMethodUnhooker findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
+        if (parameterTypesAndCallback.length == 0 || !(parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof MethodHook))
+            throw new IllegalArgumentException("no callback defined");
+
+        MethodHook callback = (MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
+        Method m = findMethodExact(clazz, methodName, getParameterClasses(clazz.getClassLoader(), parameterTypesAndCallback));
+        return doHookMethod(m, callback);
+    }
+
+    /**
+     * Look up a method and hook it. The last argument must be the callback for the hook.
+     *
+     * @param className                 The name of the class which implements the method.
+     * @param classLoader               The class loader for resolving the target and parameter classes.
+     * @param methodName                The target method name.
+     * @param parameterTypesAndCallback The parameter types of the target method, plus the callback.
+     * @return An object which can be used to remove the callback again.
+     * @throws NoSuchMethodError  In case the method was not found.
+     * @throws ClassNotFoundError In case the target class or one of the parameter types couldn't be resolved.
+     */
+    public static CustomMethodUnhooker findAndHookMethod(String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback) {
+        return findAndHookMethod(findClass(className, classLoader), methodName, parameterTypesAndCallback);
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     * See {@link #findMethodExact(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Method findMethodExact(Class<?> clazz, String methodName, Object... parameterTypes) {
+        return findMethodExact(clazz, methodName, getParameterClasses(clazz.getClassLoader(), parameterTypes));
+    }
+
+    /**
+     * Look up and return a method if it exists.
+     * See {@link #findMethodExactIfExists(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Method findMethodExactIfExists(Class<?> clazz, String methodName, Object... parameterTypes) {
+        try {
+            return findMethodExact(clazz, methodName, parameterTypes);
+        } catch (ClassNotFoundError | NoSuchMethodError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     * The method must be declared or overridden in the given class.
+     *
+     * <p>See {@link #findAndHookMethod(String, ClassLoader, String, Object...)} for details about
+     * the method and parameter type resolution.
+     *
+     * @param className      The name of the class which implements the method.
+     * @param classLoader    The class loader for resolving the target and parameter classes.
+     * @param methodName     The target method name.
+     * @param parameterTypes The parameter types of the target method.
+     * @return A reference to the method.
+     * @throws NoSuchMethodError  In case the method was not found.
+     * @throws ClassNotFoundError In case the target class or one of the parameter types couldn't be resolved.
+     */
+    public static Method findMethodExact(String className, ClassLoader classLoader, String methodName, Object... parameterTypes) {
+        return findMethodExact(findClass(className, classLoader), methodName, getParameterClasses(classLoader, parameterTypes));
+    }
+
+    /**
+     * Look up and return a method if it exists.
+     * Like {@link #findMethodExact(String, ClassLoader, String, Object...)}, but doesn't throw an
+     * exception if the method doesn't exist.
+     *
+     * @param className      The name of the class which implements the method.
+     * @param classLoader    The class loader for resolving the target and parameter classes.
+     * @param methodName     The target method name.
+     * @param parameterTypes The parameter types of the target method.
+     * @return A reference to the method, or {@code null} if it doesn't exist.
+     */
+    public static Method findMethodExactIfExists(String className, ClassLoader classLoader, String methodName, Object... parameterTypes) {
+        try {
+            return findMethodExact(className, classLoader, methodName, parameterTypes);
+        } catch (ClassNotFoundError | NoSuchMethodError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     * See {@link #findMethodExact(String, ClassLoader, String, Object...)} for details.
+     *
+     * <p>This variant requires that you already have reference to all the parameter types.
+     */
+    public static Method findMethodExact(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+        MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, true);
+
+        Object cached = methodCache.get(key);
+        if (cached != null) {
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Method) cached;
+        }
+
+        try {
+            Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            method.setAccessible(true);
+            methodCache.put(key, method);
+            return method;
+        } catch (NoSuchMethodException e) {
+            methodCache.put(key, NOT_FOUND);
+            throw new NoSuchMethodError(key.toString());
+        }
+    }
+
+    /**
+     * Returns an array of all methods declared/overridden in a class with the specified parameter types.
+     *
+     * <p>The return type is optional, it will not be compared if it is {@code null}.
+     * Use {@code void.class} if you want to search for methods returning nothing.
+     *
+     * @param clazz          The class to look in.
+     * @param returnType     The return type, or {@code null} (see above).
+     * @param parameterTypes The parameter types.
+     * @return An array with matching methods, all set to accessible already.
+     */
+    public static Method[] findMethodsByExactParameters(Class<?> clazz, Class<?> returnType, Class<?>... parameterTypes) {
+        List<Method> result = new LinkedList<>();
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (returnType != null && returnType != method.getReturnType())
+                continue;
+
+            Class<?>[] methodParameterTypes = method.getParameterTypes();
+            if (parameterTypes.length != methodParameterTypes.length)
+                continue;
+
+            boolean match = true;
+            for (int i = 0; i < parameterTypes.length; i++) {
+                if (parameterTypes[i] != methodParameterTypes[i]) {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (!match)
+                continue;
+
+            method.setAccessible(true);
+            result.add(method);
+        }
+        return result.toArray(new Method[result.size()]);
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     *
+     * <p>This does'nt only look for exact matches, but for the best match. All considered candidates
+     * must be compatible with the given parameter types, i.e. the parameters must be assignable
+     * to the method's formal parameters. Inherited methods are considered here.
+     *
+     * @param clazz          The class which declares, inherits or overrides the method.
+     * @param methodName     The method name.
+     * @param parameterTypes The types of the method's parameters.
+     * @return A reference to the best-matching method.
+     * @throws NoSuchMethodError In case no suitable method was found.
+     */
+    public static Method findMethodBestMatch(Class<?> clazz, String methodName) {
+        return findMethodBestMatch(clazz, methodName, EMPTY_CLASS_ARRAY);
+    }
+
+    public static Method findMethodBestMatch(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+        // find the exact matching method first
+        try {
+            return findMethodExact(clazz, methodName, parameterTypes);
+        } catch (NoSuchMethodError ignored) {
+        }
+
+        // then find the best match
+        MemberCacheKey.Method key = new MemberCacheKey.Method(clazz, methodName, parameterTypes, false);
+
+        Object cached = methodCache.get(key);
+        if (cached != null) {
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Method) cached;
+        }
+
+        Method bestMatch = null;
+        Class<?> clz = clazz;
+        boolean considerPrivateMethods = true;
+        do {
+            for (Method method : clz.getDeclaredMethods()) {
+                // don't consider private methods of superclasses
+                if (!considerPrivateMethods && Modifier.isPrivate(method.getModifiers()))
+                    continue;
+
+                // compare name and parameters
+                if (method.getName().equals(methodName) && ClassUtils.isAssignable(
+                    parameterTypes,
+                    method.getParameterTypes(),
+                    true)) {
+                    // get accessible version of method
+                    if (bestMatch == null || MemberUtilsX.compareMethodFit(
+                        method,
+                        bestMatch,
+                        parameterTypes) < 0) {
+                        bestMatch = method;
+                    }
+                }
+            }
+            considerPrivateMethods = false;
+        } while ((clz = clz.getSuperclass()) != null);
+
+        if (bestMatch != null) {
+            bestMatch.setAccessible(true);
+        }
+        methodCache.put(key, bestMatch != null ? bestMatch : NOT_FOUND);
+        if (bestMatch != null) {
+            return bestMatch;
+        }
+        throw new NoSuchMethodError(key.toString());
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     *
+     * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details. This variant
+     * determines the parameter types from the classes of the given objects.
+     */
+    public static Method findMethodBestMatch(Class<?> clazz, String methodName, Object... args) {
+        return findMethodBestMatch(clazz, methodName, getParameterTypes(args));
+    }
+
+    /**
+     * Look up a method in a class and set it to accessible.
+     *
+     * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details. This variant
+     * determines the parameter types from the classes of the given objects. For any item that is
+     * {@code null}, the type is taken from {@code parameterTypes} instead.
+     */
+    public static Method findMethodBestMatch(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] args) {
+        Class<?>[] argsClasses = null;
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (parameterTypes[i] != null)
+                continue;
+            if (argsClasses == null)
+                argsClasses = getParameterTypes(args);
+            parameterTypes[i] = argsClasses[i];
+        }
+        return findMethodBestMatch(clazz, methodName, parameterTypes);
+    }
+
+    /**
+     * Hook all constructors of the specified class.
+     *
+     * @param hookClass The class to check for constructors.
+     * @param callback  The callback to be executed when the hooked constructors are called.
+     * @return A set containing one object for each found constructor which can be used to unhook it.
+     */
+    public static Set<CustomMethodUnhooker> hookAllConstructors(Class<?> hookClass, MethodHook callback) {
+        Set<CustomMethodUnhooker> unhooks = new HashSet<>();
+        for (Constructor<?> constructor : hookClass.getDeclaredConstructors())
+            unhooks.add(doHookConstructor(constructor, callback));
+        return unhooks;
+    }
+
+    /**
+     * Hooks all methods with a certain name that were declared in the specified class. Inherited
+     * methods and constructors are not considered. For constructors, use
+     * {@link #hookAllConstructors} instead.
+     *
+     * @param hookClass  The class to check for declared methods.
+     * @param methodName The name of the method(s) to hook.
+     * @param callback   The callback to be executed when the hooked methods are called.
+     * @return A set containing one object for each found method which can be used to unhook it.
+     */
+    public static Set<CustomMethodUnhooker> hookAllMethods(Class<?> hookClass, String methodName, MethodHook callback) {
+        Set<CustomMethodUnhooker> unhooks = new HashSet<>();
+        for (Method method : hookClass.getDeclaredMethods())
+            if (method.getName().equals(methodName))
+                unhooks.add(doHookMethod(method, callback));
+        return unhooks;
+    }
+
+    /**
+     * Returns an array with the classes of the given objects.
+     */
+    public static Class<?>[] getParameterTypes(Object... args) {
+        if (args.length == 0) return EMPTY_CLASS_ARRAY;
+        Class<?>[] clazzes = new Class<?>[args.length];
+        for (int i = 0; i < args.length; i++) {
+            clazzes[i] = (args[i] != null) ? args[i].getClass() : null;
+        }
+        return clazzes;
+    }
+
+    /**
+     * Retrieve classes from an array, where each element might either be a Class
+     * already, or a String with the full class name.
+     */
+    private static Class<?>[] getParameterClasses(ClassLoader classLoader, Object[] parameterTypesAndCallback) {
+        int parameterCount = 0;
+        for (Object type : parameterTypesAndCallback) {
+            if (!(type instanceof MethodHook)) parameterCount++;
+        }
+        if (parameterCount == 0) return EMPTY_CLASS_ARRAY;
+
+        Class<?>[] parameterClasses = new Class<?>[parameterCount];
+        int parameterIndex = 0;
+        for (Object type : parameterTypesAndCallback) {
+            if (type == null)
+                throw new ClassNotFoundError("parameter type must not be null", null);
+
+            // ignore trailing callback
+            if (type instanceof MethodHook)
+                continue;
+
+            if (type instanceof Class)
+                parameterClasses[parameterIndex++] = (Class<?>) type;
+            else if (type instanceof String)
+                parameterClasses[parameterIndex++] = findClass((String) type, classLoader);
+            else
+                throw new ClassNotFoundError("parameter type must either be specified as Class or String", null);
+        }
+        return parameterClasses;
+    }
+
+    /**
+     * Returns an array of the given classes.
+     */
+    public static Class<?>[] getClassesAsArray(Class<?>... clazzes) {
+        return clazzes;
+    }
+
+    private static String getParametersString(Class<?>... clazzes) {
+        StringBuilder sb = new StringBuilder("(");
+        boolean first = true;
+        for (Class<?> clazz : clazzes) {
+            if (first)
+                first = false;
+            else
+                sb.append(",");
+
+            if (clazz != null)
+                sb.append(clazz.getCanonicalName());
+            else
+                sb.append("null");
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    /**
+     * Look up a constructor of a class and set it to accessible.
+     * See {@link #findMethodExact(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Constructor<?> findConstructorExact(Class<?> clazz, Object... parameterTypes) {
+        return findConstructorExact(clazz, getParameterClasses(clazz.getClassLoader(), parameterTypes));
+    }
+
+    /**
+     * Look up and return a constructor if it exists.
+     * See {@link #findMethodExactIfExists(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Constructor<?> findConstructorExactIfExists(Class<?> clazz, Object... parameterTypes) {
+        try {
+            return findConstructorExact(clazz, parameterTypes);
+        } catch (ClassNotFoundError | NoSuchMethodError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Look up a constructor of a class and set it to accessible.
+     * See {@link #findMethodExact(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Constructor<?> findConstructorExact(String className, ClassLoader classLoader, Object... parameterTypes) {
+        return findConstructorExact(findClass(className, classLoader), getParameterClasses(classLoader, parameterTypes));
+    }
+
+    /**
+     * Look up and return a constructor if it exists.
+     * See {@link #findMethodExactIfExists(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Constructor<?> findConstructorExactIfExists(String className, ClassLoader classLoader, Object... parameterTypes) {
+        try {
+            return findConstructorExact(className, classLoader, parameterTypes);
+        } catch (ClassNotFoundError | NoSuchMethodError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Look up a constructor of a class and set it to accessible.
+     * See {@link #findMethodExact(String, ClassLoader, String, Object...)} for details.
+     */
+    public static Constructor<?> findConstructorExact(Class<?> clazz, Class<?>... parameterTypes) {
+        MemberCacheKey.Constructor key = new MemberCacheKey.Constructor(clazz, parameterTypes, true);
+
+        Object cached = constructorCache.get(key);
+        if (cached != null) {
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Constructor<?>) cached;
+        }
+
+        try {
+            Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
+            constructor.setAccessible(true);
+            constructorCache.put(key, constructor);
+            return constructor;
+        } catch (NoSuchMethodException e) {
+            constructorCache.put(key, NOT_FOUND);
+            throw new NoSuchMethodError(key.toString());
+        }
+    }
+
+    /**
+     * Look up a constructor and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
+     * for details.
+     */
+    public static CustomMethodUnhooker findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
+        if (parameterTypesAndCallback.length == 0 || !(parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof MethodHook))
+            throw new IllegalArgumentException("no callback defined");
+
+        MethodHook callback = (MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
+        Constructor<?> m = findConstructorExact(clazz, getParameterClasses(clazz.getClassLoader(), parameterTypesAndCallback));
+        return doHookConstructor(m, callback);
+    }
+
+    public static CustomMethodUnhooker doHookMethod(Method m, MethodHook hook) {
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
+            .intercept(hook);
+        return handle::unhook;
+    }
+
+    private static CustomMethodUnhooker doHookConstructor(Constructor<?> m, MethodHook hook) {
+        XposedInterface.HookHandle handle = moduleInst.hook(m)
+            .setPriority(hook.mPriority)
+            .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
+            .intercept(hook);
+        return handle::unhook;
+    }
+
+
+    /**
+     * Look up a constructor and hook it. See {@link #findAndHookMethod(String, ClassLoader, String, Object...)}
+     * for details.
+     */
+    public static CustomMethodUnhooker findAndHookConstructor(String className, ClassLoader classLoader, Object... parameterTypesAndCallback) {
+        return findAndHookConstructor(findClass(className, classLoader), parameterTypesAndCallback);
+    }
+
+    /**
+     * Look up a constructor in a class and set it to accessible.
+     *
+     * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details.
+     */
+    public static Constructor<?> findConstructorBestMatch(Class<?> clazz) {
+        return findConstructorBestMatch(clazz, EMPTY_CLASS_ARRAY);
+    }
+
+    public static Constructor<?> findConstructorBestMatch(Class<?> clazz, Class<?>... parameterTypes) {
+        // find the exact matching constructor first
+        try {
+            return findConstructorExact(clazz, parameterTypes);
+        } catch (NoSuchMethodError ignored) {
+        }
+
+        // then find the best match
+        MemberCacheKey.Constructor key = new MemberCacheKey.Constructor(clazz, parameterTypes, false);
+
+        Object cached = constructorCache.get(key);
+        if (cached != null) {
+            if (cached == NOT_FOUND) throw new NoSuchMethodError(key.toString());
+            return (Constructor<?>) cached;
+        }
+
+        Constructor<?> bestMatch = null;
+        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+        for (Constructor<?> constructor : constructors) {
+            // compare name and parameters
+            if (ClassUtils.isAssignable(
+                parameterTypes,
+                constructor.getParameterTypes(),
+                true)) {
+                // get accessible version of method
+                if (bestMatch == null || MemberUtilsX.compareConstructorFit(
+                    constructor,
+                    bestMatch,
+                    parameterTypes) < 0) {
+                    bestMatch = constructor;
+                }
+            }
+        }
+
+        if (bestMatch != null) {
+            bestMatch.setAccessible(true);
+        }
+        constructorCache.put(key, bestMatch != null ? bestMatch : NOT_FOUND);
+        if (bestMatch != null) {
+            return bestMatch;
+        }
+        throw new NoSuchMethodError(key.toString());
+    }
+
+    /**
+     * Look up a constructor in a class and set it to accessible.
+     *
+     * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details. This variant
+     * determines the parameter types from the classes of the given objects.
+     */
+    public static Constructor<?> findConstructorBestMatch(Class<?> clazz, Object... args) {
+        return findConstructorBestMatch(clazz, getParameterTypes(args));
+    }
+
+    /**
+     * Look up a constructor in a class and set it to accessible.
+     *
+     * <p>See {@link #findMethodBestMatch(Class, String, Class...)} for details. This variant
+     * determines the parameter types from the classes of the given objects. For any item that is
+     * {@code null}, the type is taken from {@code parameterTypes} instead.
+     */
+    public static Constructor<?> findConstructorBestMatch(Class<?> clazz, Class<?>[] parameterTypes, Object[] args) {
+        Class<?>[] argsClasses = null;
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (parameterTypes[i] != null)
+                continue;
+            if (argsClasses == null)
+                argsClasses = getParameterTypes(args);
+            parameterTypes[i] = argsClasses[i];
+        }
+        return findConstructorBestMatch(clazz, parameterTypes);
+    }
+
+    /**
+     * Thrown when a class loader is unable to find a class. Unlike {@link ClassNotFoundException},
+     * callers are not forced to explicitly catch this. If uncaught, the error will be passed to the
+     * next caller in the stack.
+     */
+    public static final class ClassNotFoundError extends Error {
+        private static final long serialVersionUID = -1070936889459514628L;
+
+        /**
+         * @hide
+         */
+        public ClassNotFoundError(Throwable cause) {
+            super(cause);
+        }
+
+        /**
+         * @hide
+         */
+        public ClassNotFoundError(String detailMessage, Throwable cause) {
+            super(detailMessage, cause);
+        }
+    }
+
+    /**
+     * Returns the index of the first parameter declared with the given type.
+     *
+     * @throws NoSuchFieldError if there is no parameter with that type.
+     * @hide
+     */
+    public static int getFirstParameterIndexByType(Member method, Class<?> type) {
+        Class<?>[] classes = (method instanceof Method) ?
+            ((Method) method).getParameterTypes() : ((Constructor) method).getParameterTypes();
+        for (int i = 0; i < classes.length; i++) {
+            if (classes[i] == type) {
+                return i;
+            }
+        }
+        throw new NoSuchFieldError("No parameter of type " + type + " found in " + method);
+    }
+
+    /**
+     * Returns the index of the parameter declared with the given type, ensuring that there is exactly one such parameter.
+     *
+     * @throws NoSuchFieldError if there is no or more than one parameter with that type.
+     * @hide
+     */
+    public static int getParameterIndexByType(Member method, Class<?> type) {
+        Class<?>[] classes = (method instanceof Method) ?
+            ((Method) method).getParameterTypes() : ((Constructor) method).getParameterTypes();
+        int idx = -1;
+        for (int i = 0; i < classes.length; i++) {
+            if (classes[i] == type) {
+                if (idx == -1) {
+                    idx = i;
+                } else {
+                    throw new NoSuchFieldError("More than one parameter of type " + type + " found in " + method);
+                }
+            }
+        }
+        if (idx != -1) {
+            return idx;
+        } else {
+            throw new NoSuchFieldError("No parameter of type " + type + " found in " + method);
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Sets the value of an object field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setObjectField(Object obj, String fieldName, Object value) {
+        try {
+            findField(obj.getClass(), fieldName).set(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code boolean} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setBooleanField(Object obj, String fieldName, boolean value) {
+        try {
+            findField(obj.getClass(), fieldName).setBoolean(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code byte} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setByteField(Object obj, String fieldName, byte value) {
+        try {
+            findField(obj.getClass(), fieldName).setByte(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code char} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setCharField(Object obj, String fieldName, char value) {
+        try {
+            findField(obj.getClass(), fieldName).setChar(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code double} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setDoubleField(Object obj, String fieldName, double value) {
+        try {
+            findField(obj.getClass(), fieldName).setDouble(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code float} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setFloatField(Object obj, String fieldName, float value) {
+        try {
+            findField(obj.getClass(), fieldName).setFloat(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of an {@code int} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setIntField(Object obj, String fieldName, int value) {
+        try {
+            findField(obj.getClass(), fieldName).setInt(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code long} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setLongField(Object obj, String fieldName, long value) {
+        try {
+            findField(obj.getClass(), fieldName).setLong(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a {@code short} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static void setShortField(Object obj, String fieldName, short value) {
+        try {
+            findField(obj.getClass(), fieldName).setShort(obj, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Returns the value of an object field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static Object getObjectField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).get(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * For inner classes, returns the surrounding instance, i.e. the {@code this} reference of the surrounding class.
+     */
+    public static Object getSurroundingThis(Object obj) {
+        return getObjectField(obj, "this$0");
+    }
+
+    /**
+     * Returns the value of a {@code boolean} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean getBooleanField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getBoolean(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code byte} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static byte getByteField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getByte(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code char} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static char getCharField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getChar(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code double} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static double getDoubleField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getDouble(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code float} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static float getFloatField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getFloat(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of an {@code int} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static int getIntField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getInt(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code long} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static long getLongField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getLong(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a {@code short} field in the given object instance. A class reference is not sufficient! See also {@link #findField}.
+     */
+    public static short getShortField(Object obj, String fieldName) {
+        try {
+            return findField(obj.getClass(), fieldName).getShort(obj);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Sets the value of a static object field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticObjectField(Class<?> clazz, String fieldName, Object value) {
+        try {
+            findField(clazz, fieldName).set(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code boolean} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticBooleanField(Class<?> clazz, String fieldName, boolean value) {
+        try {
+            findField(clazz, fieldName).setBoolean(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code byte} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticByteField(Class<?> clazz, String fieldName, byte value) {
+        try {
+            findField(clazz, fieldName).setByte(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code char} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticCharField(Class<?> clazz, String fieldName, char value) {
+        try {
+            findField(clazz, fieldName).setChar(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code double} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticDoubleField(Class<?> clazz, String fieldName, double value) {
+        try {
+            findField(clazz, fieldName).setDouble(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code float} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticFloatField(Class<?> clazz, String fieldName, float value) {
+        try {
+            findField(clazz, fieldName).setFloat(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code int} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticIntField(Class<?> clazz, String fieldName, int value) {
+        try {
+            findField(clazz, fieldName).setInt(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code long} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticLongField(Class<?> clazz, String fieldName, long value) {
+        try {
+            findField(clazz, fieldName).setLong(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code short} field in the given class. See also {@link #findField}.
+     */
+    public static void setStaticShortField(Class<?> clazz, String fieldName, short value) {
+        try {
+            findField(clazz, fieldName).setShort(null, value);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Returns the value of a static object field in the given class. See also {@link #findField}.
+     */
+    public static Object getStaticObjectField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).get(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Returns the value of a static {@code boolean} field in the given class. See also {@link #findField}.
+     */
+    public static boolean getStaticBooleanField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getBoolean(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code byte} field in the given class. See also {@link #findField}.
+     */
+    public static byte getStaticByteField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getByte(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code char} field in the given class. See also {@link #findField}.
+     */
+    public static char getStaticCharField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getChar(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code double} field in the given class. See also {@link #findField}.
+     */
+    public static double getStaticDoubleField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getDouble(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code float} field in the given class. See also {@link #findField}.
+     */
+    public static float getStaticFloatField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getFloat(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code int} field in the given class. See also {@link #findField}.
+     */
+    public static int getStaticIntField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getInt(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code long} field in the given class. See also {@link #findField}.
+     */
+    public static long getStaticLongField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getLong(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Sets the value of a static {@code short} field in the given class. See also {@link #findField}.
+     */
+    public static short getStaticShortField(Class<?> clazz, String fieldName) {
+        try {
+            return findField(clazz, fieldName).getShort(null);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Calls an instance or static method of the given object.
+     * The method is resolved using {@link #findMethodBestMatch(Class, String, Object...)}.
+     *
+     * @param obj        The object instance. A class reference is not sufficient!
+     * @param methodName The method name.
+     * @param args       The arguments for the method call.
+     * @throws NoSuchMethodError     In case no suitable method was found.
+     * @throws InvocationTargetError In case an exception was thrown by the invoked method.
+     */
+    public static Object callMethod(Object obj, String methodName) {
+        try {
+            return findMethodBestMatch(obj.getClass(), methodName).invoke(obj, EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    public static Object callMethod(Object obj, String methodName, Object... args) {
+        try {
+            return findMethodBestMatch(obj.getClass(), methodName, args).invoke(obj, args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    /**
+     * Calls an instance or static method of the given object.
+     * See {@link #callMethod(Object, String, Object...)}.
+     *
+     * <p>This variant allows you to specify parameter types, which can help in case there are multiple
+     * methods with the same name, especially if you call it with {@code null} parameters.
+     */
+    public static Object callMethod(Object obj, String methodName, Class<?>[] parameterTypes, Object... args) {
+        try {
+            return findMethodBestMatch(obj.getClass(), methodName, parameterTypes, args).invoke(obj, args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    /**
+     * Calls a static method of the given class.
+     * The method is resolved using {@link #findMethodBestMatch(Class, String, Object...)}.
+     *
+     * @param clazz      The class reference.
+     * @param methodName The method name.
+     * @param args       The arguments for the method call.
+     * @throws NoSuchMethodError     In case no suitable method was found.
+     * @throws InvocationTargetError In case an exception was thrown by the invoked method.
+     */
+    public static Object callStaticMethod(Class<?> clazz, String methodName) {
+        try {
+            return findMethodBestMatch(clazz, methodName).invoke(null, EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    public static Object callStaticMethod(Class<?> clazz, String methodName, Object... args) {
+        try {
+            return findMethodBestMatch(clazz, methodName, args).invoke(null, args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    /**
+     * Calls a static method of the given class.
+     * See {@link #callStaticMethod(Class, String, Object...)}.
+     *
+     * <p>This variant allows you to specify parameter types, which can help in case there are multiple
+     * methods with the same name, especially if you call it with {@code null} parameters.
+     */
+    public static Object callStaticMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object... args) {
+        try {
+            return findMethodBestMatch(clazz, methodName, parameterTypes, args).invoke(null, args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        }
+    }
+
+    /**
+     * This class provides a wrapper for an exception thrown by a method invocation.
+     *
+     * @see #callMethod(Object, String, Object...)
+     * @see #callStaticMethod(Class, String, Object...)
+     * @see #newInstance(Class, Object...)
+     */
+    public static final class InvocationTargetError extends Error {
+        private static final long serialVersionUID = -1070936889459514628L;
+
+        /**
+         * @hide
+         */
+        public InvocationTargetError(Throwable cause) {
+            super(cause);
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Creates a new instance of the given class.
+     * The constructor is resolved using {@link #findConstructorBestMatch(Class, Object...)}.
+     *
+     * @param clazz The class reference.
+     * @param args  The arguments for the constructor call.
+     * @throws NoSuchMethodError     In case no suitable constructor was found.
+     * @throws InvocationTargetError In case an exception was thrown by the invoked method.
+     * @throws InstantiationError    In case the class cannot be instantiated.
+     */
+    public static Object newInstance(Class<?> clazz) {
+        try {
+            return findConstructorBestMatch(clazz).newInstance(EMPTY_OBJECT_ARRAY);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        } catch (InstantiationException e) {
+            throw new InstantiationError(e.getMessage());
+        }
+    }
+
+    public static Object newInstance(Class<?> clazz, Object... args) {
+        try {
+            return findConstructorBestMatch(clazz, args).newInstance(args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        } catch (InstantiationException e) {
+            throw new InstantiationError(e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a new instance of the given class.
+     * See {@link #newInstance(Class, Object...)}.
+     *
+     * <p>This variant allows you to specify parameter types, which can help in case there are multiple
+     * constructors with the same name, especially if you call it with {@code null} parameters.
+     */
+    public static Object newInstance(Class<?> clazz, Class<?>[] parameterTypes, Object... args) {
+        try {
+            return findConstructorBestMatch(clazz, parameterTypes, args).newInstance(args);
+        } catch (IllegalAccessException e) {
+            // should not happen
+            XposedHelpers.log(e);
+            throw new IllegalAccessError(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetError(e.getCause());
+        } catch (InstantiationException e) {
+            throw new InstantiationError(e.getMessage());
+        }
+    }
+
+    //#################################################################################################
+
+    /**
+     * Attaches any value to an object instance. This simulates adding an instance field.
+     * The value can be retrieved again with {@link #getAdditionalInstanceField}.
+     *
+     * @param obj   The object instance for which the value should be stored.
+     * @param key   The key in the value map for this object instance.
+     * @param value The value to store.
+     * @return The previously stored value for this instance/key combination, or {@code null} if there was none.
+     */
+    public static Object setAdditionalInstanceField(Object obj, String key, Object value) {
+        if (obj == null)
+            throw new NullPointerException("object must not be null");
+        if (key == null)
+            throw new NullPointerException("key must not be null");
+
+        HashMap<String, Object> objectFields;
+        synchronized (additionalFields) {
+            objectFields = additionalFields.get(obj);
+            if (objectFields == null) {
+                objectFields = new HashMap<>();
+                additionalFields.put(obj, objectFields);
+            }
+        }
+
+        synchronized (objectFields) {
+            return objectFields.put(key, value);
+        }
+    }
+
+    /**
+     * Returns a value which was stored with {@link #setAdditionalInstanceField}.
+     *
+     * @param obj The object instance for which the value has been stored.
+     * @param key The key in the value map for this object instance.
+     * @return The stored value for this instance/key combination, or {@code null} if there is none.
+     */
+    public static Object getAdditionalInstanceField(Object obj, String key) {
+        if (obj == null)
+            throw new NullPointerException("object must not be null");
+        if (key == null)
+            throw new NullPointerException("key must not be null");
+
+        HashMap<String, Object> objectFields;
+        synchronized (additionalFields) {
+            objectFields = additionalFields.get(obj);
+            if (objectFields == null)
+                return null;
+        }
+
+        synchronized (objectFields) {
+            return objectFields.get(key);
+        }
+    }
+
+    /**
+     * Removes and returns a value which was stored with {@link #setAdditionalInstanceField}.
+     *
+     * @param obj The object instance for which the value has been stored.
+     * @param key The key in the value map for this object instance.
+     * @return The previously stored value for this instance/key combination, or {@code null} if there was none.
+     */
+    public static Object removeAdditionalInstanceField(Object obj, String key) {
+        if (obj == null)
+            throw new NullPointerException("object must not be null");
+        if (key == null)
+            throw new NullPointerException("key must not be null");
+
+        HashMap<String, Object> objectFields;
+        synchronized (additionalFields) {
+            objectFields = additionalFields.get(obj);
+            if (objectFields == null)
+                return null;
+        }
+
+        synchronized (objectFields) {
+            return objectFields.remove(key);
+        }
+    }
+
+    /**
+     * Like {@link #setAdditionalInstanceField}, but the value is stored for the class of {@code obj}.
+     */
+    public static Object setAdditionalStaticField(Object obj, String key, Object value) {
+        return setAdditionalInstanceField(obj.getClass(), key, value);
+    }
+
+    /**
+     * Like {@link #getAdditionalInstanceField}, but the value is returned for the class of {@code obj}.
+     */
+    public static Object getAdditionalStaticField(Object obj, String key) {
+        return getAdditionalInstanceField(obj.getClass(), key);
+    }
+
+    /**
+     * Like {@link #removeAdditionalInstanceField}, but the value is removed and returned for the class of {@code obj}.
+     */
+    public static Object removeAdditionalStaticField(Object obj, String key) {
+        return removeAdditionalInstanceField(obj.getClass(), key);
+    }
+
+    /**
+     * Like {@link #setAdditionalInstanceField}, but the value is stored for {@code clazz}.
+     */
+    public static Object setAdditionalStaticField(Class<?> clazz, String key, Object value) {
+        return setAdditionalInstanceField(clazz, key, value);
+    }
+
+    /**
+     * Like {@link #setAdditionalInstanceField}, but the value is returned for {@code clazz}.
+     */
+    public static Object getAdditionalStaticField(Class<?> clazz, String key) {
+        return getAdditionalInstanceField(clazz, key);
+    }
+
+    /**
+     * Like {@link #setAdditionalInstanceField}, but the value is removed and returned for {@code clazz}.
+     */
+    public static Object removeAdditionalStaticField(Class<?> clazz, String key) {
+        return removeAdditionalInstanceField(clazz, key);
+    }
+
+    //#################################################################################################
+
+    /**
+     * Loads an asset from a resource object and returns the content as {@code byte} array.
+     *
+     * @param res  The resources from which the asset should be loaded.
+     * @param path The path to the asset, as in {@link AssetManager#open}.
+     * @return The content of the asset.
+     */
+    public static byte[] assetAsByteArray(Resources res, String path) throws IOException {
+        return inputStreamToByteArray(res.getAssets().open(path));
+    }
+
+    /*package*/
+    static byte[] inputStreamToByteArray(InputStream is) throws IOException {
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        byte[] temp = new byte[1024];
+        int read;
+
+        while ((read = is.read(temp)) > 0) {
+            buf.write(temp, 0, read);
+        }
+        is.close();
+        return buf.toByteArray();
+    }
+
+    public static void createBridge(String apkPath) {
+        bridge = DexKitBridge.create(apkPath);
+    }
+
+    public static void closeBridge() {
+        bridge.close();
+        bridge = null;
+    }
+
+}

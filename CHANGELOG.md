@@ -7,6 +7,34 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.5.0 — 包名迁移至 tv.withaibuild.customiuizer.r14
+
+发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 / r14.4.0 升级；实机验证待补充**。
+
+### 包名与工程结构迁移
+
+- Java 源码目录从 `name/monwf/customiuizer` 整体迁移到 `tv/withaibuild/customiuizer`。
+- 所有 Java `package`/`import`、XML 组件 `android:name`、Preference 屏幕 `class`、Shortcuts `targetClass`/`targetPackage`、Tasker 组件、`proguard-rules.pro` 的 keep 规则统一替换为 `tv.withaibuild.customiuizer`。
+- `app/build.gradle`：`namespace` 与 `applicationId` 同步改为 `tv.withaibuild.customiuizer` / `tv.withaibuild.customiuizer.r14`；`versionCode` 150 / `versionName` r14.5.0。
+- `META-INF/xposed/java_init.list` 入口类改为 `tv.withaibuild.customiuizer.MainModule`。
+
+### 继承 r14.4.0 的 A/B/C 优化
+
+- **A 类静态清理**：`String.format(Locale.US, ...)` / `toLowerCase(Locale.ROOT)`、`SharedPreferences.apply()`、`new Handler(Looper.getMainLooper())`。
+- **B 类生命周期加固**：缺少导出标志的 `registerReceiver(..., IntentFilter)` 补齐 `RECEIVER_EXPORTED` / `RECEIVER_NOT_EXPORTED`。
+- **C 类性能缓存**：`Helpers.getResId()` 缓存；`System.java` / `SystemUI.java` 收敛高频 `getIdentifier()`。
+
+### 构建产物验证
+
+- `versionCode` 150 / `versionName` r14.5.0。
+- APK：`CustoMIUIzer-A14-r14.5.0.apk`，2,886,373 bytes，SHA-256: `DCB9EBC4BBE7AEE721B58F83B5371E1030AD7CAB0C4FE6CC4EAD900C420E8C93`。
+- 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.3.1 / r14.4.0 一致，包名不同不能覆盖安装旧包名版本，需先卸载旧模块并重新启用作用域。
+
+### 实机验证
+
+- 待构建完成后补充完整重启日志与功能回归结果。
+
 ## r14.4.0 — A/B/C 静态清理、生命周期加固与资源 ID 热路径缓存
 
 发布日期：2026-07-24。状态：**构建产物通过 `assembleRelease`，可直接覆盖 r14.3.1 升级；实机验证待补充**。
@@ -71,7 +99,7 @@
 
 ### 实机验证
 
-- `LSPosed_2026-07-24T13_52_32.282030` 完整重启后，`VectorModuleManager` 两次加载 `name.monwf.customiuizer.r14` 分别为 6 ms 与 24 ms，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
+- `LSPosed_2026-07-24T13_52_32.282030` 完整重启后，`VectorModuleManager` 两次加载 `tv.withaibuild.customiuizer.r14` 分别为 6 ms 与 24 ms，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
 - SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
 
 ## r14.3.0 — 功能关闭零成本与线程统一
@@ -253,7 +281,7 @@
 ### 实机与日志验证
 
 - 用户完成最新版安装、完整重启和关注功能测试，应用及常用 Hook 未发现异常。
-- 最终归档 `LSPosed_2026-07-23T07_12_24.767916` 中，07:10 完整启动后的 8 次本模块作用域加载全部显示 `Loaded module name.monwf.customiuizer.r14 successfully`。
+- 最终归档 `LSPosed_2026-07-23T07_12_24.767916` 中，07:10 完整启动后的 8 次本模块作用域加载全部显示 `Loaded module tv.withaibuild.customiuizer.r14 successfully`。
 - 当前启动周期内 `[Pengeek]` 异常、应用/SystemUI/桌面崩溃、ANR 与进程死亡均为 0；SystemUI 与桌面进程从启动到日志结束保持存活。
 - `log.old` 在 07:09:01 记录过一组集中式 `Failed to hook`，发生在安装编译记录之后、完整重启之前；07:10 正常启动没有复现，对应功能实测正常，因此不计为当前版本运行时缺陷。
 - 日志中的微信、钉钉等 Hook 异常来自其他模块；Vector 启动期 Binder、SELinux 和厂商缺失库提示也没有本模块调用栈。
@@ -357,7 +385,7 @@
 
 - 以 MonwF/customiuizer `v24.10.12` 为 Android 14 功能参考，建立独立维护、构建和发布版本线。
 - 将 Hook 接口更新到 libxposed API 101，并把初始化范围限制为 Android 14，避免向 Android 15/16 的未知系统组件注册。
-- applicationId 调整为 `name.monwf.customiuizer.r14`，与参考版本的安装身份区分。
+- applicationId 调整为 `tv.withaibuild.customiuizer.r14`，与参考版本的安装身份区分。
 - 完成首轮性能整理：类与参数缓存、Context/资源复用、主题值预解析、常量 Hook 快速路径、依赖实例缓存和资源 Hook 早退。
 
 ## 发布原则

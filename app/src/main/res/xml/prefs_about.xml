@@ -4,16 +4,16 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer_settings">
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
+		<tv.withaibuild.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_locale"
 			android:title="@string/miuizer_locale_title"
 			android:summary="@string/miuizer_locale_summ"
 			android:entries="@array/placeholder_array"
 			android:entryValues="@array/placeholder_array_strval"
 			android:defaultValue="auto" />
-	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
+	</tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

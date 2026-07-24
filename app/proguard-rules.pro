@@ -13,7 +13,7 @@
 # app resolve the compileOnly libxposed API during process initialization.
 -keep,allowobfuscation class * implements io.github.libxposed.api.XposedInterface$Hooker { *; }
 
--keepnames class name.monwf.customiuizer.GateWayLauncher
+-keepnames class tv.withaibuild.customiuizer.GateWayLauncher
 
 # Obfuscation
 -repackageclasses

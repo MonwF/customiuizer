@@ -4,19 +4,19 @@
 	android:layout_height="match_parent"
 	android:key="pref_key_cat">
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_fingerprint"
 		android:key="pref_key_controls_cat_fingerprint" />
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_power"
 		android:key="pref_key_controls_cat_power" />
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_volume"
 		android:key="pref_key_controls_cat_volume" />
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_navbar"
 		android:key="pref_key_controls_cat_navbar" />
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:title="@string/controls_mods_fsg"
 		android:key="pref_key_controls_cat_fsg" />
 

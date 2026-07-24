@@ -11,7 +11,7 @@
 
 - 安定版：r14.3.1
 - 前の安定版：r14.3.0
-- パッケージ：`name.monwf.customiuizer.r14`
+- パッケージ：`tv.withaibuild.customiuizer.r14`
 - LSPosed 基準：[Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)、commit `9350c7c`
 - リリース：[tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases)
 

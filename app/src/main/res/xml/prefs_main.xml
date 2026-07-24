@@ -5,32 +5,32 @@
 	android:layout_height="match_parent"
 	android:key="prefs">
 
-	<name.monwf.customiuizer.prefs.PreferenceEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceEx
 		android:key="pref_key_warning"
 		app:isPreferenceVisible="false"
 		miuizer:warning="true" />
 
-	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/mods"
 		android:key="prefs_cat">
-		<name.monwf.customiuizer.prefs.PreferenceEx
+		<tv.withaibuild.customiuizer.prefs.PreferenceEx
 			android:title="@string/system_mods"
 			android:key="pref_key_system" />
-		<name.monwf.customiuizer.prefs.PreferenceEx
+		<tv.withaibuild.customiuizer.prefs.PreferenceEx
 			android:title="@string/launcher_title"
 			android:key="pref_key_launcher" />
-		<name.monwf.customiuizer.prefs.PreferenceEx
+		<tv.withaibuild.customiuizer.prefs.PreferenceEx
 			android:title="@string/controls_mods"
 			android:key="pref_key_controls" />
-		<name.monwf.customiuizer.prefs.PreferenceEx
+		<tv.withaibuild.customiuizer.prefs.PreferenceEx
 			android:title="@string/various_mods"
 			android:key="pref_key_various" />
-	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
+	</tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx>
 
-	<name.monwf.customiuizer.prefs.PreferenceCategoryEx
+	<tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx
 		android:title="@string/miuizer"
 		android:key="pref_key_miuizer">
-		<name.monwf.customiuizer.prefs.ListPreferenceEx
+		<tv.withaibuild.customiuizer.prefs.ListPreferenceEx
 			android:key="pref_key_miuizer_settingsiconpos"
 			android:title="@string/miuizer_show_settingsicon_title"
 			android:summary="@string/miuizer_show_settingsicon_summ"
@@ -38,11 +38,11 @@
 			android:entryValues="@array/settingsicon_val"
 			miuizer:valueAsSummary="true"
 			android:defaultValue="1" />
-		<name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+		<tv.withaibuild.customiuizer.prefs.CheckBoxPreferenceEx
 			android:key="pref_key_miuizer_launchericon"
 			android:summary="@string/miuizer_show_launchericon_summ"
 			android:title="@string/miuizer_show_launchericon_title"
 			android:defaultValue="true" />
-	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
+	</tv.withaibuild.customiuizer.prefs.PreferenceCategoryEx>
 
 </PreferenceScreen>

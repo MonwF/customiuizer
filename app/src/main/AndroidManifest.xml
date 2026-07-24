@@ -30,7 +30,7 @@
         android:label="@string/app_name"
         android:description="@string/app_slogan"
         android:supportsRtl="true"
-        android:name="name.monwf.customiuizer.MainApplication"
+        android:name="tv.withaibuild.customiuizer.MainApplication"
         android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
@@ -40,7 +40,7 @@
 
         <activity
             android:exported="true"
-            android:name="name.monwf.customiuizer.MainActivity"
+            android:name="tv.withaibuild.customiuizer.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop"
@@ -54,9 +54,9 @@
 
         <activity-alias
             android:exported="true"
-            android:name="name.monwf.customiuizer.GateWayLauncher"
+            android:name="tv.withaibuild.customiuizer.GateWayLauncher"
             android:label="@string/title_activity_main"
-            android:targetActivity="name.monwf.customiuizer.MainActivity"
+            android:targetActivity="tv.withaibuild.customiuizer.MainActivity"
             android:taskAffinity="com.android.settings.customiuizer"
             android:allowTaskReparenting="true"
             android:clearTaskOnLaunch="true"
@@ -70,7 +70,7 @@
         </activity-alias>
 
         <activity
-            android:name="name.monwf.customiuizer.Credentials"
+            android:name="tv.withaibuild.customiuizer.Credentials"
             android:label="@string/credentials_unlock"
             android:theme="@style/Invisible"
             android:icon="@drawable/ic_credentials"
@@ -82,8 +82,8 @@
         </activity>
 
         <activity-alias
-            android:name="name.monwf.customiuizer.CredentialsLauncher"
-            android:targetActivity="name.monwf.customiuizer.Credentials"
+            android:name="tv.withaibuild.customiuizer.CredentialsLauncher"
+            android:targetActivity="tv.withaibuild.customiuizer.Credentials"
             android:enabled="false"
             android:exported="true">
             <intent-filter>
@@ -93,7 +93,7 @@
         </activity-alias>
 
         <activity
-            android:name="name.monwf.customiuizer.CredentialsShortcut"
+            android:name="tv.withaibuild.customiuizer.CredentialsShortcut"
             android:label="@string/credentials_unlock"
             android:theme="@style/Invisible"
             android:icon="@drawable/ic_credentials"
@@ -109,7 +109,7 @@
         </activity>
 
         <activity
-            android:name="name.monwf.customiuizer.tasker.UnlockSettings"
+            android:name="tv.withaibuild.customiuizer.tasker.UnlockSettings"
             android:theme="@style/AppTheme"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
@@ -120,7 +120,7 @@
         </activity>
 
         <provider
-            android:name="name.monwf.customiuizer.PrefsProvider"
+            android:name="tv.withaibuild.customiuizer.PrefsProvider"
             android:authorities="${applicationId}.provider.sharedprefs"
             android:grantUriPermissions="true"
             android:exported="true"
@@ -128,7 +128,7 @@
 
         <service
             android:exported="true"
-            android:name="name.monwf.customiuizer.qs.AutoRotateService"
+            android:name="tv.withaibuild.customiuizer.qs.AutoRotateService"
             android:icon="@drawable/ic_qs_autorotate_disabled"
             android:label="@string/qs_toggle_autorotate"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -139,7 +139,7 @@
         </service>
 
         <receiver
-            android:name="name.monwf.customiuizer.tasker.UnlockReceiver"
+            android:name="tv.withaibuild.customiuizer.tasker.UnlockReceiver"
             android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>

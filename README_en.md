@@ -14,7 +14,7 @@ Its two defining differences are **libxposed API 101 integration** and ongoing *
 | App name | 米客 A14 |
 | Stable release | r14.3.1 |
 | Previous stable release | r14.3.0 |
-| Package | `name.monwf.customiuizer.r14` |
+| Package | `tv.withaibuild.customiuizer.r14` |
 | Hook API | libxposed API 101 |
 | LSPosed baseline | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935), commit `9350c7c` |
 | Releases | [tomthenpc/customiuizer-a14](https://github.com/tomthenpc/customiuizer-a14/releases) |

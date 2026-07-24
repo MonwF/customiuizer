@@ -16,14 +16,14 @@
 |---|---|
 | 当前稳定版 | r14.3.1 |
 | 上一稳定版 | r14.3.0 |
-| 当前候选版 | r14.4.0 |
+| 当前候选版 | r14.5.0 |
 | 应用名 | 米客 A14 |
-| 包名 | `name.monwf.customiuizer.r14` |
+| 包名 | `tv.withaibuild.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14 |
 | Hook 接口 | libxposed API 101 |
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
-| 下一版规划 | **r14.5.0**：包名 `name.monwf.customiuizer.r14` → `tv.withaibuild.customiuizer.r14`；仍保持 `米客 A14` / HyperOS 1 / Android 14 / libxposed API 101 |
+| 包名变更记录 | 已完成：源码目录/Java 包名/清单/Gradle 全量迁移至 `tv.withaibuild.customiuizer.r14` |
 
 r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版。该版本在 r14.3.0 基础上修复锁屏充电数据重复显示问题，并清理 lint 提示（`SimpleDateFormat`/`DefaultLocale`/`ApplySharedPref`、资源 ID 缓存），同时升级 `com.github.ben-manes.versions` 插件与 `kotlin-bom`。r14.3.0 已完成实机完整重启验证，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常。r14.2.9（含 r14.2.8 合并）、r14.2.7、r14.2.4（含 r14.2.1-r14.2.3 合并）、r14.2.0、r14.1.3（含 r14.1.0-r14.1.2 合并）日志验证均无异常，可作为回退基线。r14.2.5 与 r14.2.6 因状态栏过渡尝试导致双排信号图标深浅色切换异常，已回退并删除 tag/release，不再推荐使用。
 
@@ -62,6 +62,15 @@ r14.3.1 已完成构建、签名与 `assembleRelease`，为当前推荐稳定版
 5. 验证设置应用、SystemUI、桌面、锁屏和常用 Hook。
 
 只有包名、签名一致且新 APK 的版本号不低于已安装版本时才能覆盖安装；其他情况请先备份再卸载。
+
+## r14.5.0 包名迁移与候选版
+
+- **包名迁移**：`name.monwf.customiuizer.r14` → `tv.withaibuild.customiuizer.r14`。
+  - Java 源码目录从 `name/monwf/customiuizer` 整体迁移到 `tv/withaibuild/customiuizer`。
+  - `AndroidManifest.xml` 组件名、Preference 屏幕 class、Shortcuts、Tasker 组件统一改为新包名。
+  - `app/build.gradle` 的 `namespace` 与 `applicationId` 同步改为新包名。
+  - `META-INF/xposed/java_init.list` 入口类改为 `tv.withaibuild.customiuizer.MainModule`。
+- 完整保留 r14.4.0 的 A/B/C 优化：Locale/format/apply/Handler 静态清理、`registerReceiver` 导出标志、`Helpers.getResId()` 热路径缓存。
 
 ## r14.4.0 优化重点（候选版）
 
@@ -116,7 +125,7 @@ r14.1.3 主要解决线程、缓存、图像处理、音频计算与无关资源
 
 ### 模块加载实测
 
-以下数据来自同一设备的 Vector/LSPosed 日志，只统计 `name.monwf.customiuizer.r14` 从开始加载到报告成功的时间：
+以下数据来自同一设备的 Vector/LSPosed 日志，只统计 `tv.withaibuild.customiuizer.r14` 从开始加载到报告成功的时间：
 
 | 版本与启动周期 | 样本数 | 中位数 | 平均值 | 范围 |
 |---|---:|---:|---:|---:|
@@ -140,6 +149,7 @@ r14.3.1 本次完整重启后两次加载分别为 6 ms 与 24 ms（中位数 15
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 2,886,165 B | −4 B | StepCounter 接收者生命周期；BatteryIndicator 绘制热路径缓存 density/statusbar 高度并减少 Matrix 分配（含 r14.2.8 累积） |
 | [r14.3.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.0) | 2,886,165 B | 0 B | SystemUI.setupStatusBar 按 `hasStatusBarModifications()` 跳过无效资源替换；WeatherDataController 统一后台执行器并修复接收者生命周期 |
 | [r14.4.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.4.0) | 2,886,165 B | 0 B | A/B/C 静态清理、生命周期加固与 `Helpers.getResId()` 热路径缓存（候选版） |
+| [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 2,886,373 B | +208 B | 包名迁移至 `tv.withaibuild.customiuizer.r14`，继承 r14.4.0 A/B/C 优化（候选版） |
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 2,886,165 B | 0 B | 锁屏充电数据去重；lint 清理（Locale、SharedPreferences apply、资源 ID 缓存）；versions 插件与 kotlin-bom 升级 |
 
 r14.3.0 比 r14.0.0 小 15,735 B；r14.1.3 比 r14.0.0 小 15,650 B；相对上游 v24.10.12 大 100,801 B（约 3.62%）。主要体积差异来自 API 101 原生运行库：上游基线约为 290,440 B，本项目 API 101 库为 381,024 B，单项增加约 90.6 KB。APK 大小并不等同于运行效率。
