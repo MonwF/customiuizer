@@ -41,11 +41,12 @@ class ShortcutSelector : SubFragmentWithSearch() {
         key = args?.getString("key")
         keyContents = AppHelper.getStringOfAppPrefs(key, null)
 
+        val ctx = context ?: return
         val shortcutIntent = Intent(Intent.ACTION_CREATE_SHORTCUT)
-        val pm = activity?.packageManager ?: return
+        val pm = ctx.packageManager
         shortcuts.addAll(pm.queryIntentActivities(shortcutIntent, 0))
 
-        listView?.adapter = ResolveInfoAdapter(context, shortcuts)
+        listView?.adapter = ResolveInfoAdapter(ctx, shortcuts)
         listView?.setOnItemClickListener { parent: AdapterView<*>, _, position: Int, _ ->
             val app = parent.adapter?.getItem(position) as? ResolveInfo ?: return@setOnItemClickListener
             val cn = ComponentName(app.activityInfo.packageName, app.activityInfo.name)
