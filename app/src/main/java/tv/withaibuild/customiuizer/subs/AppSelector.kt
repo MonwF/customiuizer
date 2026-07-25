@@ -146,7 +146,7 @@ class AppSelector : SubFragmentWithSearch() {
             }
         } else if (privacy) {
             if (AppHelper.installedAppsList == null) return
-            listView?.adapter = PrivacyAppAdapter(context, AppHelper.installedAppsList, mPrivacyAppsMap)
+            listView?.adapter = PrivacyAppAdapter(context, AppHelper.installedAppsList, mPrivacyAppsMap ?: HashMap())
         } else if (applock) {
             if (AppHelper.installedAppsList == null) return
             listView?.adapter = LockedAppAdapter(context, AppHelper.installedAppsList)
