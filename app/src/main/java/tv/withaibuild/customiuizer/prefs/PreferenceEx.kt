@@ -14,7 +14,7 @@ import tv.withaibuild.customiuizer.R
 import tv.withaibuild.customiuizer.utils.AppHelper
 import tv.withaibuild.customiuizer.utils.Helpers
 
-class PreferenceEx(context: Context, attrs: AttributeSet?) : Preference(context, attrs), PreferenceState {
+open class PreferenceEx(context: Context, attrs: AttributeSet?) : Preference(context, attrs), PreferenceState {
 
     private val indentLevel: Int
     private val dynamic: Boolean
