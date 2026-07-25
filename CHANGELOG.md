@@ -7,6 +7,44 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.7.1 — Kotlin 协程化继续迁移（设置/应用选择子页面）
+
+发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
+
+> 本版本在 `r14.7.0` 基础上继续将设置子页面与列表选择相关 Java 类迁移为 Kotlin，并用 Kotlin Coroutines 替代 `Thread` / `Handler.postDelayed`。未修改 Xposed Hook 核心路径。
+
+### 变更摘要与对应测试功能
+
+- **`ActivitySelector.kt`**（`subs`）
+  - 原异步机制：`new Thread` + `runOnUiThread`
+  - 对应功能：**应用活动选择界面**。进入「选择活动」时应正常列出包内 Activity 并可选中返回。
+- **`AppSelector.kt`**（`subs`）
+  - 原异步机制：`new Thread` + `runOnUiThread` + `BroadcastReceiver`
+  - 对应功能：**应用/分享/打开方式/隐私/锁定/自定义标题等应用列表选择界面**。列表加载、搜索过滤、点击选中、隐私配置广播接收均应正常。
+- **`SubFragmentWithSearch.kt`**（`tv.withaibuild.customiuizer`）
+  - 无原异步机制，纯 Java → Kotlin 迁移。
+  - 对应功能：**带搜索框的应用列表子页面**。搜索框焦点、键盘隐藏、实时过滤应正常。
+- **`SubFragment.kt`**（`tv.withaibuild.customiuizer`）
+  - 原异步机制：`postDelayed` 自动滚动高亮项。
+  - 对应功能：**所有设置子页面基类**。从主页面跳转至深项时自动滚动高亮应正常；同时保持 `openAppsEdit`、`openLockedAppEdit` 等公开监听器字段，供 `System`、`Launcher`、`Controls` 等子类继续使用。
+- **`MainFragment.kt`**（`r14.7.0` 未纳入，本版本补齐）
+  - 原异步机制：`new Thread`（`Helpers.getAllMods`） + `Handler.postDelayed`
+  - 对应功能：**主设置页面加载、搜索、Xposed 未激活提示**。主页面不应出现启动卡顿，未激活提示应在约 800ms 后正确弹出。
+
+### 基础设施变更
+
+- 继续使用现有 `kotlinx-coroutines-android:1.6.4` 与 Kotlin 2.2.21。
+- Fragment 中统一使用 `lifecycleScope`（来自 `androidx.lifecycle:lifecycle-runtime-ktx`，已通过传递依赖引入）管理协程生命周期，避免手动 `CoroutineScope.cancel()`。
+- 新增 Kotlin 源文件 5 个，删除对应 Java 源文件 5 个（`MainFragment`、`SubFragment`、`SubFragmentWithSearch`、`AppSelector`、`ActivitySelector`）。
+- 子类仍从 Java 访问 `SubFragment` 的 `protected` 字段与可覆盖方法，已通过 `@JvmField` / `open` 保留兼容性。
+
+### 构建产物验证
+
+- `versionCode` 166 / `versionName` r14.7.1。
+- APK：`CustoMIUIzer-A14-r14.7.1.apk`，3,031,995 bytes，SHA-256: `4613D886E98E7EB6A5EBE087CEA420B60583B55DC0DC0747D1DE8C153CF5FED1`。
+- 通过 `./gradlew test` 与 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
+- 签名证书与 `r14.7.0` 一致；包名不变，可覆盖安装。
+
 ## r14.7.0 — Kotlin 协程化重构（Java → Kotlin 移植）
 
 发布日期：2026-07-25。状态：**重大重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
