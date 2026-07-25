@@ -232,12 +232,12 @@ open class SubFragment : PreferenceFragmentBase() {
             if (nView != null) try {
                 if (nView.tag != null) {
                     when (nView) {
-                        is TextView -> AppHelper.appPrefs.edit().putString(nView.tag as String, nView.text.toString()).apply()
+                        is TextView -> AppHelper.appPrefs!!.edit().putString(nView.tag as String, nView.text.toString()).apply()
                         is SpinnerExFake -> {
-                            AppHelper.appPrefs.edit().putString(nView.tag as String, nView.value).apply()
+                            AppHelper.appPrefs!!.edit().putString(nView.tag as String, nView.value).apply()
                             nView.applyOthers()
                         }
-                        is SpinnerEx -> AppHelper.appPrefs.edit().putInt(nView.tag as String, nView.getSelectedArrayValue()).apply()
+                        is SpinnerEx -> AppHelper.appPrefs!!.edit().putInt(nView.tag as String, nView.getSelectedArrayValue()).apply()
                     }
                 }
             } catch (e: Throwable) {

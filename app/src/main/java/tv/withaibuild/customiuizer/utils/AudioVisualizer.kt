@@ -174,7 +174,7 @@ class AudioVisualizer @JvmOverloads constructor(
         updateRainbowColors()
 
         ModuleHelper.observePreferenceChange(object : ModuleHelper.PreferenceObserver {
-            override fun onChange(key: String) {
+            override fun onChange(key: String?) {
                 try {
                     when (key) {
                         "pref_key_system_visualizer_animdur" -> {

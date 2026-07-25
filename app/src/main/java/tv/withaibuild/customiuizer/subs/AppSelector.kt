@@ -185,9 +185,9 @@ class AppSelector : SubFragmentWithSearch() {
                 val k = key ?: return@setOnItemClickListener
                 AppHelper.showInputDialog(activity, k + ":" + app.pkgName + "|" + app.actName + "|" + app.user, R.string.launcher_renameapps_modified, 0, 1) { _, text ->
                     if (TextUtils.isEmpty(text)) {
-                        AppHelper.appPrefs.edit().remove(k + ":" + app.pkgName + "|" + app.actName + "|" + app.user).apply()
+                        AppHelper.appPrefs!!.edit().remove(k + ":" + app.pkgName + "|" + app.actName + "|" + app.user).apply()
                     } else {
-                        AppHelper.appPrefs.edit().putString(k + ":" + app.pkgName + "|" + app.actName + "|" + app.user, text).apply()
+                        AppHelper.appPrefs!!.edit().putString(k + ":" + app.pkgName + "|" + app.actName + "|" + app.user, text).apply()
                     }
                     (parent.adapter as? AppDataAdapter)?.notifyDataSetChanged()
                 }
@@ -225,7 +225,7 @@ class AppSelector : SubFragmentWithSearch() {
                     selectedAppsBlack.remove(app.pkgName)
                 }
             }
-            AppHelper.appPrefs.edit().putStringSet(key + "_black", selectedAppsBlack).apply()
+            AppHelper.appPrefs!!.edit().putStringSet(key + "_black", selectedAppsBlack).apply()
         } else {
             val identifier = if (share || openwith) app.pkgName + "|" + app.user else app.pkgName
             if (selectedApps.contains(identifier)) {
@@ -257,13 +257,13 @@ class AppSelector : SubFragmentWithSearch() {
                             if (checkedType) sum += 1 shl order
                             order++
                         }
-                        AppHelper.appPrefs.edit().putInt(mimeKey, sum).apply()
+                        AppHelper.appPrefs!!.edit().putInt(mimeKey, sum).apply()
                     }
                     builder.show()
                 }
             }
         }
-        AppHelper.appPrefs.edit().putStringSet(key, selectedApps).apply()
+        AppHelper.appPrefs!!.edit().putStringSet(key, selectedApps).apply()
         (parent.adapter as? AppDataAdapter)?.updateSelectedApps()
     }
 

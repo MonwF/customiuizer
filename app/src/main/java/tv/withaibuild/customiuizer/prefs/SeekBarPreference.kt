@@ -254,7 +254,7 @@ class SeekBarPreference @JvmOverloads constructor(
 
     private fun saveValue() {
         val k = key ?: return
-        AppHelper.appPrefs.edit().putInt(k, getValue()).apply()
+        AppHelper.appPrefs!!.edit().putInt(k, getValue()).apply()
     }
 
     fun setUnsupported(value: Boolean) {

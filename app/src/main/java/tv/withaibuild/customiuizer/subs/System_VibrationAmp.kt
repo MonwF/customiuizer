@@ -26,7 +26,7 @@ class System_VibrationAmp : SubFragment() {
         val startMinute = AppHelper.getIntOfAppPrefs(key + "start_minute", 0)
         updateStartTime(startHour, startMinute)
         startTimePicker = TimePickerDialog(activity, { _, hourOfDay, minutes ->
-            AppHelper.appPrefs.edit().putInt(key + "start_hour", hourOfDay).putInt(key + "start_minute", minutes).apply()
+            AppHelper.appPrefs!!.edit().putInt(key + "start_hour", hourOfDay).putInt(key + "start_minute", minutes).apply()
             updateStartTime(hourOfDay, minutes)
         }, startHour, startMinute, is24)
 
@@ -39,7 +39,7 @@ class System_VibrationAmp : SubFragment() {
         val endMinute = AppHelper.getIntOfAppPrefs(key + "end_minute", 0)
         updateEndTime(endHour, endMinute)
         endTimePicker = TimePickerDialog(activity, { _, hourOfDay, minutes ->
-            AppHelper.appPrefs.edit().putInt(key + "end_hour", hourOfDay).putInt(key + "end_minute", minutes).apply()
+            AppHelper.appPrefs!!.edit().putInt(key + "end_hour", hourOfDay).putInt(key + "end_minute", minutes).apply()
             updateEndTime(hourOfDay, minutes)
         }, endHour, endMinute, is24)
 

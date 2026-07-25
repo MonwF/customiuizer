@@ -67,7 +67,7 @@ class SortableList : SubFragment() {
                     val itemList = itemStr.trim().split("|").toMutableList()
                     val uuid = itemList.removeAt(oldPos)
                     itemList.add(newPos, uuid)
-                    AppHelper.appPrefs.edit().putString(mKey, itemList.joinToString("|")).apply()
+                    AppHelper.appPrefs!!.edit().putString(mKey, itemList.joinToString("|")).apply()
                     (listView?.adapter as? PreferenceAdapter)?.run {
                         updateItems()
                         notifyDataSetChanged()
@@ -99,7 +99,7 @@ class SortableList : SubFragment() {
     private fun createNewItem(uuid: String) {
         val mKey = key ?: return
         val items = AppHelper.getStringOfAppPrefs(mKey, "") ?: ""
-        AppHelper.appPrefs.edit().putString(mKey, if (items.isEmpty()) uuid else "$items|$uuid").apply()
+        AppHelper.appPrefs!!.edit().putString(mKey, if (items.isEmpty()) uuid else "$items|$uuid").apply()
         (listView?.adapter as? PreferenceAdapter)?.run {
             updateItems()
             notifyDataSetChanged()
@@ -112,7 +112,7 @@ class SortableList : SubFragment() {
         val items = AppHelper.getStringOfAppPrefs(mKey, "") ?: ""
         if (items.isEmpty()) return
         val itemList = items.split("|").toMutableList().apply { removeAt(position) }
-        AppHelper.appPrefs.edit().putString(mKey, itemList.joinToString("|")).apply()
+        AppHelper.appPrefs!!.edit().putString(mKey, itemList.joinToString("|")).apply()
         adapter.updateItems()
         adapter.notifyDataSetChanged()
     }
@@ -151,7 +151,7 @@ class SortableList : SubFragment() {
             if (activityUser < 0) return
 
             val uuid = createNewUUID()
-            AppHelper.appPrefs.edit()
+            AppHelper.appPrefs!!.edit()
                 .putInt(mKey + "_" + uuid + "_action", 20)
                 .putString(mKey + "_" + uuid + "_activity", activityValue)
                 .putInt(mKey + "_" + uuid + "_activity_user", activityUser)

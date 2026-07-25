@@ -7,6 +7,29 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.8.0 — 基础设施 / 工具类 Kotlin 化
+
+发布日期：进行中。状态：**开发中（r14.8 系列第一阶段）**。
+
+> 将全项目引用的 `utils` 与 `mods.utils` 基础设施类迁移为 Kotlin，为核心 `mods` 主类 Kotlin 化铺路。功能行为无变化，重点保持 Java/Kotlin 互调用兼容、测试覆盖与构建稳定。
+
+### 迁移范围
+
+- `utils.Helpers.java` → `Helpers.kt`
+- `utils.AppHelper.java` → `AppHelper.kt`
+- `mods.utils.ModuleHelper.java` → `ModuleHelper.kt`
+- `mods.utils.HookerClassHelper.java` → `HookerClassHelper.kt`
+- `mods.utils.ResourceHooks.java` → `ResourceHooks.kt`
+- `mods.utils.ShakeManager.java` → `ShakeManager.kt`（已完成）
+- `ResourceConstants.java` → `ResourceConstants.kt`（已完成）
+- 测试 `AppHelperTest`、`PrefMapTest`、`XposedHelpersCacheTest` 改为 Kotlin。
+
+### 构建验证
+
+- `versionCode` 170 / `versionName` r14.8.0。
+- 每迁一个文件后执行 `./gradlew :app:compileDebugJavaWithJavac` / `:app:test`。
+- 保持签名证书、包名与上一版一致，可覆盖安装。
+
 ## r14.7.4 — r14.7.x 系列合并整理
 
 发布日期：2026-07-25。状态：**稳定版（完整重启验证通过，无模块相关崩溃/ANR）**。

@@ -251,8 +251,8 @@ class MultiAction : SubFragment() {
         }
         val mKey = key
         if (mKey != null) {
-            if (appUser != -1) AppHelper.appPrefs.edit().putInt(mKey + "_app_user", appUser).apply()
-            if (activityUser != -1) AppHelper.appPrefs.edit().putInt(mKey + "_activity_user", activityUser).apply()
+            if (appUser != -1) AppHelper.appPrefs!!.edit().putInt(mKey + "_app_user", appUser).apply()
+            if (activityUser != -1) AppHelper.appPrefs!!.edit().putInt(mKey + "_activity_user", activityUser).apply()
         }
         super.saveSharedPrefs()
     }

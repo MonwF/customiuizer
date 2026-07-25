@@ -27,7 +27,7 @@ class SpinnerExFake(context: Context, attrs: AttributeSet?) : SpinnerEx(context,
 
     fun applyOthers() {
         if (others.isEmpty()) return
-        val editor = AppHelper.appPrefs.edit()
+        val editor = AppHelper.appPrefs!!.edit()
         for (pref in others) {
             editor.putString(pref.first, pref.second)
         }

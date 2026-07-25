@@ -105,7 +105,7 @@ class BTList : SubFragment() {
             val sr = btAdapter1?.getItem(position) ?: return@OnItemClickListener
             addresses = LinkedHashSet(AppHelper.getStringSetOfAppPrefs(key, LinkedHashSet()))
             AppHelper.removeStringPair(addresses, sr.first)
-            AppHelper.appPrefs.edit().putStringSet(key, if (addresses.isEmpty()) null else addresses).apply()
+            AppHelper.appPrefs!!.edit().putStringSet(key, if (addresses.isEmpty()) null else addresses).apply()
             btAdapter1?.notifyDataSetChanged()
             btAdapter2?.notifyDataSetChanged()
         }
@@ -115,7 +115,7 @@ class BTList : SubFragment() {
             val sr = btAdapter2?.getItem(position) ?: return@OnItemClickListener
             addresses = LinkedHashSet(AppHelper.getStringSetOfAppPrefs(key, LinkedHashSet()))
             AppHelper.addStringPair(addresses, sr.first, sr.second)
-            AppHelper.appPrefs.edit().putStringSet(key, addresses).apply()
+            AppHelper.appPrefs!!.edit().putStringSet(key, addresses).apply()
             btAdapter1?.notifyDataSetChanged()
             btAdapter2?.notifyDataSetChanged()
         }

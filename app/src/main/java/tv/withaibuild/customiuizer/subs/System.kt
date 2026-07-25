@@ -231,7 +231,7 @@ class System : SubFragment() {
                     true
                 }
 
-                AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_window", (Helpers.getAnimationScale(0) * 10).roundToInt()).apply()
+                AppHelper.appPrefs!!.edit().putInt("pref_key_system_animationscale_window", (Helpers.getAnimationScale(0) * 10).roundToInt()).apply()
                 findPreference<SeekBarPreference>("pref_key_system_animationscale_window")?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -240,7 +240,7 @@ class System : SubFragment() {
                     }
                 })
 
-                AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_transition", (Helpers.getAnimationScale(1) * 10).roundToInt()).apply()
+                AppHelper.appPrefs!!.edit().putInt("pref_key_system_animationscale_transition", (Helpers.getAnimationScale(1) * 10).roundToInt()).apply()
                 findPreference<SeekBarPreference>("pref_key_system_animationscale_transition")?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -249,7 +249,7 @@ class System : SubFragment() {
                     }
                 })
 
-                AppHelper.appPrefs.edit().putInt("pref_key_system_animationscale_animator", (Helpers.getAnimationScale(2) * 10).roundToInt()).apply()
+                AppHelper.appPrefs!!.edit().putInt("pref_key_system_animationscale_animator", (Helpers.getAnimationScale(2) * 10).roundToInt()).apply()
                 findPreference<SeekBarPreference>("pref_key_system_animationscale_animator")?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -286,7 +286,7 @@ class System : SubFragment() {
                 else -> null
             }
             if (key != null) {
-                AppHelper.appPrefs.edit()
+                AppHelper.appPrefs!!.edit()
                     .putString(key, data?.getStringExtra("app"))
                     .putInt(key + "_user", data?.getIntExtra("user", 0) ?: 0)
                     .apply()

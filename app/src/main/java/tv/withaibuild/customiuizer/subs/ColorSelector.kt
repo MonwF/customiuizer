@@ -147,7 +147,7 @@ class ColorSelector : SubFragment(), ColorCircle.ColorListener {
     }
 
     override fun saveSharedPrefs() {
-        key?.let { AppHelper.appPrefs.edit().putInt(it, colorCircle?.getColor() ?: Color.WHITE).apply() }
+        key?.let { AppHelper.appPrefs!!.edit().putInt(it, colorCircle?.getColor() ?: Color.WHITE).apply() }
         super.saveSharedPrefs()
     }
 

@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             prefEdit.apply()
         }
 
-        prefsChanged?.let { AppHelper.appPrefs.registerOnSharedPreferenceChangeListener(it) }
+        prefsChanged?.let { AppHelper.appPrefs!!.registerOnSharedPreferenceChangeListener(it) }
     }
 
     fun navToSubFragment(
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ApplySharedPref")
     override fun onDestroy() {
         try {
-            prefsChanged?.let { AppHelper.appPrefs.unregisterOnSharedPreferenceChangeListener(it) }
+            prefsChanged?.let { AppHelper.appPrefs!!.unregisterOnSharedPreferenceChangeListener(it) }
         } catch (t: Throwable) {
             t.printStackTrace()
         }
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle(R.string.reset_settings)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                AppHelper.appPrefs.edit().clear().apply()
+                AppHelper.appPrefs!!.edit().clear().apply()
                 AlertDialog.Builder(this)
                     .setTitle(R.string.reset_settings_done)
                     .setCancelable(true)

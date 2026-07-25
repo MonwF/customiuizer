@@ -43,7 +43,7 @@ class System_ScreenshotConfig : SubFragment() {
             var dir = GetPathUtils.getDirectoryPathFromUri(activity ?: return, data?.data)
             if (dir == null) dir = ""
             findPreference<Preference>("pref_key_system_screenshot_mypath")?.summary = dir
-            AppHelper.appPrefs.edit().putString("pref_key_system_screenshot_mypath", dir).apply()
+            AppHelper.appPrefs!!.edit().putString("pref_key_system_screenshot_mypath", dir).apply()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

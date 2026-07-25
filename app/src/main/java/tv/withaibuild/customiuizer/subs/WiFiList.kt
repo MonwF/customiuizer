@@ -114,7 +114,7 @@ class WiFiList : SubFragment() {
             val sr = wifiAdapter1?.getItem(position) ?: return@OnItemClickListener
             bssids = LinkedHashSet(AppHelper.getStringSetOfAppPrefs(key, LinkedHashSet()))
             AppHelper.removeStringPair(bssids, sr.first)
-            AppHelper.appPrefs.edit().putStringSet(key, if (bssids.isEmpty()) null else bssids).apply()
+            AppHelper.appPrefs!!.edit().putStringSet(key, if (bssids.isEmpty()) null else bssids).apply()
             wifiAdapter1?.notifyDataSetChanged()
             wifiAdapter2?.notifyDataSetChanged()
         }
@@ -124,7 +124,7 @@ class WiFiList : SubFragment() {
             val sr = wifiAdapter2?.getItem(position) ?: return@OnItemClickListener
             bssids = LinkedHashSet(AppHelper.getStringSetOfAppPrefs(key, LinkedHashSet()))
             AppHelper.addStringPair(bssids, sr.first, sr.second)
-            AppHelper.appPrefs.edit().putStringSet(key, bssids).apply()
+            AppHelper.appPrefs!!.edit().putStringSet(key, bssids).apply()
             wifiAdapter1?.notifyDataSetChanged()
             wifiAdapter2?.notifyDataSetChanged()
         }
