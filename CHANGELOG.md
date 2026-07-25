@@ -7,6 +7,47 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.7.0 — Kotlin 协程化重构（Java → Kotlin 移植）
+
+发布日期：2026-07-25。状态：**重大重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
+
+> 本版本将 `r14.6.4` 中多个使用 Java 并发/异步机制的模块移植为 Kotlin，并用 Kotlin Coroutines 替代 `ThreadPoolExecutor` / `ExecutorService` / `Handler` / `AsyncTask` / `postDelayed`。所有改动对外 API 保持不变，理论上不影响功能，但建议重点测试以下对应模块。
+
+### 变更摘要与对应测试功能
+
+- **`BitmapCachedLoader.kt`**（`utils`）
+  - 原异步机制：`ThreadPoolExecutor` + `Handler`
+  - 对应功能：**应用选择/锁定/隐私列表中的图标加载**，例如 `AppSelector`、`LockedApp`、`PrivacyApp`、`ResolveInfoAdapter`。进入这些设置页面时应能看到应用图标正常加载、无错位。
+- **`WeatherDataController.kt`**（`mods/utils`）
+  - 原异步机制：`ExecutorService` + `Handler`
+  - 对应功能：**锁屏/时钟天气显示**。开启天气相关设置后，锁屏或状态栏天气应正常刷新。
+- **`StepCounterController.kt`**（`mods/utils`）
+  - 原异步机制：`Handler` + `BroadcastReceiver`
+  - 对应功能：**锁屏步数显示**。开启健康/步数相关设置后，锁屏步数应正常更新。
+- **`AudioVisualizer.kt`**（`utils`）
+  - 原异步机制：`AsyncTask` + `Handler`
+  - 对应功能：**锁屏/抽屉音乐可视化条**。播放音乐时，可视化条应随节奏正常跳动。
+- **`BatteryIndicator.kt`**（`utils`）
+  - 原异步机制：`postDelayed` / `post`
+  - 对应功能：**状态栏顶部/底部彩色电量条**。电量变化、充电状态切换时颜色与长度应正确。
+- **`BTList.kt` / `WiFiList.kt`**（`subs`）
+  - 原异步机制：`Handler` + `postDelayed`
+  - 对应功能：**设置中的蓝牙/WiFi 触发条件选择界面**。扫描设备、点击列表项增删应正常。
+
+### 基础设施变更
+
+- 根目录 `build.gradle` 引入 `org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.21`。
+- `app/build.gradle` 应用 `org.jetbrains.kotlin.android` 插件，并增加 `kotlinx-coroutines-android:1.6.4` / `kotlinx-coroutines-test:1.6.4` 依赖。
+- Kotlin 编译目标 Java 17，与现有 Java 源码完全互操作（`@JvmStatic` / `@JvmField` / `@JvmOverloads` 等保留）。
+- 新增 Kotlin 源文件 7 个，删除对应 Java 源文件 7 个，未修改 Xposed Hook 核心路径。
+
+### 构建产物验证
+
+- `versionCode` 165 / `versionName` r14.7.0。
+- APK：`CustoMIUIzer-A14-r14.7.0.apk`，3,031,995 bytes，SHA-256: `286EEBBEC81AE1E622C634D75E15F9BBCE9DD8BF0CC24E088E6BD61B070E037C`。
+- 通过 `./gradlew test` 与 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
+- 签名证书与 `r14.6.4` 一致；包名不变，可覆盖安装。
+
 ## r14.6.4 — 架构整理与单元测试补充（无功能变更）
 
 发布日期：2026-07-25。状态：**稳定版（纯维护发布；源码结构优化，无功能变更）**。
