@@ -6,8 +6,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | **r14.6.3** |
-| 上一稳定版 | r14.6.2 |
+| 当前稳定版 | **r14.6.4** |
+| 上一稳定版 | r14.6.3 |
 | 应用名 | 米客 A14 |
 | 包名 | `tv.withaibuild.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14（minSdk 34，仅 `arm64-v8a`） |
@@ -16,7 +16,7 @@
 | LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-- **推荐日常使用的稳定版**：**r14.6.3**。它在 r14.6.2 基础上合并 r14.6.x 历史并修复双排信号栏 SIM1 为空、颜色不跟随状态栏的问题；LSPosed 重启日志未出现模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`，可覆盖安装。
+- **推荐日常使用的稳定版**：**r14.6.4**。它在 r14.6.3 基础上做架构整理、大文件拆分、单元测试补充与 Proguard keep 规则清理；未改动 Hook 逻辑，功能与 r14.6.3 一致，可覆盖安装。
 - **r14.5.0** 仍是上一完整验证基线，如果你更看重经过多轮重启测试的保守版本，可以继续使用。
 - **r14.6.0 与 r14.6.1 的 release/tag 已删除**：r14.6.0 因 `systemui` 启动崩溃被废弃，r14.6.1 已合并到 r14.6.2。
 
@@ -41,7 +41,8 @@
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 稳定版 | 2.89 MB | 0 B | 15 ms | 锁屏充电去重、天气查询线程池化 | 验证无崩溃 | 推荐 |
 | [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 稳定版 | 2.89 MB | +208 B | 57 ms | 包名迁移，资源 ID 查找缓存，生命周期加固 | 完整重启验证通过 | 上一稳定基线 |
 | [r14.6.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.2) | 稳定版 | 2.90 MB | +13.8 KB | 参考 57 ms | 修复 r14.6.0 崩溃，清理死代码/权限/错误标签 | 无新增崩溃/ANR | 推荐 |
-| r14.6.3（本版） | **稳定版** | 2.95 MB | +49 KB | 参考 57 ms | 合并 r14.6.x 历史，修复双排信号栏 SIM1 为空与颜色跟随 | 完整重启验证通过 | **推荐日常版** |
+| [r14.6.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.3) | 稳定版 | 2.95 MB | +49 KB | 参考 57 ms | 合并 r14.6.x 历史，修复双排信号栏 SIM1 为空与颜色跟随 | 完整重启验证通过 | 推荐 |
+| [r14.6.4（本版）](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.4) | **稳定版** | 2.82 MB | -135 KB | 参考 57 ms | 架构整理、大文件拆分、补充单元测试、整理 keep 规则 | 构建验证通过 | **推荐日常版** |
 
 > **关于“省电性”的说明**：
 > r14.2.7 及以后通过“功能未开启时不注册 Hook/Receiver/Observer”、减少对象分配与线程池化来降低 CPU/内存/唤醒开销，对续航与流畅度有正面作用。但 APK 大小和加载速度**不能直接等同于省电收益**；要量化续航改善，必须在同设备、同功能开关、同使用场景下使用 **Perfetto / Batterystats** 长时间对照采样。

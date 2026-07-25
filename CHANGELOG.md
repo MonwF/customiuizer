@@ -7,6 +7,31 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.6.4 — 架构整理与单元测试补充（无功能变更）
+
+发布日期：2026-07-25。状态：**稳定版（纯维护发布；源码结构优化，无功能变更）**。
+
+> 本版本在 `r14.6.3` 基础上做最终收尾整理，未改动 Hook 逻辑，仅拆分大文件、补充测试、整理 keep 规则并移除冗余项。
+
+### 变更摘要
+
+- **大文件拆分（俄罗斯代码风格；保持原类委托 stub，调用方不变）**：
+  - `System.java`：提取状态栏/时钟相关 hooks 到 `SystemClockHooks.java`、`SystemStatusBarBackgroundHooks.java`、`SystemStatusBarIconHooks.java`。
+  - `SystemUI.java`：提取电池相关 hooks 到 `SystemUIBatteryHooks.java`。
+  - `GlobalActions.java`：提取意图启动/解析逻辑到 `GlobalActionsIntentHelper.java`。
+  - 移除 `System.java` 中废弃的注释代码块。
+- **单元测试**：
+  - `PrefMapTest`：补充 `getStringAsInt` 缓存与失效测试。
+  - `XposedHelpersCacheTest`：补充 `Constructor` 缓存/匹配测试。
+  - `AppHelperTest`：补充 clearType=0、非数字字符串、缺失 needle 等边界测试。
+- **Proguard/R8**：
+  - `proguard-rules.pro` 补充 `MainActivity`、`Credentials`、`MainApplication` 等 manifest 组件的 `-keepnames`。
+- **依赖检查**：
+  - 通过 `dependencyUpdates` 检查，当前配置仓库中无合适的安全稳定升级项，未升级 alpha/beta 依赖。
+- **构建验证**：
+  - `./gradlew test` ✅
+  - `./gradlew assembleRelease lintVitalRelease` ✅
+
 ## r14.6.3 — 双排信号栏修复与生命周期治理（合并 r14.6.0~r14.6.2）
 
 发布日期：2026-07-25。状态：**稳定版（r14.6.x 终版；合并 r14.6.0/14.6.1/14.6.2 历史；双排信号栏修复已实机验证）**。
