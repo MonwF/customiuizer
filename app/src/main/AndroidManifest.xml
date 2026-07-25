@@ -19,6 +19,8 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.MODIFY_DAY_NIGHT_MODE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />

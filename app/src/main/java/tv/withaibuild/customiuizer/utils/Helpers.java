@@ -9,6 +9,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.os.IBinder;
 import android.os.PowerManager.WakeLock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.app.PendingIntent;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -97,6 +99,8 @@ public class Helpers {
     public static final int REQUEST_PERMISSIONS_BLUETOOTH = 5;
     public static final int REQUEST_PERMISSIONS_SECURITY_CENTER = 6;
     public static boolean withinAppContext = false;
+    @SuppressLint("StaticFieldLeak")
+    public static ContentResolver appContentResolver = null;
 
     private static final int ICON_CACHE_KB = Math.max(1024, Math.min(16 * 1024,
         (int) (Runtime.getRuntime().maxMemory() / 1024 / 8)));
@@ -351,46 +355,62 @@ public class Helpers {
         return context.getPackageManager().checkPermission("android.permission.INTERACT_ACROSS_USERS", modulePkg) == PackageManager.PERMISSION_GRANTED;
     }
 
-    @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
-    @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
-    public static float getAnimationScale(int type) {
+    private static ContentResolver getAppContentResolver() {
+        if (appContentResolver != null) return appContentResolver;
         try {
-            Class<?> smClass = Class.forName("android.os.ServiceManager");
-            Method getService = smClass.getDeclaredMethod("getService", String.class);
-            getService.setAccessible(true);
-            Object manager = getService.invoke(smClass, "window");
+            Class<?> appGlobals = Class.forName("android.app.AppGlobals");
+            Object app = appGlobals.getMethod("getInitialApplication").invoke(null);
+            if (app instanceof Context) return ((Context) app).getContentResolver();
+        } catch (Throwable t) {
+            // ignore
+        }
+        try {
+            Class<?> activityThread = Class.forName("android.app.ActivityThread");
+            Object app = activityThread.getMethod("currentApplication").invoke(null);
+            if (app instanceof Context) return ((Context) app).getContentResolver();
+        } catch (Throwable t) {
+            // ignore
+        }
+        return null;
+    }
 
-            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-            asInterface.setAccessible(true);
-            Object wm = asInterface.invoke(wmsClass, manager);
+    private static String getAnimationScaleKey(int type) {
+        switch (type) {
+            case 0: return Settings.Global.WINDOW_ANIMATION_SCALE;
+            case 1: return Settings.Global.TRANSITION_ANIMATION_SCALE;
+            case 2: return Settings.Global.ANIMATOR_DURATION_SCALE;
+            default: return Settings.Global.WINDOW_ANIMATION_SCALE;
+        }
+    }
 
-            Method getAnimationScale = wm.getClass().getDeclaredMethod("getAnimationScale", int.class);
-            getAnimationScale.setAccessible(true);
-            return (float)getAnimationScale.invoke(wm, type);
+    public static float getAnimationScale(int type) {
+        ContentResolver resolver = getAppContentResolver();
+        if (resolver == null) return 1.0f;
+        try {
+            return Settings.Global.getFloat(resolver, getAnimationScaleKey(type), 1.0f);
         } catch (Throwable t) {
             t.printStackTrace();
             return 1.0f;
         }
     }
 
-    @SuppressWarnings({"JavaReflectionInvocation", "ConstantConditions"})
-    @SuppressLint({"PrivateApi", "DiscouragedPrivateApi"})
     public static void setAnimationScale(int type, float value) {
+        ContentResolver resolver = getAppContentResolver();
+        if (resolver == null) return;
+        String key = getAnimationScaleKey(type);
+        boolean written = false;
         try {
-            Class<?> smClass = Class.forName("android.os.ServiceManager");
-            Method getService = smClass.getDeclaredMethod("getService", String.class);
-            getService.setAccessible(true);
-            Object manager = getService.invoke(smClass, "window");
-
-            Class<?> wmsClass = Class.forName("android.view.IWindowManager$Stub");
-            Method asInterface = wmsClass.getDeclaredMethod("asInterface", IBinder.class);
-            asInterface.setAccessible(true);
-            Object wm = asInterface.invoke(wmsClass, manager);
-
-            Method setAnimationScale = wm.getClass().getDeclaredMethod("setAnimationScale", int.class, float.class);
-            setAnimationScale.setAccessible(true);
-            setAnimationScale.invoke(wm, type, value);
+            written = Settings.Global.putFloat(resolver, key, value);
+        } catch (SecurityException | IllegalArgumentException e) {
+            // app lacks WRITE_SECURE_SETTINGS, fall through to root
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return;
+        }
+        if (!written) try {
+            ProcessBuilder pb = new ProcessBuilder("su", "-c", "settings put global " + key + " " + value);
+            Process p = pb.start();
+            p.waitFor();
         } catch (Throwable t) {
             t.printStackTrace();
         }
