@@ -22,7 +22,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -594,6 +596,9 @@ public class SystemUI {
         return level;
     }
 
+    private static final ColorStateList DUAL_SIGNAL_WHITE_TINT = ColorStateList.valueOf(Color.WHITE);
+    private static final ColorStateList DUAL_SIGNAL_BLACK_TINT = ColorStateList.valueOf(Color.BLACK);
+
     private static boolean applyDualSignalDrawables(Object mobileView, Object mobileIconState, int subLevel, Resources systemUIRes, SparseIntArray signalResToLevelMap, HashMap<String, Integer> dualSignalResMap, String selectedIconStyle) {
         if (systemUIRes == null) return false;
         int mainSignalResId = XposedHelpers.getIntField(mobileIconState, "strengthId");
@@ -623,6 +628,16 @@ public class SystemUI {
         if (sim1ResId == null || sim1ResId == 0 || sim2ResId == null || sim2ResId == 0) return false;
         XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
         XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
+        ColorStateList tintList = null;
+        Object mMobileRoaming = XposedHelpers.getObjectField(mobileView, "mMobileRoaming");
+        if (mMobileRoaming != null) {
+            tintList = (ColorStateList) XposedHelpers.callMethod(mMobileRoaming, "getImageTintList");
+        }
+        if (tintList == null) {
+            tintList = mLight ? DUAL_SIGNAL_WHITE_TINT : DUAL_SIGNAL_BLACK_TINT;
+        }
+        XposedHelpers.callMethod(mMobile, "setImageTintList", tintList);
+        XposedHelpers.callMethod(mSmallRoaming, "setImageTintList", tintList);
         return true;
     }
 
@@ -741,22 +756,14 @@ public class SystemUI {
 
         MethodHook resetImageDrawable = new MethodHook() {
             @Override
-            protected void before(final BeforeHookCallback param) throws Throwable {
+            protected void after(final AfterHookCallback param) throws Throwable {
                 Object mobileIconState = XposedHelpers.getObjectField(param.getThisObject(), "mState");
-                // SystemUI can apply tint before the first mobile state is assigned during boot.
-                // Let the original method handle that initialization pass instead of touching it.
                 if (mobileIconState == null) return;
                 boolean visible = XposedHelpers.getBooleanField(mobileIconState, "visible");
                 boolean airplane = XposedHelpers.getBooleanField(mobileIconState, "airplane");
                 int subId = XposedHelpers.getIntField(mobileIconState, "subId");
-                if (!visible || airplane) {
-                    param.returnAndSkip(null);
-                    return;
-                }
-                if (subId != signalStates[0]) return;
-                if (applyDualSignalDrawables(param.getThisObject(), mobileIconState, signalStates[1], systemUIRes[0], signalResToLevelMap, dualSignalResMap, selectedIconStyle)) {
-                    param.returnAndSkip(null);
-                }
+                if (!visible || airplane || subId != signalStates[0]) return;
+                applyDualSignalDrawables(param.getThisObject(), mobileIconState, signalStates[1], systemUIRes[0], signalResToLevelMap, dualSignalResMap, selectedIconStyle);
             }
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyDarknessInternal", resetImageDrawable);

@@ -27,6 +27,7 @@
 - **代码清理与质量修复**：清理改动文件中的未使用 import、注释死代码；修复 `SystemUIMonitorAndTileHooks` 的 `DefaultLocale` 与 `DiscouragedApi` lint 警告。
 - **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
 - **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 不再把 `MobileIconState.strengthId` 覆盖成等级数值，保留原始信号 drawable 资源 ID；在 `applyDarknessInternal` 与 `onDarkChanged` 中通过 `Resources.getResourceName` 动态解析资源名得到等级，并绘制双排自定义图标。修复因 `strengthId` 被改为 1..5 后被 SystemUI `setImageResource` 当作无效资源 ID 加载，导致 SIM1 信号为空的问题。
+- **双排信号栏图标颜色跟随状态栏**：`applyDualSignalDrawables` 在设置自定义信号图标后，从 `mMobileRoaming` 读取当前 `ImageTintList`（未取到则按 `mLight` 回退黑白），并同步设置到 `mMobile` 与 `mSmallRoaming`，修复状态栏图标变黑/变白时双排信号图标颜色不跟随的问题。
 
 ### 构建产物
 
