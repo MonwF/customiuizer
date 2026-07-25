@@ -62,7 +62,7 @@ class ActivitySelector : SubFragmentWithSearch() {
             if (pi.activities != null) {
                 for (info in pi.activities) {
                     val appData = AppData()
-                    appData.pkgName = pkg
+                    appData.pkgName = pkg ?: ""
                     appData.actName = info.name ?: ""
                     appData.label = info.loadLabel(pm).toString()
                     appData.enabled = info.enabled
