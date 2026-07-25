@@ -7,7 +7,33 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.7.3 — 动画缩放 hidden API 修复与小体积 Java 类 Kotlin 迁移
+## r14.7.4 — r14.7.x 系列合并整理
+
+发布日期：2026-07-25。状态：**稳定版（完整重启验证通过，无模块相关崩溃/ANR）**。
+
+> 本版本合并 r14.7.0–r14.7.3 的全部内部重构与修复内容，并对项目进行最终清理与代码质量审查。对外功能与行为无变化，可作为 r14.7 系列的唯一稳定发布。
+
+### 合并内容摘要
+
+- **r14.7.0 — Kotlin 协程化重构**：`BitmapCachedLoader`、`WeatherDataController`、`StepCounterController`、`AudioVisualizer`、`BatteryIndicator`、`BTList`/`WiFiList` 等从 Java 并发机制迁移到 Kotlin Coroutines；引入 `kotlinx-coroutines-android`。
+- **r14.7.1 — 子页面/选择器协程化**：`ActivitySelector`、`AppSelector`、`SubFragmentWithSearch`、`SubFragment`、`MainFragment` 迁移；统一使用 `lifecycleScope`。
+- **r14.7.2 — UI 适配器与控件 Kotlin 化**：列表适配器 `ViewHolder` 化；`ColorCircle` 等偏好控件与全部小 `subs` 迁移；`PreferenceState` 接口 Kotlin 化；`ColorCircle` 启用硬件图层。
+- **r14.7.3 — 动画缩放 hidden API 修复与小文件 Kotlin 迁移**：`Helpers.getAnimationScale`/`setAnimationScale` 改用 `Settings.Global` 公共 API 并回退 `su`；新增 `WRITE_SECURE_SETTINGS`；迁移 `MainActivity`、`MainApplication`、适配器/工具类等低风险小文件。
+
+### r14.7.4 最终整理
+
+- 清理项目根目录废弃构建产物、构建日志与旧版 APK。
+- 审查重启日志：无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`VectorModuleManager` 加载成功；system 侧 `ActivityManagerWrapper`/`WorldCirculate` 报错与 SELinux 审计均不追溯到本模块代码。
+- 更新 `CHANGELOG.md` 与 `README.md` 状态，将 r14.7.0–r14.7.3 标记为已合并到 r14.7.4。
+
+### 构建产物验证
+
+- `versionCode` 169 / `versionName` r14.7.4。
+- APK：`CustoMIUIzer-A14-r14.7.4.apk`，3,048,687 bytes，SHA-256: `1B2026B6FFAEE33C3BE50E4695EE8BF19EAA6740124A199153D89C63251F2329`。
+- 通过 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
+- 签名证书与 `r14.7.3` 一致；包名不变，可覆盖安装。
+
+## r14.7.3 — 动画缩放 hidden API 修复与小体积 Java 类 Kotlin 迁移（已合并到 r14.7.4）
 
 发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
 
@@ -41,7 +67,7 @@
 - 通过 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
 - 签名证书与 `r14.7.2` 一致；包名不变，可覆盖安装。
 
-## r14.7.2 — UI 适配器/偏好设置/小工具 Kotlin 化与界面性能优化
+## r14.7.2 — UI 适配器/偏好设置/小工具 Kotlin 化与界面性能优化（已合并到 r14.7.4）
 
 发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
 
@@ -79,7 +105,7 @@
 - 通过 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
 - 签名证书与 `r14.7.1` 一致；包名不变，可覆盖安装。
 
-## r14.7.1 — Kotlin 协程化继续迁移（设置/应用选择子页面）
+## r14.7.1 — Kotlin 协程化继续迁移（设置/应用选择子页面）（已合并到 r14.7.4）
 
 发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
 
@@ -117,7 +143,7 @@
 - 通过 `./gradlew test` 与 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
 - 签名证书与 `r14.7.0` 一致；包名不变，可覆盖安装。
 
-## r14.7.0 — Kotlin 协程化重构（Java → Kotlin 移植）
+## r14.7.0 — Kotlin 协程化重构（Java → Kotlin 移植）（已合并到 r14.7.4）
 
 发布日期：2026-07-25。状态：**重大重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
 
