@@ -15,14 +15,14 @@
 
 ### 迁移范围
 
-- `utils.Helpers.java` → `Helpers.kt`
-- `utils.AppHelper.java` → `AppHelper.kt`
-- `mods.utils.ModuleHelper.java` → `ModuleHelper.kt`
-- `mods.utils.HookerClassHelper.java` → `HookerClassHelper.kt`
-- `mods.utils.ResourceHooks.java` → `ResourceHooks.kt`
+- `utils.Helpers.java` → `Helpers.kt`（已完成）
+- `utils.AppHelper.java` → `AppHelper.kt`（已完成）
+- `mods.utils.ModuleHelper.java` → `ModuleHelper.kt`（已完成）
+- `mods.utils.HookerClassHelper.java` → `HookerClassHelper.kt`（已完成）
+- `mods.utils.ResourceHooks.java` → `ResourceHooks.kt`（已完成）
 - `mods.utils.ShakeManager.java` → `ShakeManager.kt`（已完成）
 - `ResourceConstants.java` → `ResourceConstants.kt`（已完成）
-- 测试 `AppHelperTest`、`PrefMapTest`、`XposedHelpersCacheTest` 改为 Kotlin。
+- 测试 `AppHelperTest`、`PrefMapTest`、`XposedHelpersCacheTest` 改为 Kotlin（已完成）。
 
 ### 构建验证
 
