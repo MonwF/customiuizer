@@ -7,31 +7,59 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
-## r14.6.3
+## r14.6.3 — 双排信号栏修复与生命周期治理（合并 r14.6.0~r14.6.2）
 
-发布日期：2026-07-25。状态：**稳定版（生命周期治理、ClassNotFound 回退适配与双排信号栏修复已实机验证）**。
+发布日期：2026-07-25。状态：**稳定版（r14.6.x 终版；合并 r14.6.0/14.6.1/14.6.2 历史；双排信号栏修复已实机验证）**。
 
-### 修复与改进
+> `r14.6.0` / `r14.6.1` 已废弃并合并到 `r14.6.2`（对应 release/tag 已删除）；本版本在 `r14.6.2` 基础上继续修复双排信号栏的 SIM1 为空与颜色跟随问题。
 
-- **ClassNotFound 异常回退**：`XposedHelpers.findClassInternal` 在类加载器无法找到类时，增加对 `Application` 层 ClassLoader 的回退查找，减少 systemui/keyguard 内部类加载失败。
-- **Owner 级 PreferenceObserver 管理**：`ModuleHelper` 新增 `observePreferenceChange(PreferenceObserver, Object)` 与 `removePreferenceObserver(Object)`，支持以生命周期宿主为 owner 注册/注销偏好监听，避免静态观察者重复注册与内存泄漏。
-- **Controls.java 长按回调治理**：`NavBarActionsHook` 在 `postDelayed` 之前先 `removeCallbacks`，防止导航键长按 Runnable 重复堆积。
-- **Launcher.java 生命周期治理**：
-  - `RenameShortcutsHook` 使用 owner 方式注册 `PreferenceObserver`，并在 `onDestroy` 中移除。
-  - `PrivacyFolderHook` 与 `setupLauncher` 的 `BroadcastReceiver` 改为具名变量、先注销旧实例再注册，并在 `onDestroy` 中统一清理。
-- **System.java 生命周期治理**：
-  - 所有 `observePreferenceChange` 调用改为以 `thisObject` 为 owner 注册。
-  - `KeyguardSecurityContainerController`、`KeyguardViewMediator`、`BluetoothControllerImpl`、`MiuiPhoneStatusBarPolicy` 等处的匿名 `BroadcastReceiver` 先注销旧实例再注册，避免重复。
-  - `HeadsUpManager` 的 `mRemoveAlertRunnable`、`MultiWindowPlusHook`、`ExpandHeadsUpHook` 的 `postDelayed` 在发送前移除旧回调或复用 stored runnable，防止重复与泄漏。
-- **SystemUI.java 方法拆分**：将 `MonitorDeviceInfoHook` 与 `AddCustomTileHook` 提取到 `SystemUIMonitorAndTileHooks.java`，`SystemUI.java` 保留委托 stub；通过包级可见的 helper/field 共享解决跨类依赖，降低主文件行数与维护耦合。
-- **代码清理与质量修复**：清理改动文件中的未使用 import、注释死代码；修复 `SystemUIMonitorAndTileHooks` 的 `DefaultLocale` 与 `DiscouragedApi` lint 警告。
-- **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
-- **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 不再把 `MobileIconState.strengthId` 覆盖成等级数值，保留原始信号 drawable 资源 ID；在 `applyDarknessInternal` 与 `onDarkChanged` 中通过 `Resources.getResourceName` 动态解析资源名得到等级，并绘制双排自定义图标。修复因 `strengthId` 被改为 1..5 后被 SystemUI `setImageResource` 当作无效资源 ID 加载，导致 SIM1 信号为空的问题。
-- **双排信号栏图标颜色跟随状态栏**：`applyDualSignalDrawables` 在设置自定义信号图标后，从 `mMobileRoaming` 读取当前 `ImageTintList`（未取到则按 `mLight` 回退黑白），并同步设置到 `mMobile` 与 `mSmallRoaming`，修复状态栏图标变黑/变白时双排信号图标颜色不跟随的问题。
+### r14.6.x 演进
 
-### 构建产物
+- **r14.6.0 原始尝试**：
+  - D 类废弃 API/权限迁移：将 `Settings.System` 自定义键（`systemui_restart_time`、`last_music_paused_time`、`dark_mode_enable_by_setting`）迁移到模块 `SharedPreferences`；新增 `Helpers.getSystemSharedPrefs()`。
+  - PendingIntent flag 兼容辅助：在 `Helpers` 中新增 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent`。
+  - 通知渠道：`MainApplication.onCreate` 创建默认低重要性 `NotificationChannel`（ID `customiuizer_default`）。
+  - 权限声明：`AndroidManifest.xml` 新增 `WAKE_LOCK` 与 `POST_NOTIFICATIONS`。
+- **r14.6.1 热修复**：
+  - 回退 `Settings.System` 自定义键迁移，恢复使用 `Settings.System`；移除 `Helpers.getSystemSharedPrefs()`，避免 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
+  - 保留通知渠道、`WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明、PendingIntent flag 兼容辅助。
+  - LSPosed 日志（`LSPosed_2026-07-24T23_06_27.328222`）确认无模块相关报错。
+- **r14.6.2 清理与发布**：
+  - 删除 GitHub `r14.6.0` 和 `r14.6.1` release 与 tag（两个版本均已废弃或合并）。
+  - 合并 r14.6.0/14.6.1 变更记录到本版本。
+  - 移除 `Helpers.java` 中未使用的 `android.content.SharedPreferences` 导入。
+  - 移除 `AndroidManifest.xml` 中未使用的 `POST_NOTIFICATIONS` 权限声明；`WAKE_LOCK` 仍保留（`Controls.java` 实际使用 `WakeLock`）。
+  - 重写 `README.md`，新增“各版本全方位对比”表。
+- **r14.6.3 最终修复**：
+  - **ClassNotFound 异常回退**：`XposedHelpers.findClassInternal` 在类加载器无法找到类时，增加对 `Application` 层 ClassLoader 的回退查找，减少 systemui/keyguard 内部类加载失败。
+  - **Owner 级 PreferenceObserver 管理**：`ModuleHelper` 新增 `observePreferenceChange(PreferenceObserver, Object)` 与 `removePreferenceObserver(Object)`，支持以生命周期宿主为 owner 注册/注销偏好监听，避免静态观察者重复注册与内存泄漏。
+  - **Controls.java 长按回调治理**：`NavBarActionsHook` 在 `postDelayed` 之前先 `removeCallbacks`，防止导航键长按 Runnable 重复堆积。
+  - **Launcher.java 生命周期治理**：
+    - `RenameShortcutsHook` 使用 owner 方式注册 `PreferenceObserver`，并在 `onDestroy` 中移除。
+    - `PrivacyFolderHook` 与 `setupLauncher` 的 `BroadcastReceiver` 改为具名变量、先注销旧实例再注册，并在 `onDestroy` 中统一清理。
+  - **System.java 生命周期治理**：
+    - 所有 `observePreferenceChange` 调用改为以 `thisObject` 为 owner 注册。
+    - `KeyguardSecurityContainerController`、`KeyguardViewMediator`、`BluetoothControllerImpl`、`MiuiPhoneStatusBarPolicy` 等处的匿名 `BroadcastReceiver` 先注销旧实例再注册，避免重复。
+    - `HeadsUpManager` 的 `mRemoveAlertRunnable`、`MultiWindowPlusHook`、`ExpandHeadsUpHook` 的 `postDelayed` 在发送前移除旧回调或复用 stored runnable，防止重复与泄漏。
+  - **SystemUI.java 方法拆分**：将 `MonitorDeviceInfoHook` 与 `AddCustomTileHook` 提取到 `SystemUIMonitorAndTileHooks.java`，`SystemUI.java` 保留委托 stub；通过包级可见的 helper/field 共享解决跨类依赖，降低主文件行数与维护耦合。
+  - **代码清理与质量修复**：清理改动文件中的未使用 import、注释死代码；修复 `SystemUIMonitorAndTileHooks` 的 `DefaultLocale` 与 `DiscouragedApi` lint 警告。
+  - **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
+  - **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 不再把 `MobileIconState.strengthId` 覆盖成等级数值，保留原始信号 drawable 资源 ID；在 `applyDarknessInternal` 与 `onDarkChanged` 中通过 `Resources.getResourceName` 动态解析资源名得到等级，并绘制双排自定义图标。修复因 `strengthId` 被改为 1..5 后被 SystemUI `setImageResource` 当作无效资源 ID 加载，导致 SIM1 信号为空的问题。
+  - **双排信号栏图标颜色跟随状态栏**：`applyDualSignalDrawables` 在设置自定义信号图标后，从 `mMobileRoaming` 读取当前 `ImageTintList`（未取到则按 `mLight` 回退黑白），并同步设置到 `mMobile` 与 `mSmallRoaming`，修复状态栏图标变黑/变白时双排信号图标颜色不跟随的问题。
+
+### 构建产物验证
 
 - `versionCode` 163 / `versionName` r14.6.3。
+- APK：`CustoMIUIzer-A14-r14.6.3.apk`，2,949,361 bytes，SHA-256: `25BB468500C496D87863550A5E04797835FE3861744A141BA5E3F019408D0E60`。
+- 通过 `gradlew test` 与 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
+- 签名证书与 r14.6.2 一致；包名不变，可覆盖安装。
+
+### 实机验证
+
+- LSPosed 重启日志（`LSPosed_2026-07-25T11_38_15.751122`）未出现模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
+- 控制中心关闭/开启移动数据后，双排信号栏 SIM1 信号显示正常；状态栏图标变黑/变白时双排信号图标颜色正确跟随。
+- 日志中存在的 `Invalid resource ID 0x00000000`（`ClockPalette`）与 `ApkAssets` 弱引用警告均不含本模块调用栈，未追溯到 CustoMIUIzer 代码。
+- 建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.3 的加载数据。
 
 ## r14.6.2
 
