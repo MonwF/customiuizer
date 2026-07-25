@@ -22,14 +22,11 @@ package tv.withaibuild.customiuizer.mods.utils;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MemberUtilsX;
 import org.luckypray.dexkit.DexKitBridge;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +45,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-
 import io.github.libxposed.api.XposedInterface;
 import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.CustomMethodUnhooker;
 import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.MethodHook;
@@ -285,7 +281,13 @@ public final class XposedHelpers {
      */
     public static Class<?> findClass(String className, ClassLoader classLoader) {
         Class<?> c = findClassInternal(className, classLoader);
-        if (c == null) throw new ClassNotFoundError(new ClassNotFoundException(className));
+        if (c == null) {
+            ClassLoader appLoader = getApplicationClassLoader(classLoader);
+            if (appLoader != null && appLoader != (classLoader != null ? classLoader : moduleInst.getClass().getClassLoader())) {
+                c = findClassInternal(className, appLoader);
+            }
+        }
+        if (c == null) throw new ClassNotFoundError("Class not found: " + className + " with classLoader " + classLoader, new ClassNotFoundException(className));
         return c;
     }
 
@@ -298,7 +300,26 @@ public final class XposedHelpers {
      * @return A reference to the class, or {@code null} if it doesn't exist.
      */
     public static Class<?> findClassIfExists(String className, ClassLoader classLoader) {
-        return findClassInternal(className, classLoader);
+        Class<?> c = findClassInternal(className, classLoader);
+        if (c == null) {
+            ClassLoader appLoader = getApplicationClassLoader(classLoader);
+            if (appLoader != null && appLoader != (classLoader != null ? classLoader : moduleInst.getClass().getClassLoader())) {
+                c = findClassInternal(className, appLoader);
+            }
+        }
+        return c;
+    }
+
+    private static ClassLoader getApplicationClassLoader(ClassLoader classLoader) {
+        try {
+            ClassLoader loader = classLoader != null ? classLoader : (moduleInst != null ? moduleInst.getClass().getClassLoader() : XposedHelpers.class.getClassLoader());
+            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread", false, loader);
+            Object currentApp = callStaticMethod(activityThreadClass, "currentApplication");
+            if (currentApp != null) {
+                return (ClassLoader) callMethod(currentApp, "getClassLoader");
+            }
+        } catch (Throwable ignored) {}
+        return null;
     }
 
     private static Class<?> findClassInternal(String className, ClassLoader classLoader) {

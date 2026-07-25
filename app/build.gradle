@@ -5,8 +5,8 @@ def hasReleaseSigning = keystorePropertiesFile.isFile()
 if (hasReleaseSigning) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-def lastVersion = 162
-def lastVersionName = "r14.6.2"
+def lastVersion = 163
+def lastVersionName = "r14.6.3"
 
 android {
     namespace "tv.withaibuild.customiuizer"
@@ -93,6 +93,7 @@ android {
 dependencies {
     compileOnly files('lib/framework.jar')
     compileOnly "io.github.libxposed:api:101.0.1"
+    testImplementation "io.github.libxposed:api:101.0.1"
 
     implementation "io.github.libxposed:service:101.0.0"
     implementation "org.apache.commons:commons-lang3:3.20.0"

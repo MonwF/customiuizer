@@ -3,7 +3,6 @@ package tv.withaibuild.customiuizer.mods.utils;
 import static tv.withaibuild.customiuizer.mods.GlobalActions.ACTION_PREFIX;
 import static tv.withaibuild.customiuizer.mods.utils.XposedHelpers.findClass;
 import static tv.withaibuild.customiuizer.mods.utils.XposedHelpers.log;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.app.Application;
@@ -19,16 +18,13 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.MiuiMultiWindowUtils;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-
 import io.github.libxposed.api.XposedModuleInterface;
 import miui.app.MiuiFreeFormManager;
 import miui.process.ForegroundInfo;
@@ -58,6 +54,7 @@ public class ModuleHelper {
 
     private static final CopyOnWriteArraySet<PreferenceObserver> prefObservers =
         new CopyOnWriteArraySet<>();
+    private static final String PREF_OBSERVER_FIELD = "customiuizer_prefObserver";
 
     static Class<?> ActivityThreadClass;
 
@@ -313,6 +310,26 @@ public class ModuleHelper {
 
     public static void observePreferenceChange(PreferenceObserver prefObserver) {
         prefObservers.add(prefObserver);
+    }
+
+    public static void observePreferenceChange(PreferenceObserver prefObserver, Object owner) {
+        if (owner == null) {
+            observePreferenceChange(prefObserver);
+            return;
+        }
+        Object old = XposedHelpers.getAdditionalInstanceField(owner, PREF_OBSERVER_FIELD);
+        if (old instanceof PreferenceObserver) {
+            prefObservers.remove(old);
+        }
+        XposedHelpers.setAdditionalInstanceField(owner, PREF_OBSERVER_FIELD, prefObserver);
+        prefObservers.add(prefObserver);
+    }
+
+    public static void removePreferenceObserver(Object owner) {
+        Object old = XposedHelpers.removeAdditionalInstanceField(owner, PREF_OBSERVER_FIELD);
+        if (old instanceof PreferenceObserver) {
+            prefObservers.remove(old);
+        }
     }
 
     public static void handlePreferenceChanged(@Nullable String key) {

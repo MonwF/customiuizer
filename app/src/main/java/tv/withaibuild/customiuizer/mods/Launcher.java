@@ -2,7 +2,6 @@ package tv.withaibuild.customiuizer.mods;
 
 import static tv.withaibuild.customiuizer.mods.utils.XposedHelpers.findClass;
 import static tv.withaibuild.customiuizer.mods.utils.XposedHelpers.findClassIfExists;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.appwidget.AppWidgetProviderInfo;
@@ -25,7 +24,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.UserHandle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,13 +38,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.AfterHookCallback;
 import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
@@ -515,12 +511,28 @@ public class Launcher {
             		                            XposedHelpers.log(t);
             		                        }
             		                    }
-            		                });
+            		                }, thisObject);
 
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
             	return XposedHelpers.throwOrReturn(throwable, result);
+            }
+        });
+
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onDestroy", new MethodHook() {
+            @Override
+            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result = null;
+                Throwable throwable = null;
+                try {
+                    ModuleHelper.removePreferenceObserver(chain.getThisObject());
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
 
@@ -1762,7 +1774,11 @@ public class Launcher {
                 		                    intentFilter.addDataAuthority("233233", null);
                 		                    intentFilter.addDataScheme("android_secret_code");
 
-                		                    act.registerReceiver(new BroadcastReceiver() {
+                		                    Object oldsecretCodeReceiver = XposedHelpers.getAdditionalInstanceField(thisObject, "secretCodeReceiver");
+                		                    if (oldsecretCodeReceiver instanceof BroadcastReceiver) {
+                		                        try { act.unregisterReceiver((BroadcastReceiver) oldsecretCodeReceiver); } catch (Throwable ignore) {}
+                		                    }
+                		                    BroadcastReceiver secretCodeReceiver = new BroadcastReceiver() {
                 		                        @Override
                 		                        public void onReceive(Context context, Intent intent) {
                 		                            try {
@@ -1775,7 +1791,9 @@ public class Launcher {
                 		                                XposedHelpers.log(t);
                 		                            }
                 		                        }
-                		                    }, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+                		                    };
+                		                    XposedHelpers.setAdditionalInstanceField(thisObject, "secretCodeReceiver", secretCodeReceiver);
+                		                    act.registerReceiver(secretCodeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
 
                 	} catch (Throwable t) {
                 		XposedHelpers.log(t);
@@ -1811,6 +1829,30 @@ public class Launcher {
             		result = null;
             	}
             	return XposedHelpers.throwOrReturn(throwable, result);
+            }
+        });
+
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onDestroy", new MethodHook() {
+            @Override
+            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result = null;
+                Throwable throwable = null;
+                try {
+                    Activity act = (Activity) chain.getThisObject();
+                    Object secretCodeReceiver = XposedHelpers.getAdditionalInstanceField(act, "secretCodeReceiver");
+                    if (secretCodeReceiver instanceof BroadcastReceiver) {
+                        try { act.unregisterReceiver((BroadcastReceiver) secretCodeReceiver); } catch (Throwable ignore) {}
+                    }
+                    Object fetchAppConfigReceiver = XposedHelpers.getAdditionalInstanceField(act, "fetchAppConfigReceiver");
+                    if (fetchAppConfigReceiver instanceof BroadcastReceiver) {
+                        try { act.unregisterReceiver((BroadcastReceiver) fetchAppConfigReceiver); } catch (Throwable ignore) {}
+                    }
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }
@@ -2991,7 +3033,11 @@ public class Launcher {
             		                IntentFilter intentFilter = new IntentFilter();
             		                intentFilter.addAction(GlobalActions.EVENT_PREFIX + "FETCHAPPCONFIG");
 
-            		                act.registerReceiver(new BroadcastReceiver() {
+            		                Object oldfetchAppConfigReceiver = XposedHelpers.getAdditionalInstanceField(thisObject, "fetchAppConfigReceiver");
+            		                if (oldfetchAppConfigReceiver instanceof BroadcastReceiver) {
+            		                    try { act.unregisterReceiver((BroadcastReceiver) oldfetchAppConfigReceiver); } catch (Throwable ignore) {}
+            		                }
+            		                BroadcastReceiver fetchAppConfigReceiver = new BroadcastReceiver() {
             		                    @Override
             		                    public void onReceive(Context context, Intent intent) {
             		                        try {
@@ -3024,12 +3070,38 @@ public class Launcher {
             		                            XposedHelpers.log(t);
             		                        }
             		                    }
-            		                }, intentFilter, Context.RECEIVER_EXPORTED);
+            		                };
+            		                XposedHelpers.setAdditionalInstanceField(thisObject, "fetchAppConfigReceiver", fetchAppConfigReceiver);
+            		                act.registerReceiver(fetchAppConfigReceiver, intentFilter, Context.RECEIVER_EXPORTED);
 
             	} catch (Throwable t) {
             		XposedHelpers.log(t);
             	}
             	return XposedHelpers.throwOrReturn(throwable, result);
+            }
+        });
+
+        ModuleHelper.findAndHookMethod("com.miui.home.launcher.Launcher", lpparam.getClassLoader(), "onDestroy", new MethodHook() {
+            @Override
+            public Object intercept(XposedInterface.Chain chain) throws Throwable {
+                Object result = null;
+                Throwable throwable = null;
+                try {
+                    Activity act = (Activity) chain.getThisObject();
+                    Object secretCodeReceiver = XposedHelpers.getAdditionalInstanceField(act, "secretCodeReceiver");
+                    if (secretCodeReceiver instanceof BroadcastReceiver) {
+                        try { act.unregisterReceiver((BroadcastReceiver) secretCodeReceiver); } catch (Throwable ignore) {}
+                    }
+                    Object fetchAppConfigReceiver = XposedHelpers.getAdditionalInstanceField(act, "fetchAppConfigReceiver");
+                    if (fetchAppConfigReceiver instanceof BroadcastReceiver) {
+                        try { act.unregisterReceiver((BroadcastReceiver) fetchAppConfigReceiver); } catch (Throwable ignore) {}
+                    }
+                    result = chain.proceed();
+                } catch (Throwable t) {
+                    throwable = t;
+                    result = null;
+                }
+                return XposedHelpers.throwOrReturn(throwable, result);
             }
         });
     }

@@ -28,10 +28,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
 import tv.withaibuild.customiuizer.mods.utils.HookerClassHelper.BeforeHookCallback;
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam;
 import io.github.libxposed.api.XposedInterface;
@@ -727,15 +725,20 @@ public class Controls {
 									if (basePWMContext == null) basePWMContext = (Context)XposedHelpers.getObjectField(thisObject, "mContext");
 									if (markShortcutTriggered == null) markShortcutTriggered = XposedHelpers.findMethodExact("com.android.server.policy.BaseMiuiPhoneWindowManager", lpparam.getClassLoader(), "markShortcutTriggered");
 
+									Handler mHandler = (Handler)XposedHelpers.getObjectField(thisObject, "mHandler");
+
 									int key = (int)args[0];
 									if (key == KeyEvent.KEYCODE_BACK && MainModule.mPrefs.getInt("controls_backlong_action", 1) > 1) {
-										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
+										mHandler.removeCallbacks(mBackLongPressAction);
+										mHandler.postDelayed(mBackLongPressAction, ViewConfiguration.getLongPressTimeout());
 										{ skipped = true; result = null; throwable = null; }
 									} else if (key == KeyEvent.KEYCODE_HOME && MainModule.mPrefs.getInt("controls_homelong_action", 1) > 1) {
-										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
+										mHandler.removeCallbacks(mHomeLongPressAction);
+										mHandler.postDelayed(mHomeLongPressAction, ViewConfiguration.getLongPressTimeout());
 										{ skipped = true; result = null; throwable = null; }
 									} else if (key == KeyEvent.KEYCODE_APP_SWITCH && MainModule.mPrefs.getInt("controls_menulong_action", 1) > 1) {
-										((Handler)XposedHelpers.getObjectField(thisObject, "mHandler")).postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
+										mHandler.removeCallbacks(mMenuLongPressAction);
+										mHandler.postDelayed(mMenuLongPressAction, ViewConfiguration.getLongPressTimeout());
 										{ skipped = true; result = null; throwable = null; }
 									}
 

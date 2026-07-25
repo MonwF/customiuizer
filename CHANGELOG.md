@@ -7,6 +7,30 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.6.3
+
+发布日期：2026-07-25。状态：**开发版（生命周期治理与 ClassNotFound 回退适配）**。
+
+### 修复与改进
+
+- **ClassNotFound 异常回退**：`XposedHelpers.findClassInternal` 在类加载器无法找到类时，增加对 `Application` 层 ClassLoader 的回退查找，减少 systemui/keyguard 内部类加载失败。
+- **Owner 级 PreferenceObserver 管理**：`ModuleHelper` 新增 `observePreferenceChange(PreferenceObserver, Object)` 与 `removePreferenceObserver(Object)`，支持以生命周期宿主为 owner 注册/注销偏好监听，避免静态观察者重复注册与内存泄漏。
+- **Controls.java 长按回调治理**：`NavBarActionsHook` 在 `postDelayed` 之前先 `removeCallbacks`，防止导航键长按 Runnable 重复堆积。
+- **Launcher.java 生命周期治理**：
+  - `RenameShortcutsHook` 使用 owner 方式注册 `PreferenceObserver`，并在 `onDestroy` 中移除。
+  - `PrivacyFolderHook` 与 `setupLauncher` 的 `BroadcastReceiver` 改为具名变量、先注销旧实例再注册，并在 `onDestroy` 中统一清理。
+- **System.java 生命周期治理**：
+  - 所有 `observePreferenceChange` 调用改为以 `thisObject` 为 owner 注册。
+  - `KeyguardSecurityContainerController`、`KeyguardViewMediator`、`BluetoothControllerImpl`、`MiuiPhoneStatusBarPolicy` 等处的匿名 `BroadcastReceiver` 先注销旧实例再注册，避免重复。
+  - `HeadsUpManager` 的 `mRemoveAlertRunnable`、`MultiWindowPlusHook`、`ExpandHeadsUpHook` 的 `postDelayed` 在发送前移除旧回调或复用 stored runnable，防止重复与泄漏。
+- **SystemUI.java 方法拆分**：将 `MonitorDeviceInfoHook` 与 `AddCustomTileHook` 提取到 `SystemUIMonitorAndTileHooks.java`，`SystemUI.java` 保留委托 stub；通过包级可见的 helper/field 共享解决跨类依赖，降低主文件行数与维护耦合。
+- **代码清理与质量修复**：清理改动文件中的未使用 import、注释死代码；修复 `SystemUIMonitorAndTileHooks` 的 `DefaultLocale` 与 `DiscouragedApi` lint 警告。
+- **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
+
+### 构建产物
+
+- `versionCode` 163 / `versionName` r14.6.3。
+
 ## r14.6.2
 
 发布日期：2026-07-24。状态：**稳定版（r14.6.x 终版；合并 r14.6.0/14.6.1 历史、清理死代码与发布标签；无业务逻辑改动）**。
