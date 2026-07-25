@@ -34,45 +34,50 @@ class PreferenceAdapter(context: Context, private val key: String, private val a
 
     @SuppressLint("ClickableViewAccessibility")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row = convertView ?: inflater.inflate(R.layout.pref_item, parent, false)
+        val holder = (convertView?.tag as? ViewHolder) ?: run {
+            val row = inflater.inflate(R.layout.pref_item, parent, false)
+            Helpers.setMiuiPrefItem(row)
+            ViewHolder(row).also { row.tag = it }
+        }
 
-        Helpers.setMiuiPrefItem(row)
-        val dragHandle = row.findViewById<ImageView>(R.id.drag_handle)
-        val itemIcon = row.findViewById<ImageView>(android.R.id.icon)
-        val itemTitle = row.findViewById<TextView>(android.R.id.title)
-        val itemSummary = row.findViewById<TextView>(android.R.id.summary)
-
-        dragHandle.visibility = if (activities) View.GONE else View.VISIBLE
-        (parent as? SortableListView)?.let { dragHandle.setOnTouchListener(it.getListenerForStartingSort()) }
-        itemIcon.visibility = View.VISIBLE
+        holder.dragHandle.visibility = if (activities) View.GONE else View.VISIBLE
+        (parent as? SortableListView)?.let { holder.dragHandle.setOnTouchListener(it.getListenerForStartingSort()) }
+        holder.icon.visibility = View.VISIBLE
         val uuid = getItem(position)
-        val name = AppHelper.getActionNameLocal(row.context, key + "_" + uuid)
+        val name = AppHelper.getActionNameLocal(holder.root.context, key + "_" + uuid)
         if (name == null) {
-            itemTitle.setText(R.string.notselected)
-            itemSummary.visibility = View.GONE
+            holder.title.setText(R.string.notselected)
+            holder.summary.visibility = View.GONE
         } else {
             if (activities) {
                 val actStr = AppHelper.getStringOfAppPrefs(key + "_" + uuid + "_activity", "") ?: ""
-                itemTitle.text = Helpers.getAppName(row.context, actStr, true) ?: ""
+                holder.title.text = Helpers.getAppName(holder.root.context, actStr, true) ?: ""
             } else {
-                itemTitle.text = name.first
+                holder.title.text = name.first
             }
             if (name.second.isNullOrEmpty()) {
-                itemSummary.visibility = View.GONE
+                holder.summary.visibility = View.GONE
             } else {
-                itemSummary.visibility = View.VISIBLE
-                itemSummary.text = name.second
+                holder.summary.visibility = View.VISIBLE
+                holder.summary.text = name.second
             }
         }
 
         try {
-            val drawable = Helpers.getActionImageLocal(row.context, key + "_" + uuid)
-            itemIcon.setImageDrawable(drawable ?: row.context.packageManager.getApplicationIcon(Helpers.modulePkg))
+            val drawable = Helpers.getActionImageLocal(holder.root.context, key + "_" + uuid)
+            holder.icon.setImageDrawable(drawable ?: holder.root.context.packageManager.getApplicationIcon(Helpers.modulePkg))
         } catch (t: Throwable) {
             t.printStackTrace()
         }
 
-        row.setPadding(row.paddingLeft, row.paddingTop, 0, row.paddingBottom)
-        return row
+        holder.root.setPadding(holder.root.paddingLeft, holder.root.paddingTop, 0, holder.root.paddingBottom)
+        return holder.root
+    }
+
+    private class ViewHolder(val root: View) {
+        val dragHandle: ImageView = root.findViewById(R.id.drag_handle)
+        val icon: ImageView = root.findViewById(android.R.id.icon)
+        val title: TextView = root.findViewById(android.R.id.title)
+        val summary: TextView = root.findViewById(android.R.id.summary)
     }
 }

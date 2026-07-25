@@ -150,50 +150,45 @@ class AppDataAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row = convertView ?: inflater.inflate(R.layout.applist_item11, parent, false)
-
-        val itemIsDis = row.findViewById<ImageView>(R.id.icon_disable)
-        val itemIsDual = row.findViewById<ImageView>(R.id.icon_dual)
-        val itemChecked = row.findViewById<CheckBox>(android.R.id.checkbox)
-        if (!bwlist && itemChecked.tag != true) {
-            itemChecked.tag = true
+        val holder = (convertView?.tag as? ViewHolder) ?: run {
+            val row = inflater.inflate(R.layout.applist_item11, parent, false)
+            ViewHolder(row).also { row.tag = it }
         }
-        val itemStateIcon = row.findViewById<ImageView>(android.R.id.selectedIcon)
-        val itemTitle = row.findViewById<TextView>(android.R.id.title)
-        val itemSummary = row.findViewById<TextView>(android.R.id.summary)
-        val itemIcon = row.findViewById<ImageView>(android.R.id.icon)
+
+        if (!bwlist && holder.checked.tag != true) {
+            holder.checked.tag = true
+        }
 
         val ad = getItem(position)
-        itemTitle.text = ad.label
-        itemIsDis.visibility = if (ad.enabled) View.GONE else View.VISIBLE
+        holder.title.text = ad.label
+        holder.disableIcon.visibility = if (ad.enabled) View.GONE else View.VISIBLE
 
         if (aType == AppHelper.AppAdapterType.Activities) {
-            itemIcon.visibility = View.GONE
-            val container = row.findViewById<View>(R.id.container)
-            (container.layoutParams as? LinearLayout.LayoutParams)?.let {
+            holder.icon.visibility = View.GONE
+            (holder.container.layoutParams as? LinearLayout.LayoutParams)?.let {
                 it.leftMargin = 0
-                container.layoutParams = it
+                holder.container.layoutParams = it
             }
         } else {
-            itemIcon.tag = position
+            holder.icon.tag = position
             val icon = Helpers.memoryCache[ad.pkgName + "|" + ad.actName]
             if (icon == null) {
                 val dualIcon = arrayOf(ctx.resources.getDrawable(R.drawable.card_icon_default, ctx.theme))
                 val crossfader = TransitionDrawable(dualIcon)
                 crossfader.setCrossFadeEnabled(true)
-                itemIcon.setImageDrawable(crossfader)
-                BitmapCachedLoader(itemIcon, ad, ctx).execute()
+                holder.icon.setImageDrawable(crossfader)
+                BitmapCachedLoader(holder.icon, ad, ctx).execute()
             } else {
-                itemIcon.setImageBitmap(icon)
+                holder.icon.setImageBitmap(icon)
             }
         }
 
         when (aType) {
             AppHelper.AppAdapterType.Mutli -> {
-                itemSummary.visibility = View.GONE
+                holder.summary.visibility = View.GONE
                 if (bwlist) {
-                    itemStateIcon.visibility = View.VISIBLE
-                    itemStateIcon.setImageResource(
+                    holder.stateIcon.visibility = View.VISIBLE
+                    holder.stateIcon.setImageResource(
                         when {
                             selectedApps.contains(ad.pkgName) -> R.drawable.icon_action_allow
                             selectedAppsBlack.contains(ad.pkgName) -> R.drawable.icon_action_disallow
@@ -201,37 +196,48 @@ class AppDataAdapter(
                         }
                     )
                 } else {
-                    itemChecked.visibility = View.VISIBLE
-                    itemChecked.isChecked = shouldSelect(ad.pkgName, ad.user)
+                    holder.checked.visibility = View.VISIBLE
+                    holder.checked.isChecked = shouldSelect(ad.pkgName, ad.user)
                 }
-                itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+                holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
             }
             AppHelper.AppAdapterType.CustomTitles -> {
-                itemSummary.text = AppHelper.getStringOfAppPrefs(key + ":" + ad.pkgName + "|" + ad.actName + "|" + ad.user, "") ?: ""
-                itemSummary.visibility = if (TextUtils.isEmpty(itemSummary.text)) View.GONE else View.VISIBLE
-                itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+                holder.summary.text = AppHelper.getStringOfAppPrefs(key + ":" + ad.pkgName + "|" + ad.actName + "|" + ad.user, "") ?: ""
+                holder.summary.visibility = if (TextUtils.isEmpty(holder.summary.text)) View.GONE else View.VISIBLE
+                holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
             }
             AppHelper.AppAdapterType.Standalone -> {
-                itemChecked.visibility = View.VISIBLE
-                itemChecked.isChecked = (selectedApp == "" && ad.pkgName == "" && ad.actName == "") ||
+                holder.checked.visibility = View.VISIBLE
+                holder.checked.isChecked = (selectedApp == "" && ad.pkgName == "" && ad.actName == "") ||
                         ((ad.pkgName + "|" + ad.actName) == selectedApp && ad.user == selectedUser)
-                itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+                holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
             }
             AppHelper.AppAdapterType.Activities -> {
-                itemSummary.text = ad.actName.replace(".", ".\u200B")
-                itemSummary.visibility = if (TextUtils.isEmpty(itemSummary.text)) View.GONE else View.VISIBLE
-                itemSummary.setSingleLine(false)
-                itemSummary.maxLines = Integer.MAX_VALUE
-                itemSummary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-                itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+                holder.summary.text = ad.actName.replace(".", ".\u200B")
+                holder.summary.visibility = if (TextUtils.isEmpty(holder.summary.text)) View.GONE else View.VISIBLE
+                holder.summary.setSingleLine(false)
+                holder.summary.maxLines = Integer.MAX_VALUE
+                holder.summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
             }
             else -> {
-                itemSummary.visibility = View.GONE
-                itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+                holder.summary.visibility = View.GONE
+                holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
             }
         }
 
-        return row
+        return holder.root
+    }
+
+    private class ViewHolder(val root: View) {
+        val disableIcon: ImageView = root.findViewById(R.id.icon_disable)
+        val dualIcon: ImageView = root.findViewById(R.id.icon_dual)
+        val checked: CheckBox = root.findViewById(android.R.id.checkbox)
+        val stateIcon: ImageView = root.findViewById(android.R.id.selectedIcon)
+        val title: TextView = root.findViewById(android.R.id.title)
+        val summary: TextView = root.findViewById(android.R.id.summary)
+        val icon: ImageView = root.findViewById(android.R.id.icon)
+        val container: View = root.findViewById(R.id.container)
     }
 
     private inner class ItemFilter : Filter() {

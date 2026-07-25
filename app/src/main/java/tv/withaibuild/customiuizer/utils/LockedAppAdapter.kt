@@ -71,45 +71,50 @@ class LockedAppAdapter(context: Context, arr: ArrayList<AppData>) : BaseAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row = convertView ?: inflater.inflate(R.layout.applist_item11, parent, false)
-
-        val itemIsDis = row.findViewById<ImageView>(R.id.icon_disable)
-        val itemIsDual = row.findViewById<ImageView>(R.id.icon_dual)
-        val itemChecked = row.findViewById<CheckBox>(android.R.id.checkbox)
-        val itemTitle = row.findViewById<TextView>(android.R.id.title)
-        val itemIcon = row.findViewById<ImageView>(android.R.id.icon)
+        val holder = (convertView?.tag as? ViewHolder) ?: run {
+            val row = inflater.inflate(R.layout.applist_item11, parent, false)
+            ViewHolder(row).also { row.tag = it }
+        }
 
         val ad = getItem(position)
-        itemIcon.tag = position
-        itemTitle.text = ad.label
-        itemIsDis.visibility = if (ad.enabled) View.GONE else View.VISIBLE
-        itemIsDual.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
+        holder.icon.tag = position
+        holder.title.text = ad.label
+        holder.disableIcon.visibility = if (ad.enabled) View.GONE else View.VISIBLE
+        holder.dualIcon.visibility = if (ad.user != 0) View.VISIBLE else View.GONE
 
         val icon = Helpers.memoryCache[ad.pkgName + "|" + ad.actName]
         if (icon == null) {
             val dualIcon = arrayOf(ctx.resources.getDrawable(R.drawable.card_icon_default, ctx.theme))
             val crossfader = TransitionDrawable(dualIcon)
             crossfader.setCrossFadeEnabled(true)
-            itemIcon.setImageDrawable(crossfader)
-            BitmapCachedLoader(itemIcon, ad, ctx).execute()
+            holder.icon.setImageDrawable(crossfader)
+            BitmapCachedLoader(holder.icon, ad, ctx).execute()
         } else {
-            itemIcon.setImageBitmap(icon)
+            holder.icon.setImageBitmap(icon)
         }
 
         try {
-            itemChecked.visibility = View.VISIBLE
-            itemChecked.isChecked = getApplicationAccessControlEnabledAsUser?.invoke(mSecurityManager, ad.pkgName, ad.user) as? Boolean ?: false
+            holder.checked.visibility = View.VISIBLE
+            holder.checked.isChecked = getApplicationAccessControlEnabledAsUser?.invoke(mSecurityManager, ad.pkgName, ad.user) as? Boolean ?: false
         } catch (_: Throwable) {
-            itemChecked.visibility = View.GONE
+            holder.checked.visibility = View.GONE
         }
 
         val enabled = ad.pkgName != "com.miui.securitycenter"
-        itemIcon.alpha = if (enabled) 1.0f else 0.5f
-        itemTitle.alpha = if (enabled) 1.0f else 0.5f
-        itemChecked.visibility = if (enabled) View.VISIBLE else View.INVISIBLE
-        row.isEnabled = enabled
+        holder.icon.alpha = if (enabled) 1.0f else 0.5f
+        holder.title.alpha = if (enabled) 1.0f else 0.5f
+        holder.checked.visibility = if (enabled) View.VISIBLE else View.INVISIBLE
+        holder.root.isEnabled = enabled
 
-        return row
+        return holder.root
+    }
+
+    private class ViewHolder(val root: View) {
+        val disableIcon: ImageView = root.findViewById(R.id.icon_disable)
+        val dualIcon: ImageView = root.findViewById(R.id.icon_dual)
+        val checked: CheckBox = root.findViewById(android.R.id.checkbox)
+        val title: TextView = root.findViewById(android.R.id.title)
+        val icon: ImageView = root.findViewById(android.R.id.icon)
     }
 
     private inner class ItemFilter : Filter() {

@@ -33,14 +33,13 @@ class ResolveInfoAdapter(context: Context, arr: ArrayList<ResolveInfo>) : BaseAd
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row = convertView ?: inflater.inflate(R.layout.applist_item11, parent, false)
-
-        val itemIsDis = row.findViewById<ImageView>(R.id.icon_disable)
-        val itemTitle = row.findViewById<TextView>(android.R.id.title)
-        val itemIcon = row.findViewById<ImageView>(android.R.id.icon)
+        val holder = (convertView?.tag as? ViewHolder) ?: run {
+            val row = inflater.inflate(R.layout.applist_item11, parent, false)
+            ViewHolder(row).also { row.tag = it }
+        }
 
         val ri = getItem(position)
-        itemIcon.tag = position
+        holder.icon.tag = position
 
         val ad = AppData().apply {
             pkgName = ri.activityInfo.applicationInfo.packageName
@@ -49,21 +48,27 @@ class ResolveInfoAdapter(context: Context, arr: ArrayList<ResolveInfo>) : BaseAd
             label = ri.loadLabel(pm).toString()
         }
 
-        itemTitle.text = ad.label
-        itemIsDis.visibility = if (ad.enabled) View.INVISIBLE else View.VISIBLE
+        holder.title.text = ad.label
+        holder.disableIcon.visibility = if (ad.enabled) View.INVISIBLE else View.VISIBLE
         val icon = Helpers.memoryCache[ad.pkgName + "|" + ad.actName]
 
         if (icon == null) {
             val dualIcon = arrayOf(ctx.resources.getDrawable(R.drawable.card_icon_default, ctx.theme))
             val crossfader = TransitionDrawable(dualIcon)
             crossfader.setCrossFadeEnabled(true)
-            itemIcon.setImageDrawable(crossfader)
-            BitmapCachedLoader(itemIcon, ad, ctx).execute()
+            holder.icon.setImageDrawable(crossfader)
+            BitmapCachedLoader(holder.icon, ad, ctx).execute()
         } else {
-            itemIcon.setImageBitmap(icon)
+            holder.icon.setImageBitmap(icon)
         }
 
-        return row
+        return holder.root
+    }
+
+    private class ViewHolder(val root: View) {
+        val disableIcon: ImageView = root.findViewById(R.id.icon_disable)
+        val title: TextView = root.findViewById(android.R.id.title)
+        val icon: ImageView = root.findViewById(android.R.id.icon)
     }
 
     private inner class ItemFilter : Filter() {
