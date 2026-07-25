@@ -1,4 +1,4 @@
-# 米客 A14（CustoMIUIzer A14）
+﻿# 米客 A14（CustoMIUIzer A14）
 
 **米客 A14** 是面向 **HyperOS 1 / Android 14** 的独立维护版系统定制模块。项目以 [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) 为 Android 14 功能参考，但采用自己的包名、版本线、构建与发布流程。
 
@@ -34,9 +34,9 @@
 | [上游 v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) | 参考基线 | 2.78 MB | — | — | 上游 Android 14 功能参考，保留联网权限与支持资源 | 稳定 | 仅供参考 |
 | [r14.0.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.0.0) | 初始版 | 2.90 MB | +116 KB | — | 建立独立版本线，引入类/方法/参数/资源/主题缓存 | 未完整验证 | 不推荐 |
 | [r14.1.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.1.3) | 稳定版 | 2.89 MB | −15 KB | 19 ms | 资源瘦身最大：移除联网权限、非支持资源、限制图标缓存 | 验证无崩溃 | 推荐 |
-| [r14.2.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.0) | 稳定版 | 2.89 MB | −85 B | 6 ms | 偏好设置/Hook/反射热路径优化，秒针调度 | 验证无崩溃 | 推荐 |
-| [r14.2.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.4) | 稳定版 | 2.89 MB | 0 B | 22 ms | 反射缓存、无效 Hook/Receiver 去重 | 验证无崩溃 | 推荐 |
-| [r14.2.7](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.7) | 稳定版 | 2.89 MB | 0 B | 6 ms | 自定义动作/手势 gate，未配置时零成本 | 验证无崩溃 | 推荐 |
+| r14.2.0 | 已合并到 r14.2.9 | 2.89 MB | −85 B | 6 ms | 偏好设置/Hook/反射热路径优化，秒针调度 | 验证无崩溃 | — |
+| r14.2.4 | 已合并到 r14.2.9 | 2.89 MB | 0 B | 22 ms | 反射缓存、无效 Hook/Receiver 去重 | 验证无崩溃 | — |
+| r14.2.7 | 已合并到 r14.2.9 | 2.89 MB | 0 B | 6 ms | 自定义动作/手势 gate，未配置时零成本 | 验证无崩溃 | — |
 | [r14.2.9](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.2.9) | 稳定版 | 2.89 MB | −4 B | 20 ms | 电池/状态栏绘制缓存，Matrix 对象复用 | 验证无崩溃 | 推荐 |
 | [r14.3.1](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.3.1) | 稳定版 | 2.89 MB | 0 B | 15 ms | 锁屏充电去重、天气查询线程池化 | 验证无崩溃 | 推荐 |
 | [r14.5.0](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.5.0) | 稳定版 | 2.89 MB | +208 B | 57 ms | 包名迁移，资源 ID 查找缓存，生命周期加固 | 完整重启验证通过 | 上一稳定基线 |
@@ -65,8 +65,8 @@
 | 只求稳定、省电、不折腾 | **r14.7.4** | 合并 r14.7.x 重构与修复，清理废弃文件/死代码/旧构建，完整重启验证无模块崩溃/ANR |
 | 保守稳定基线 | **r14.6.4** | 多轮完整重启验证，大文件拆分、单元测试、Proguard keep 规则已落地 |
 | 想跟随上一版验证版 | **r14.5.0** | 包名迁移后多轮完整重启验证，架构与缓存稳定 |
-| 重度状态栏/电池绘制定制 | **r14.2.9** | BatteryIndicator 绘制热路径缓存，Matrix 复用 |
-| 自定义动作/控制中心开关较多 | **r14.2.7** | 自定义动作 gate 与 Launcher gesture gate，未配置时不加载控制器 |
+| 重度状态栏/电池绘制定制或自定义动作较多 | **r14.2.9** | r14.2 系列唯一发布，包含 gate 零成本、热路径缓存与绘制缓存全部优化 |
+| 已安装 r14.2.0/2.4/2.7 并遇到问题 | **r14.2.9** | r14.2 系列已合并整理到 r14.2.9，对外功能一致，建议直接覆盖安装 |
 | 已安装 r14.7.0/7.1/7.2/7.3 并遇到问题 | **r14.7.4** | r14.7 系列已合并整理到 r14.7.4，对外功能一致，建议直接覆盖安装 |
 
 ---
