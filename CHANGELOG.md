@@ -26,7 +26,7 @@
 - **SystemUI.java 方法拆分**：将 `MonitorDeviceInfoHook` 与 `AddCustomTileHook` 提取到 `SystemUIMonitorAndTileHooks.java`，`SystemUI.java` 保留委托 stub；通过包级可见的 helper/field 共享解决跨类依赖，降低主文件行数与维护耦合。
 - **代码清理与质量修复**：清理改动文件中的未使用 import、注释死代码；修复 `SystemUIMonitorAndTileHooks` 的 `DefaultLocale` 与 `DiscouragedApi` lint 警告。
 - **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
-- **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 通过 `Resources.getResourceName` 动态解析 `stat_sys_signal_*` 资源名中的信号等级，并缓存结果；修复 MIUI/HyperOS 5G/4G 后缀（如 `stat_sys_signal_3_5g`）导致映射失败、SIM1 显示为空的问题。
+- **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 不再把 `MobileIconState.strengthId` 覆盖成等级数值，保留原始信号 drawable 资源 ID；在 `applyDarknessInternal` 与 `onDarkChanged` 中通过 `Resources.getResourceName` 动态解析资源名得到等级，并绘制双排自定义图标。修复因 `strengthId` 被改为 1..5 后被 SystemUI `setImageResource` 当作无效资源 ID 加载，导致 SIM1 信号为空的问题。
 
 ### 构建产物
 

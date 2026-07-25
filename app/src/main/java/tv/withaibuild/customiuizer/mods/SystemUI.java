@@ -594,6 +594,38 @@ public class SystemUI {
         return level;
     }
 
+    private static boolean applyDualSignalDrawables(Object mobileView, Object mobileIconState, int subLevel, Resources systemUIRes, SparseIntArray signalResToLevelMap, HashMap<String, Integer> dualSignalResMap, String selectedIconStyle) {
+        if (systemUIRes == null) return false;
+        int mainSignalResId = XposedHelpers.getIntField(mobileIconState, "strengthId");
+        int mainLevel = getSignalLevel(systemUIRes, mainSignalResId, signalResToLevelMap);
+        if (mainLevel == 6) mainLevel = 0;
+        if (subLevel == 6) subLevel = 0;
+        boolean mLight = XposedHelpers.getBooleanField(mobileView, "mLight");
+        boolean mUseTint = XposedHelpers.getBooleanField(mobileView, "mUseTint");
+        Object mSmallRoaming = XposedHelpers.getObjectField(mobileView, "mSmallRoaming");
+        Object mMobile = XposedHelpers.getObjectField(mobileView, "mMobile");
+        if (mMobile == null || mSmallRoaming == null) return false;
+        String colorMode = "";
+        if (mUseTint && !"theme".equals(selectedIconStyle)) {
+            colorMode = "_tint";
+        }
+        else if (!mLight) {
+            colorMode = "_dark";
+        }
+        String iconStyle = "";
+        if (!selectedIconStyle.isEmpty()) {
+            iconStyle = "_" + selectedIconStyle;
+        }
+        String sim1IconId = "statusbar_signal_1_" + mainLevel + colorMode + iconStyle;
+        String sim2IconId = "statusbar_signal_2_" + subLevel + colorMode + iconStyle;
+        Integer sim1ResId = dualSignalResMap.get(sim1IconId);
+        Integer sim2ResId = dualSignalResMap.get(sim2IconId);
+        if (sim1ResId == null || sim1ResId == 0 || sim2ResId == null || sim2ResId == 0) return false;
+        XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
+        XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
+        return true;
+    }
+
     public static void DualRowSignalHook(PackageReadyParam lpparam) {
         boolean mobileTypeSingle = MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single");
         if (!mobileTypeSingle) {
@@ -665,8 +697,9 @@ public class SystemUI {
                             XposedHelpers.setObjectField(mainIconState, field, XposedHelpers.getObjectField(subIconState, field));
                         }
                     }
-                    int mainSignalResId = XposedHelpers.getIntField(mainIconState, "strengthId");
-                    XposedHelpers.setObjectField(mainIconState, "strengthId", getSignalLevel(systemUIRes[0], mainSignalResId, signalResToLevelMap));
+                    // Keep mainIconState.strengthId as the original drawable resource id so
+                    // other StatusBarMobileView paths (applyMobileState/onDarkChanged) can still
+                    // call setImageResource(strengthId). The level is derived when drawing.
                     param.getArgs()[1] = iconStates;
                 }
             }
@@ -691,6 +724,8 @@ public class SystemUI {
                     if (!visible) return;
                     boolean airplane = XposedHelpers.getBooleanField(mobileIconState, "airplane");
                     if (airplane) return;
+                    int subId = XposedHelpers.getIntField(mobileIconState, "subId");
+                    if (signalStates[0] == -1 || subId != signalStates[0]) return;
                     Object mSmallHd = XposedHelpers.getObjectField(param.getThisObject(), "mSmallHd");
                     XposedHelpers.callMethod(mSmallHd, "setVisibility", 8);
                     Object mSmallRoaming = XposedHelpers.getObjectField(param.getThisObject(), "mSmallRoaming");
@@ -714,43 +749,31 @@ public class SystemUI {
                 boolean visible = XposedHelpers.getBooleanField(mobileIconState, "visible");
                 boolean airplane = XposedHelpers.getBooleanField(mobileIconState, "airplane");
                 int subId = XposedHelpers.getIntField(mobileIconState, "subId");
-                if (!visible || airplane || subId != signalStates[0]) {
+                if (!visible || airplane) {
                     param.returnAndSkip(null);
                     return;
                 }
-                int subLevel = signalStates[1];
-                if (subLevel == 6) subLevel = 0;
-                int mainLevel = XposedHelpers.getIntField(mobileIconState, "strengthId");
-                if (mainLevel == 6) mainLevel = 0;
-                boolean mLight = XposedHelpers.getBooleanField(param.getThisObject(), "mLight");
-                boolean mUseTint = XposedHelpers.getBooleanField(param.getThisObject(), "mUseTint");
-                Object mSmallRoaming = XposedHelpers.getObjectField(param.getThisObject(), "mSmallRoaming");
-                Object mMobile = XposedHelpers.getObjectField(param.getThisObject(), "mMobile");
-                String colorMode = "";
-                if (mUseTint && !selectedIconStyle.equals("theme")) {
-                    colorMode = "_tint";
+                if (subId != signalStates[0]) return;
+                if (applyDualSignalDrawables(param.getThisObject(), mobileIconState, signalStates[1], systemUIRes[0], signalResToLevelMap, dualSignalResMap, selectedIconStyle)) {
+                    param.returnAndSkip(null);
                 }
-                else if (!mLight) {
-                    colorMode = "_dark";
-                }
-                String iconStyle = "";
-                if (!selectedIconStyle.isEmpty()) {
-                    iconStyle = "_" + selectedIconStyle;
-                }
-                String sim1IconId = "statusbar_signal_1_" + mainLevel + colorMode + iconStyle;
-                String sim2IconId = "statusbar_signal_2_" + subLevel + colorMode + iconStyle;
-                Integer sim1ResId = dualSignalResMap.get(sim1IconId);
-                Integer sim2ResId = dualSignalResMap.get(sim2IconId);
-                if (sim1ResId == null || sim1ResId == 0 || sim2ResId == null || sim2ResId == 0
-                    || mMobile == null || mSmallRoaming == null) return;
-                // Do not cache these resource IDs. applyDarknessInternal can replace or clear the
-                // current drawables even when the calculated IDs stay unchanged (for example in
-                // tint mode), so both custom signal drawables must be restored on every callback.
-                XposedHelpers.callMethod(mMobile, "setImageResource", sim1ResId);
-                XposedHelpers.callMethod(mSmallRoaming, "setImageResource", sim2ResId);
             }
         };
         ModuleHelper.findAndHookMethod("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "applyDarknessInternal", resetImageDrawable);
+
+        MethodHook onDarkChangedSetter = new MethodHook() {
+            @Override
+            protected void after(final AfterHookCallback param) throws Throwable {
+                Object mobileIconState = XposedHelpers.getObjectField(param.getThisObject(), "mState");
+                if (mobileIconState == null) return;
+                boolean visible = XposedHelpers.getBooleanField(mobileIconState, "visible");
+                boolean airplane = XposedHelpers.getBooleanField(mobileIconState, "airplane");
+                int subId = XposedHelpers.getIntField(mobileIconState, "subId");
+                if (!visible || airplane || subId != signalStates[0]) return;
+                applyDualSignalDrawables(param.getThisObject(), mobileIconState, signalStates[1], systemUIRes[0], signalResToLevelMap, dualSignalResMap, selectedIconStyle);
+            }
+        };
+        ModuleHelper.hookAllMethods("com.android.systemui.statusbar.StatusBarMobileView", lpparam.getClassLoader(), "onDarkChanged", onDarkChangedSetter);
         int rightMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_rightmargin", 0);
         int leftMargin = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_leftmargin", 0);
         int iconScale = MainModule.mPrefs.getInt("system_statusbar_dualsimin2rows_scale", 10);
