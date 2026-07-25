@@ -65,7 +65,7 @@ class MultiAction : SubFragment() {
         }
 
         val actionSpinner = v.findViewById<SpinnerEx>(R.id.action)
-        actionSpinner.entries = resources.getStringArray(entriesResId)
+        actionSpinner.entries = resources.getTextArray(entriesResId)
         actionSpinner.entryValues = resources.getIntArray(entryValuesResId)
         actionSpinner.tag = mKey + "_action"
         actionSpinner.init(AppHelper.getIntOfAppPrefs(mKey + "_action", 1))
@@ -82,7 +82,7 @@ class MultiAction : SubFragment() {
         appLaunch = v.findViewById(R.id.app_to_launch)
         appLaunch?.apply {
             tag = mKey + "_app"
-            setValue(appValue ?: AppHelper.getStringOfAppPrefs(mKey + "_app", null))
+            value = appValue ?: AppHelper.getStringOfAppPrefs(mKey + "_app", null)
             setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
                 @SuppressLint("SetTextI18n")
                 override fun onChildViewAdded(parent: View, child: View) {
@@ -115,7 +115,7 @@ class MultiAction : SubFragment() {
         shortcutLaunch = v.findViewById(R.id.shortcut_to_launch)
         shortcutLaunch?.apply {
             tag = mKey + "_shortcut"
-            setValue(shortcutValue ?: AppHelper.getStringOfAppPrefs(mKey + "_shortcut", null))
+            value = shortcutValue ?: AppHelper.getStringOfAppPrefs(mKey + "_shortcut", null)
             shortcutIntent?.let { addValue(mKey + "_shortcut_intent", it) }
             shortcutName?.let { addValue(mKey + "_shortcut_name", it) }
         }
@@ -163,7 +163,7 @@ class MultiAction : SubFragment() {
         activityLaunch = v.findViewById(R.id.activity_to_launch)
         activityLaunch?.apply {
             tag = mKey + "_activity"
-            setValue(activityValue ?: AppHelper.getStringOfAppPrefs(mKey + "_activity", null))
+            value = activityValue ?: AppHelper.getStringOfAppPrefs(mKey + "_activity", null)
             value?.takeIf { it.isNotEmpty() }?.replace("|", "/\u200B")?.replace(".", ".\u200B").let {
                 v.findViewById<TextView>(R.id.activity_class).text = it ?: ""
             }
@@ -210,7 +210,7 @@ class MultiAction : SubFragment() {
         activities.visibility = View.GONE
         toggles.visibility = View.GONE
 
-        when (spinner.entryValues[position]) {
+        when (spinner.entryValues?.get(position) ?: -1) {
             8 -> apps.visibility = View.VISIBLE
             9 -> shortcuts.visibility = View.VISIBLE
             10 -> toggles.visibility = View.VISIBLE
