@@ -7,6 +7,40 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.7.3 — 动画缩放 hidden API 修复与小体积 Java 类 Kotlin 迁移
+
+发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
+
+> 本版本在 `r14.7.2` 基础上修复 `getAnimationScale` / `setAnimationScale` 的 hidden API 反射调用，并将低风险小体积 Java 类迁移为 Kotlin。未修改 Xposed Hook 核心路径。
+
+### 变更摘要与对应测试功能
+
+- **修复动画缩放 hidden API 反射**
+  - `Helpers.getAnimationScale` / `setAnimationScale` 不再通过反射调用 `IWindowManager`，改为使用 `Settings.Global` 公共 API。
+  - `setAnimationScale` 在无 `WRITE_SECURE_SETTINGS` 权限时回退到 `su -c "settings put global ..."`。
+  - `AndroidManifest.xml` 新增 `WRITE_SECURE_SETTINGS` 权限。
+  - `MainApplication` 初始化 `Helpers.appContentResolver`，供设置读取使用。
+  - 对应功能：**系统动画缩放相关设置（如关闭动画）**应能正确读取与写入，不再出现 hidden API 拒绝或 `NoSuchMethodException`。
+
+- **保留 `getPackageInfoAsUser` 反射**
+  - 由于 `framework.jar` 编译 stub 缺少 `Context.createContextAsUser(UserHandle, int)` 公共 API，跨用户包信息检测仍使用 `PackageManager.getPackageInfoAsUser` 反射，并在外层捕获异常，避免崩溃。
+  - 对应功能：**双开/分身应用检测**。若反射被系统限制，该功能将静默不可用，不会报错。
+
+- **低风险小文件 Kotlin 化**
+  - `utils`：`AppData`、`ModData`、`PrefMap`、`ModSearchAdapter`。
+  - 入口/Activity：`GateWayLauncher`、`CredentialsLauncher`、`CredentialsShortcut`、`MainActivity`。
+  - 应用组件：`MainApplication`、`AboutFragment`、`PrefsProvider`、`qs/AutoRotateService`。
+  - `mods/utils`：`ResourceConstants`、`ShakeManager`、`PackagePermissions`、`GlobalActionsIntentHelper`。
+  - `tasker`：`Constants`、`UnlockReceiver`、`UnlockSettings`。
+  - 对应功能：**上述 Activity/服务/Provider/适配器/工具类**对应入口应正常，无启动崩溃。
+
+### 构建产物验证
+
+- `versionCode` 168 / `versionName` r14.7.3。
+- APK：`CustoMIUIzer-A14-r14.7.3.apk`，3,048,687 bytes，SHA-256: `3CD687B48D9A3DC5F7C322CB82F599A85BF52BD1FFCF8137EF5961DA0BC60903`。
+- 通过 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
+- 签名证书与 `r14.7.2` 一致；包名不变，可覆盖安装。
+
 ## r14.7.2 — UI 适配器/偏好设置/小工具 Kotlin 化与界面性能优化
 
 发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。

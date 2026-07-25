@@ -6,8 +6,8 @@ def hasReleaseSigning = keystorePropertiesFile.isFile()
 if (hasReleaseSigning) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-def lastVersion = 167
-def lastVersionName = "r14.7.2"
+def lastVersion = 168
+def lastVersionName = "r14.7.3"
 
 android {
     namespace "tv.withaibuild.customiuizer"
