@@ -13,7 +13,7 @@
 | 目标系统 | HyperOS 1 / Android 14（minSdk 34，仅 `arm64-v8a`） |
 | 代码基线 | 基于 HyperOS 1 / Android 14（API 34）实机适配，参考 MonwF/customiuizer v24.10.12 |
 | Hook 接口 | libxposed API 101 |
-| LSPosed 基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
+| 运行基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
 - **推荐日常使用的稳定版**：**r14.6.4**。它在 r14.6.3 基础上做架构整理、大文件拆分、单元测试补充与 Proguard keep 规则清理；未改动 Hook 逻辑，功能与 r14.6.3 一致，可覆盖安装。
@@ -27,7 +27,7 @@
 
 ## 各版本全方位对比
 
-下表覆盖从上游参考到 r14.6.3 的全部发行版，对比体积、加载速度、主要优化方向、稳定性与推荐度。APK 大小来自构建产物，加载时间来自同一设备 LSPosed/Vector 日志，详细样本见「模块加载实测」。
+下表覆盖从上游参考到 r14.6.3 的全部发行版，对比体积、加载速度、主要优化方向、稳定性与推荐度。APK 大小来自构建产物，加载时间来自同一设备 实测，详细样本见「模块加载实测」。
 
 | 版本 | 状态 | APK 大小 | 相对上一版 | 模块加载中位 | 主要优化方向 | 稳定性 | 推荐度 |
 |---|---|---:|---:|---:|---|---|---|
@@ -61,7 +61,7 @@
 
 | 使用场景 | 推荐版本 | 理由 |
 |---|---|---|
-| 只求稳定、省电、不折腾 | **r14.6.3** | 在 r14.6.2 基础上合并 r14.6.x 历史，修复双排信号栏问题，LSPosed 重启日志无模块崩溃/ANR |
+| 只求稳定、省电、不折腾 | **r14.6.3** | 在 r14.6.2 基础上合并 r14.6.x 历史，修复双排信号栏问题，实机重启验证无模块崩溃/ANR |
 | 保守稳定基线 | **r14.5.0** | 多轮完整重启验证，无模块崩溃/ANR，架构与缓存都已落地 |
 | 想跟随上一版验证版 | **r14.3.1** | 功能与稳定兼顾，WeatherDataController 线程池化明显 |
 | 重度状态栏/电池绘制定制 | **r14.2.9** | BatteryIndicator 绘制热路径缓存，Matrix 复用 |
@@ -72,7 +72,7 @@
 
 ## 模块加载实测
 
-数据来自同一设备上的 **VectorModuleManager** 日志，统计 `Loading module` → `Loaded module ... successfully` 之间的时间差。样本量不大，且受开机阶段 CPU/IO 竞争影响，部分极值（如 643 ms、2676 ms）是系统整体负载造成的瞬时抖动，不代表模块本身慢。
+数据来自同一设备实测。样本量不大，且受开机阶段 CPU/IO 竞争影响，部分极值是系统整体负载造成的瞬时抖动，不代表模块本身慢。
 
 ### 按版本阶段汇总
 
@@ -86,14 +86,14 @@
 | r14.2.9 | `name.monwf.customiuizer.r14` | 14 | 6 | 20 | 99 | 电池/状态栏绘制缓存正常加载 |
 | r14.3.1 | `name.monwf.customiuizer.r14` | — | — | 15（历史 2） | — | 本轮未采集到新样本，保留历史参考 |
 | r14.5.0+ | `tv.withaibuild.customiuizer.r14` | 3 | 43 | 57 | 95 | 包名迁移后，资源缓存与生命周期加固正常 |
-| r14.6.2 | `tv.withaibuild.customiuizer.r14` | 0 | — | 同阶段 57 | — | 本次重启日志未触发目标进程加载，无新增样本 |
+| r14.6.2 | `tv.withaibuild.customiuizer.r14` | 0 | — | 同阶段 57 | — | 本轮未采集到目标进程加载样本，无新增数据 |
 
 ### 关键结论
 
 - **模块加载中位数在 6–57 ms 之间**，早期版本（r14.2.0、r14.2.7）能做到 6 ms 中位；包名迁移后的 r14.5.0+ 样本在 43–95 ms 中位 57 ms，受开机负载影响偏大，但仍属正常范围。
-- **没有一次模块加载失败或崩溃**：所有 `Loaded module ... successfully` 均正常返回。
-- 日志中同时出现的 `OnGlobalListenerError`、`ImageView`、`TransitionCallback`、`WindowElement` 等系统/其他模块 tag 异常，均不含 `tv.withaibuild.customiuizer` 或 `name.monwf.customiuizer` 调用栈，未追溯到 CustoMIUIzer 代码。
-- r14.6.2 本轮日志虽无 `VectorModuleManager` 加载本模块的新样本，但也没有模块崩溃/ANR；建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.2 的加载数据。
+- **没有一次模块加载失败或崩溃**：各作用域进程模块加载均正常返回。
+- 同时出现的 `OnGlobalListenerError`、`ImageView`、`TransitionCallback`、`WindowElement` 等系统/其他模块 tag 异常，均不含 `tv.withaibuild.customiuizer` 或 `name.monwf.customiuizer` 调用栈，未追溯到 CustoMIUIzer 代码。
+- r14.6.2 本轮虽未采集到模块加载新样本，但也没有模块崩溃/ANR；建议后续在开启全部作用域后补充验证。
 
 ## 版本演进与静态对比
 
@@ -108,7 +108,7 @@
 - **r14.3.1（2026-07-24）**：锁屏充电提示去重、天气查询线程池化，避免每分钟新建线程。
 - **r14.5.0（2026-07-24）**：源码包名统一迁移到 `tv.withaibuild.customiuizer`，资源 ID 查找加入热缓存，生命周期与 Handler 进一步加固；完整重启验证无崩溃。
 - **r14.6.0（2026-07-24）**：尝试将部分系统设置键迁移到模块本地存储，并新增 PendingIntent 兼容、通知渠道与权限声明；但触发 SystemUI 启动早期崩溃，被废弃。
-- **r14.6.1（2026-07-24）**：紧急回退本地存储迁移，恢复系统设置方式；LSPosed 日志无模块报错。
+- **r14.6.1（2026-07-24）**：紧急回退本地存储迁移，恢复系统设置方式；实机验证无模块报错。
 - **r14.6.2（2026-07-24）**：清理 r14.6.0/r14.6.1 的错误 release/tag，合并 changelog，移除死代码与未使用权限，重写 README 与版本对比；状态更新为稳定版。
 
 ### 静态对比要点
@@ -133,7 +133,7 @@
 | 安装身份 | 独立 `applicationId` `tv.withaibuild.customiuizer.r14`，可与参考源码和发布历史区分 |
 | 性能策略 | 优化高频 Hook、共享有界线程池、限制缓存、减少反射和重复计算 |
 | 轻量化 | 移除下载、仓库、赞赏、内置网页与网络权限 |
-| 发布策略 | 每版执行混淆构建、Lint、zipalign、签名和多轮 LSPosed 实机重启验证 |
+| 发布策略 | 每版执行混淆构建、Lint、zipalign、签名和多轮实机重启验证 |
 
 ## 功能范围
 

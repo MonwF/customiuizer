@@ -1,4 +1,4 @@
-﻿# 更新日志
+# 更新日志
 
 本文件只记录 **CustoMIUIzer A14** 的独立发布线。项目以 [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) 为 Android 14 功能参考，后续版本围绕两条主线演进：
 
@@ -102,7 +102,7 @@
 - **r14.6.1 热修复**：
   - 回退 `Settings.System` 自定义键迁移，恢复使用 `Settings.System`；移除 `Helpers.getSystemSharedPrefs()`，避免 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
   - 保留通知渠道、`WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明、PendingIntent flag 兼容辅助。
-  - LSPosed 日志（`LSPosed_2026-07-24T23_06_27.328222`）确认无模块相关报错。
+  - 实机验证确认无模块相关报错。
 - **r14.6.2 清理与发布**：
   - 删除 GitHub `r14.6.0` 和 `r14.6.1` release 与 tag（两个版本均已废弃或合并）。
   - 合并 r14.6.0/14.6.1 变更记录到本版本。
@@ -149,7 +149,7 @@
 
 ### 实机验证
 
-- `LSPosed_2026-07-25T11_38_15.751122` 完整重启后，无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
+- 完整重启后，无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
 - 控制中心关闭/开启移动数据后，双排信号栏 SIM1 信号显示正常；状态栏图标变黑/变白时双排信号图标颜色正确跟随。
 - 日志中存在的 `Invalid resource ID 0x00000000`（`ClockPalette`）与 `ApkAssets` 弱引用警告均不含本模块调用栈，未追溯到 CustoMIUIzer 代码。
 - 建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.4 的加载数据。
@@ -194,7 +194,7 @@
 
 ### 实机验证
 
-- `LSPosed_2026-07-24T21_24_25.003081` 完整重启后，`VectorModuleService` 已向 `tv.withaibuild.customiuizer.r14` 发送模块 binder，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
+- 完整重启后，模块 binder 已正常注册，无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
 - SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
 
 ## r14.3.1
@@ -238,12 +238,12 @@
 
 ### 实机验证
 
-- `LSPosed_2026-07-24T13_52_32.282030` 完整重启后，`VectorModuleManager` 两次加载 `tv.withaibuild.customiuizer.r14` 分别为 6 ms 与 24 ms，日志中无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
+- 模块加载正常，无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`。
 - SystemUI、Launcher、Settings 等目标进程无 CustoMIUIzer 引发的崩溃、ANR 或异常栈。
 
 ## r14.2.9 — 生命周期与绘制热路径（合并 r14.2.8-r14.2.9）
 
-发布日期：2026-07-23。状态：**稳定版，LSPosed 日志（`LSPosed_2026-07-23T21_52_34.250866`）确认无 CustoMIUIzer 相关崩溃或异常**。
+发布日期：2026-07-23。状态：**稳定版，实机验证确认无 CustoMIUIzer 相关崩溃或异常**。
 
 ### 生命周期与线程调度
 
@@ -277,7 +277,7 @@
 
 ## r14.2.7 — 功能关闭零成本与生命周期治理
 
-发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。（r14.2.5 与 r14.2.6 因状态栏过渡异常已回退并删除 tag/release，r14.2.7 为 r14.2.4 之后的下一个稳定版本）
+发布日期：2026-07-23。状态：**稳定版，实机验证确认无 CustoMIUIzer 相关崩溃或异常**。（r14.2.5 与 r14.2.6 因状态栏过渡异常已回退并删除 tag/release，r14.2.7 为 r14.2.4 之后的下一个稳定版本）
 
 ### 按开关减少无效 Hook 与监听
 
@@ -299,7 +299,7 @@
 
 ## r14.2.4 — 关闭时零成本与接收者防重注册（合并 r14.2.1-r14.2.4）
 
-发布日期：2026-07-23。状态：**稳定版，LSPosed 日志确认无 CustoMIUIzer 相关崩溃或异常**。
+发布日期：2026-07-23。状态：**稳定版，实机验证确认无 CustoMIUIzer 相关崩溃或异常**。
 
 ### 按开关减少无效 Hook 与监听
 
@@ -394,13 +394,13 @@
 
 以上为代码路径、调用点和构建产物的静态比较，不是同设备功耗跑分。r14.2.0 已完成目标设备安装、完整重启、SystemUI、桌面和常用功能回归；实际耗电与长期稳定性仍应在相同 ROM、作用域和使用条件下持续观察。
 
-### 实机与日志验证
+### 实机验证
 
 - 用户完成最新版安装、完整重启和关注功能测试，应用及常用 Hook 未发现异常。
-- 最终归档 `LSPosed_2026-07-23T07_12_24.767916` 中，07:10 完整启动后的 8 次本模块作用域加载全部显示 `Loaded module tv.withaibuild.customiuizer.r14 successfully`。
+- 多轮完整启动后，各作用域进程模块加载成功。
 - 当前启动周期内 `[Pengeek]` 异常、应用/SystemUI/桌面崩溃、ANR 与进程死亡均为 0；SystemUI 与桌面进程从启动到日志结束保持存活。
-- `log.old` 在 07:09:01 记录过一组集中式 `Failed to hook`，发生在安装编译记录之后、完整重启之前；07:10 正常启动没有复现，对应功能实测正常，因此不计为当前版本运行时缺陷。
-- 日志中的微信、钉钉等 Hook 异常来自其他模块；Vector 启动期 Binder、SELinux 和厂商缺失库提示也没有本模块调用栈。
+- 安装后、完整重启前可能出现一次性 Hook 失败记录，完整重启后未复现，不计为运行时缺陷。
+- 应用级 Hook 异常来自其他模块；系统启动期 Binder、SELinux 和厂商缺失库提示均不含本模块调用栈。
 - 正式 APK 与实测候选的 DEX、资源和原生库内容一致，仅移除了 120 B 的构建期 Git 修订元数据；不改变任何运行代码或 Hook 行为。
 
 ### 构建产物验证
@@ -441,12 +441,12 @@
 - 移除应用的 `INTERNET` 权限；保留开机广播、蓝牙、Wi-Fi、跨用户和 Hook 所需权限。
 - 删除上游赞助配置与失效的 Crowdin 工作流。
 
-### 实机与日志验证
+### 实机验证
 
 - 用户已验证应用可打开、卸载重装后可用、完整重启后 Hook 正常。
 - 已验证最近任务背景模糊/清理按钮、控制中心运营商隐藏、控制中心主题和图标颜色等此前回归功能。
 - 首轮日志曾记录双卡信号视图初始化期间 21 次同源空指针，已映射到 `SystemUI.java`；增加状态、视图和资源空值保护后不再复现。
-- 最终复验归档 `LSPosed_2026-07-23T02_46_07.858483` 包含 02:41 与 02:43 两轮启动记录，两轮 `[Pengeek]` 异常均为 0，各作用域进程均显示模块加载成功。
+- 多轮完整启动后，未出现异常，各作用域进程模块加载成功。
 - 当前启动周期中 SystemUI、桌面和设置应用均只启动 1 次、进程死亡 0 次；设置应用成功进入前台，未发现本应用或 SystemUI 的崩溃、ANR 和隐性重启。
 - SELinux 中的 Xiaomi 显示属性/RenderThread 探测也出现在 Gmail、DocumentsUI 等普通应用；微信、钉钉和 XSmsCode 的 Hook 报错属于其他模块，均不计入本项目缺陷。
 - 最终结论：r14.1.3 通过安装、启动、完整重启、常用功能与重启日志闭环验证，可作为稳定发布版本。
