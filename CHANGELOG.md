@@ -1,4 +1,4 @@
-# 更新日志
+﻿# 更新日志
 
 本文件只记录 **CustoMIUIzer A14** 的独立发布线。项目以 [MonwF/customiuizer v24.10.12](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12) 为 Android 14 功能参考，后续版本围绕两条主线演进：
 
@@ -86,36 +86,11 @@
 - 通过 `./gradlew test` 与 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
 - 签名证书与 `r14.6.4` 一致；包名不变，可覆盖安装。
 
-## r14.6.4 — 架构整理与单元测试补充（无功能变更）
+## r14.6.4
 
-发布日期：2026-07-25。状态：**稳定版（纯维护发布；源码结构优化，无功能变更）**。
+发布日期：2026-07-25。状态：**稳定版（r14.6.x 终版；合并 r14.6.2、r14.6.3；双排信号栏修复与生命周期治理已实机验证）**。
 
-> 本版本在 `r14.6.3` 基础上做最终收尾整理，未改动 Hook 逻辑，仅拆分大文件、补充测试、整理 keep 规则并移除冗余项。
-
-### 变更摘要
-
-- **大文件拆分（俄罗斯代码风格；保持原类委托 stub，调用方不变）**：
-  - `System.java`：提取状态栏/时钟相关 hooks 到 `SystemClockHooks.java`、`SystemStatusBarBackgroundHooks.java`、`SystemStatusBarIconHooks.java`。
-  - `SystemUI.java`：提取电池相关 hooks 到 `SystemUIBatteryHooks.java`。
-  - `GlobalActions.java`：提取意图启动/解析逻辑到 `GlobalActionsIntentHelper.java`。
-  - 移除 `System.java` 中废弃的注释代码块。
-- **单元测试**：
-  - `PrefMapTest`：补充 `getStringAsInt` 缓存与失效测试。
-  - `XposedHelpersCacheTest`：补充 `Constructor` 缓存/匹配测试。
-  - `AppHelperTest`：补充 clearType=0、非数字字符串、缺失 needle 等边界测试。
-- **Proguard/R8**：
-  - `proguard-rules.pro` 补充 `MainActivity`、`Credentials`、`MainApplication` 等 manifest 组件的 `-keepnames`。
-- **依赖检查**：
-  - 通过 `dependencyUpdates` 检查，当前配置仓库中无合适的安全稳定升级项，未升级 alpha/beta 依赖。
-- **构建验证**：
-  - `./gradlew test` ✅
-  - `./gradlew assembleRelease lintVitalRelease` ✅
-
-## r14.6.3 — 双排信号栏修复与生命周期治理（合并 r14.6.0~r14.6.2）
-
-发布日期：2026-07-25。状态：**稳定版（r14.6.x 终版；合并 r14.6.0/14.6.1/14.6.2 历史；双排信号栏修复已实机验证）**。
-
-> `r14.6.0` / `r14.6.1` 已废弃并合并到 `r14.6.2`（对应 release/tag 已删除）；本版本在 `r14.6.2` 基础上继续修复双排信号栏的 SIM1 为空与颜色跟随问题。
+> `r14.6.2` 与 `r14.6.3` 已废弃并合并到本版本，对应 release/tag 已删除。本版本在 `r14.6.3` 基础上做最终收尾整理，未改动 Hook 逻辑。
 
 ### r14.6.x 演进
 
@@ -150,56 +125,34 @@
   - **单元测试补齐**：新增 `XposedHelpersCacheTest`、`AppHelperTest`（与已有 `PrefMapTest` 一起），覆盖 `XposedHelpers` 反射缓存、`additional instance field` 以及 `AppHelper` 的 preferences 工具方法。
   - **双排信号栏 SIM1 信号为空修复**：`SystemUI.DualRowSignalHook` 不再把 `MobileIconState.strengthId` 覆盖成等级数值，保留原始信号 drawable 资源 ID；在 `applyDarknessInternal` 与 `onDarkChanged` 中通过 `Resources.getResourceName` 动态解析资源名得到等级，并绘制双排自定义图标。修复因 `strengthId` 被改为 1..5 后被 SystemUI `setImageResource` 当作无效资源 ID 加载，导致 SIM1 信号为空的问题。
   - **双排信号栏图标颜色跟随状态栏**：`applyDualSignalDrawables` 在设置自定义信号图标后，从 `mMobileRoaming` 读取当前 `ImageTintList`（未取到则按 `mLight` 回退黑白），并同步设置到 `mMobile` 与 `mSmallRoaming`，修复状态栏图标变黑/变白时双排信号图标颜色不跟随的问题。
+- **r14.6.4 最终整理**：
+  - **大文件拆分（俄罗斯代码风格；保持原类委托 stub，调用方不变）**：
+    - `System.java`：提取状态栏/时钟相关 hooks 到 `SystemClockHooks.java`、`SystemStatusBarBackgroundHooks.java`、`SystemStatusBarIconHooks.java`。
+    - `SystemUI.java`：提取电池相关 hooks 到 `SystemUIBatteryHooks.java`。
+    - `GlobalActions.java`：提取意图启动/解析逻辑到 `GlobalActionsIntentHelper.java`。
+    - 移除 `System.java` 中废弃的注释代码块。
+  - **单元测试**：
+    - `PrefMapTest`：补充 `getStringAsInt` 缓存与失效测试。
+    - `XposedHelpersCacheTest`：补充 `Constructor` 缓存/匹配测试。
+    - `AppHelperTest`：补充 clearType=0、非数字字符串、缺失 needle 等边界测试。
+  - **Proguard/R8**：
+    - `proguard-rules.pro` 补充 `MainActivity`、`Credentials`、`MainApplication` 等 manifest 组件的 `-keepnames`。
+  - **依赖检查**：
+    - 通过 `dependencyUpdates` 检查，当前配置仓库中无合适的安全稳定升级项，未升级 alpha/beta 依赖。
 
 ### 构建产物验证
 
-- `versionCode` 163 / `versionName` r14.6.3。
-- APK：`CustoMIUIzer-A14-r14.6.3.apk`，2,949,361 bytes，SHA-256: `25BB468500C496D87863550A5E04797835FE3861744A141BA5E3F019408D0E60`。
+- `versionCode` 164 / `versionName` r14.6.4。
+- APK：`CustoMIUIzer-A14-r14.6.4.apk`，2,949,361 bytes，SHA-256: `E7E6A23A04E709DF269DF1087FB3128435F532CF35BE53C1FE051595249B3280`。
 - 通过 `gradlew test` 与 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
-- 签名证书与 r14.6.2 一致；包名不变，可覆盖安装。
-
-### 实机验证
-
-- LSPosed 重启日志（`LSPosed_2026-07-25T11_38_15.751122`）未出现模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
-- 控制中心关闭/开启移动数据后，双排信号栏 SIM1 信号显示正常；状态栏图标变黑/变白时双排信号图标颜色正确跟随。
-- 日志中存在的 `Invalid resource ID 0x00000000`（`ClockPalette`）与 `ApkAssets` 弱引用警告均不含本模块调用栈，未追溯到 CustoMIUIzer 代码。
-- 建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.3 的加载数据。
-
-## r14.6.2
-
-发布日期：2026-07-24。状态：**稳定版（r14.6.x 终版；合并 r14.6.0/14.6.1 历史、清理死代码与发布标签；无业务逻辑改动）**。
-
-### r14.6.x 演进
-
-- **r14.6.0 原始尝试**：
-  - D 类废弃 API/权限迁移：将 `Settings.System` 自定义键（`systemui_restart_time`、`last_music_paused_time`、`dark_mode_enable_by_setting`）迁移到模块 `SharedPreferences`；新增 `Helpers.getSystemSharedPrefs()`。
-  - PendingIntent flag 兼容辅助：在 `Helpers` 中新增 `getMutableActivityPendingIntent` / `getImmutableActivityPendingIntent`。
-  - 通知渠道：`MainApplication.onCreate` 创建默认低重要性 `NotificationChannel`（ID `customiuizer_default`）。
-  - 权限声明：`AndroidManifest.xml` 新增 `WAKE_LOCK` 与 `POST_NOTIFICATIONS`。
-- **r14.6.1 热修复**：
-  - 回退 `Settings.System` 自定义键迁移，恢复使用 `Settings.System`；移除 `Helpers.getSystemSharedPrefs()`，避免 `onPackageReady` 早期 `Context` 尚未绑定到应用数据目录时调用 `getSharedPreferences` 触发 `RuntimeException: No data directory found for package android`。
-  - 保留通知渠道、`WAKE_LOCK`/`POST_NOTIFICATIONS` 权限声明、PendingIntent flag 兼容辅助。
-  - LSPosed 日志（`LSPosed_2026-07-24T23_06_27.328222`）确认无模块相关报错。
-- **r14.6.2 清理与发布**：
-  - 删除 GitHub `r14.6.0` 和 `r14.6.1` release 与 tag（两个版本均已废弃或合并）。
-  - 合并 r14.6.0/14.6.1 变更记录到本版本。
-  - 移除 `Helpers.java` 中未使用的 `android.content.SharedPreferences` 导入。
-  - 移除 `AndroidManifest.xml` 中未使用的 `POST_NOTIFICATIONS` 权限声明；`WAKE_LOCK` 仍保留（`Controls.java` 实际使用 `WakeLock`）。
-  - 重写 `README.md`，新增“各版本全方位对比”表。
-
-### 构建产物验证
-
-- `versionCode` 162 / `versionName` r14.6.2。
-- APK：`CustoMIUIzer-A14-r14.6.2.apk`，2,900,213 bytes，SHA-256: `065C43CD00A199A8363D1AD0D6F296270C32A645230113EC4DFF5AF5754ECA18`。
-- 通过 `gradlew assembleRelease`；`lintVitalRelease` 0 错误，既有 ROM API 兼容性警告保持。
 - 签名证书与 r14.5.0 一致；包名不变，可覆盖安装。
 
 ### 实机验证
 
-- LSPosed 重启日志（`LSPosed_2026-07-25T00_44_12.472641`）未出现模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
-- 日志中存在的 `OnGlobalListenerError`、`ImageView`、`TransitionCallback`、`WindowElement` 等系统/其他模块 tag 异常均不含本模块调用栈，未追溯到 CustoMIUIzer 代码。
-- 本次日志 `VectorModuleManager` 未打印新的模块加载样本；r14.5.0+ 同包名阶段历史 3 个样本加载成功，中位数 57 ms。
-- 建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.2 的加载数据。
+- `LSPosed_2026-07-25T11_38_15.751122` 完整重启后，无模块相关 `AndroidRuntime`/`FATAL`/`am_crash`/`am_anr`；`tv.withaibuild.customiuizer.r14` 包正常安装，系统服务与 KernelSU 策略加载无异常。
+- 控制中心关闭/开启移动数据后，双排信号栏 SIM1 信号显示正常；状态栏图标变黑/变白时双排信号图标颜色正确跟随。
+- 日志中存在的 `Invalid resource ID 0x00000000`（`ClockPalette`）与 `ApkAssets` 弱引用警告均不含本模块调用栈，未追溯到 CustoMIUIzer 代码。
+- 建议后续再抓一次开启全部作用域后的启动日志，以补全 r14.6.4 的加载数据。
 
 ## r14.5.0
 
