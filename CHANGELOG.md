@@ -7,6 +7,44 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.7.2 — UI 适配器/偏好设置/小工具 Kotlin 化与界面性能优化
+
+发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
+
+> 本版本在 `r14.7.1` 基础上继续将设置 UI 相关的 Java 类迁移为 Kotlin，并针对列表滑动、颜色选择、偏好控件做性能优化。未修改 Xposed Hook 核心路径。
+
+### 变更摘要与对应测试功能
+
+- **UI 适配器 ViewHolder 化**（`utils`）
+  - `ResolveInfoAdapter`、`AppDataAdapter`、`PrivacyAppAdapter`、`LockedAppAdapter`、`PreferenceAdapter` 全部改用 `ViewHolder`，复用 `convertView`，避免重复 `findViewById`。
+  - 对应功能：**所有应用/活动/隐私/锁定/偏好列表**。快速滑动时应无卡顿、无图标错位。
+- **UI 控件 Kotlin 化**（`utils/prefs/subs`）
+  - `ColorCircle.kt`：颜色选择圆环，启用硬件图层，减少颜色轮分配。
+  - `SortableListView.kt`：可拖拽排序列表，迁移触摸/动画逻辑。
+  - `SpinnerEx.kt` / `SpinnerExFake.kt`：下拉选择控件，反射设置弹窗高度。
+  - `PreferenceEx.kt` / `SeekBarPreference.kt` / `ListViewEx.kt` / `ColorPreferenceEx.kt` / `EditTextPreferenceEx.kt` / `PreferenceCategoryEx.kt` / `CheckBoxPreferenceEx.kt` / `DropDownPreferenceEx.kt` / `ListPreferenceEx.kt`：所有偏好控件 Kotlin 化。
+  - `GetPathUtils.kt`：移除大量废弃注释代码，精简目录 URI 解析。
+  - 对应功能：**设置主页面、子页面、颜色选择器、下拉框、滑块、文本编辑等**应正常显示与交互。
+- **子页面 Kotlin 化**（`subs`）
+  - `CategorySelector`、`Controls`、`Launcher`、`System`、`System_*`、`Various`、`Various_*` 全部迁移。
+  - 对应功能：**系统/桌面/控制/各类设置子页面**应正常进入、保存与返回。
+- **PreferenceState 接口 Kotlin 化**
+  - `PreferenceState.java` → `PreferenceState.kt`；所有实现类同步调整。
+
+### 基础设施与性能优化
+
+- 列表适配器统一实现 `ViewHolder` 模式，减少滚动时 `findViewById` 与 `inflate` 次数。
+- `ColorCircle` 设置 `LAYER_TYPE_HARDWARE`，降低复杂颜色选择时的重绘开销。
+- 继续使用 `kotlinx-coroutines-android:1.6.4` 与 Kotlin 2.2.21。
+- 新增 Kotlin 源文件若干，删除对应 Java 源文件若干（`ColorCircle`、`SortableList`、`SortableListView`、`SpinnerEx`、`SpinnerExFake`、`PreferenceEx`、`SeekBarPreference`、`GetPathUtils`、`ListViewEx`、`ColorPreferenceEx`、`EditTextPreferenceEx`、`PreferenceCategoryEx`、`CheckBoxPreferenceEx`、`DropDownPreferenceEx`、`ListPreferenceEx`、`System` 主片段、全部小 `subs`、`PreferenceState`）。
+
+### 构建产物验证
+
+- `versionCode` 167 / `versionName` r14.7.2。
+- APK：`CustoMIUIzer-A14-r14.7.2.apk`，3,048,379 bytes，SHA-256: `C9BB1BA068710FABEBEA0235DE3551AD3E6EE7E27B55FA94958BB43F27C933A4`。
+- 通过 `./gradlew assembleRelease`；`lintVitalRelease` 0 错误，仅有 ROM API 兼容性既有警告。
+- 签名证书与 `r14.7.1` 一致；包名不变，可覆盖安装。
+
 ## r14.7.1 — Kotlin 协程化继续迁移（设置/应用选择子页面）
 
 发布日期：2026-07-25。状态：**重构版（仅内部实现迁移，不修改 Hook 行为；需实机验证以下功能）**。
