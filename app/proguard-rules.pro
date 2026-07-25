@@ -14,6 +14,15 @@
 -keep,allowobfuscation class * implements io.github.libxposed.api.XposedInterface$Hooker { *; }
 
 -keepnames class tv.withaibuild.customiuizer.GateWayLauncher
+-keepnames class tv.withaibuild.customiuizer.MainActivity
+-keepnames class tv.withaibuild.customiuizer.Credentials
+-keepnames class tv.withaibuild.customiuizer.CredentialsLauncher
+-keepnames class tv.withaibuild.customiuizer.CredentialsShortcut
+-keepnames class tv.withaibuild.customiuizer.PrefsProvider
+-keepnames class tv.withaibuild.customiuizer.MainApplication
+-keepnames class tv.withaibuild.customiuizer.tasker.UnlockSettings
+-keepnames class tv.withaibuild.customiuizer.tasker.UnlockReceiver
+-keepnames class tv.withaibuild.customiuizer.qs.AutoRotateService
 
 # BuildConfig is referenced for APPLICATION_ID/version checks and must survive obfuscation.
 -keep class tv.withaibuild.customiuizer.BuildConfig { *; }

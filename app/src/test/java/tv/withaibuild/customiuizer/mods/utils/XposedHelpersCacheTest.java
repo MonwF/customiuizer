@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -114,5 +115,20 @@ public class XposedHelpersCacheTest {
         Class<?> fromSecondLoader = XposedHelpers.findClassIfExists("java.lang.Integer", sameLoader);
         assertSame(fromFirstLoader, fromSecondLoader);
         assertNotNull(fromSecondLoader);
+    }
+
+    @Test
+    public void findConstructorExactReturnsSameInstanceFromCache() {
+        Constructor<?> first = XposedHelpers.findConstructorExact(Sample.class);
+        Constructor<?> second = XposedHelpers.findConstructorExact(Sample.class);
+        assertSame(first, second);
+    }
+
+    @Test
+    public void findConstructorBestMatchReturnsCompatibleConstructor() {
+        Constructor<?> ctor = XposedHelpers.findConstructorBestMatch(String.class, "initial".getBytes().getClass());
+        assertNotNull(ctor);
+        Constructor<?> cached = XposedHelpers.findConstructorBestMatch(String.class, "initial".getBytes().getClass());
+        assertSame(ctor, cached);
     }
 }

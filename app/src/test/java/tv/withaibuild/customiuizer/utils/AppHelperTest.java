@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import android.content.SharedPreferences;
 
@@ -122,6 +123,39 @@ public class AppHelperTest {
 
         assertTrue(target.getBoolean("pref_key_keep", false));
         assertNull(target.getString("pref_key_drop", null));
+    }
+
+    @Test
+    public void syncPrefsToAnotherKeepsExistingKeysWhenClearTypeIsZero() {
+        Map<String, Object> entries = new HashMap<>();
+        entries.put("pref_key_enabled", true);
+
+        FakeSharedPreferences target = new FakeSharedPreferences();
+        target.put("pref_key_old", "keep");
+        AppHelper.syncPrefsToAnother(entries, target, 0, null, true);
+
+        assertTrue(target.getBoolean("pref_key_enabled", false));
+        assertEquals("keep", target.getString("pref_key_old", null));
+    }
+
+    @Test
+    public void getStringAsIntOfAppPrefsThrowsNumberFormatExceptionForNonNumericString() {
+        fakePrefs.put("pref_key_count", "not_a_number");
+        try {
+            AppHelper.getStringAsIntOfAppPrefs("count", 7);
+            fail("expected NumberFormatException");
+        } catch (NumberFormatException expected) {
+            // expected
+        }
+    }
+
+    @Test
+    public void removeStringPairIsNoOpWhenNeedleIsMissing() {
+        Set<String> set = new HashSet<>();
+        set.add("com.other.app|Other");
+        AppHelper.removeStringPair(set, "com.example.app");
+        assertEquals(1, set.size());
+        assertTrue(set.contains("com.other.app|Other"));
     }
 
     private static class FakeSharedPreferences implements SharedPreferences {

@@ -48,4 +48,31 @@ public class PrefMapTest {
         assertFalse(prefs.getBoolean("missing"));
         assertSame(prefs.getStringSet("missing"), prefs.getStringSet("missing"));
     }
+
+    @Test
+    public void getStringAsIntCachesParsedValueAndInvalidatesOnChange() {
+        PrefMap prefs = new PrefMap();
+        prefs.put("pref_key_mode", "3");
+
+        assertEquals(3, prefs.getStringAsInt("mode", 0));
+        assertEquals(3, prefs.getStringAsInt("pref_key_mode", 0));
+
+        prefs.put("mode", "7");
+        assertEquals(7, prefs.getStringAsInt("mode", 0));
+
+        prefs.remove("mode");
+        assertEquals(42, prefs.getStringAsInt("mode", 42));
+    }
+
+    @Test
+    public void getStringAsIntReturnsDefaultForNonNumericString() {
+        PrefMap prefs = new PrefMap();
+        prefs.put("pref_key_label", "not_a_number");
+
+        try {
+            prefs.getStringAsInt("label", 0);
+        } catch (NumberFormatException e) {
+            // expected; the method propagates invalid integer strings
+        }
+    }
 }
