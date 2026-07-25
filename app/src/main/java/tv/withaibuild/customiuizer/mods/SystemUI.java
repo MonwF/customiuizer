@@ -564,6 +564,36 @@ public class SystemUI {
         }
     }
 
+    private static int getSignalLevel(Resources res, int resId, SparseIntArray cache) {
+        if (resId == 0) return 6;
+        int idx = cache.indexOfKey(resId);
+        if (idx >= 0) return cache.valueAt(idx);
+        int level = 6;
+        try {
+            String name = res.getResourceName(resId);
+            if (name != null && name.contains("signal")) {
+                if (name.contains("null")) {
+                    level = 6;
+                } else {
+                    int i = name.lastIndexOf("signal_");
+                    if (i != -1) {
+                        i += "signal_".length();
+                        int end = i;
+                        while (end < name.length() && Character.isDigit(name.charAt(end))) end++;
+                        if (end > i) {
+                            try {
+                                level = Integer.parseInt(name.substring(i, end));
+                                if (level < 0 || level > 5) level = 6;
+                            } catch (NumberFormatException ignored) {}
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {}
+        cache.put(resId, level);
+        return level;
+    }
+
     public static void DualRowSignalHook(PackageReadyParam lpparam) {
         boolean mobileTypeSingle = MainModule.mPrefs.getBoolean("system_statusbar_mobiletype_single");
         if (!mobileTypeSingle) {
@@ -599,6 +629,7 @@ public class SystemUI {
             }
         });
 
+        final Resources[] systemUIRes = new Resources[1];
         SparseIntArray signalResToLevelMap = new SparseIntArray();
         final int[] signalStates = {-1, -1}; // main-subId, sub-level
         ModuleHelper.hookAllMethods("com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.getClassLoader(), "setMobileIcons", new MethodHook() {
@@ -609,6 +640,8 @@ public class SystemUI {
                     isHooked = true;
                     Context mContext = (Context) XposedHelpers.getObjectField(param.getThisObject(), "mContext");
                     Resources res = mContext.getResources();
+                    systemUIRes[0] = res;
+                    // Keep the standard signal drawables as fast-path entries.
                     signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_0", "drawable", lpparam.getPackageName()), 0);
                     signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_1", "drawable", lpparam.getPackageName()), 1);
                     signalResToLevelMap.put(res.getIdentifier("stat_sys_signal_2", "drawable", lpparam.getPackageName()), 2);
@@ -624,7 +657,7 @@ public class SystemUI {
                     XposedHelpers.setObjectField(subIconState, "visible", false);
                     int subSignalResId = XposedHelpers.getIntField(subIconState, "strengthId");
                     signalStates[0] = XposedHelpers.getIntField(mainIconState, "subId");
-                    signalStates[1] = signalResToLevelMap.get(subSignalResId);
+                    signalStates[1] = getSignalLevel(systemUIRes[0], subSignalResId, signalResToLevelMap);
                     boolean subDataConnected = (boolean) XposedHelpers.getObjectField(subIconState, "dataConnected");
                     if (subDataConnected) {
                         String[] syncFields = { "showName", "activityIn", "activityOut", "dataConnected" };
@@ -633,7 +666,7 @@ public class SystemUI {
                         }
                     }
                     int mainSignalResId = XposedHelpers.getIntField(mainIconState, "strengthId");
-                    XposedHelpers.setObjectField(mainIconState, "strengthId", signalResToLevelMap.get(mainSignalResId));
+                    XposedHelpers.setObjectField(mainIconState, "strengthId", getSignalLevel(systemUIRes[0], mainSignalResId, signalResToLevelMap));
                     param.getArgs()[1] = iconStates;
                 }
             }
