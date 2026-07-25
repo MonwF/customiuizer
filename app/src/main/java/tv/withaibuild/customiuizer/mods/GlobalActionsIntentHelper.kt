@@ -42,7 +42,7 @@ object GlobalActionsIntentHelper {
             }
 
             if (skipLock) {
-                intent.addFlags(335544320)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.putExtra("StartActivityWhenLocked", true)
             }
 

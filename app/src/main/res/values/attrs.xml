@@ -37,6 +37,7 @@
 	</declare-styleable>
 
 	<declare-styleable name="SpinnerEx">
+		<attr name="android:entries" />
 		<attr name="entryValues" format="reference" />
 	</declare-styleable>
 

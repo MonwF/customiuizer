@@ -1,5 +1,6 @@
 package tv.withaibuild.customiuizer.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -16,6 +17,7 @@ import android.widget.ListView
 import kotlin.math.max
 import kotlin.math.min
 
+@SuppressLint("Range", "ClickableViewAccessibility")
 class SortableListView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

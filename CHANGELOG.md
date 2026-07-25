@@ -9,7 +9,7 @@
 
 ## r14.8.0 — 基础设施 / 工具类 Kotlin 化
 
-发布日期：进行中。状态：**开发中（r14.8 系列第一阶段）**。
+发布日期：2026-07-25。状态：**已发布 / 稳定版（实机重启验证通过，无模块相关崩溃/ANR）**。
 
 > 将全项目引用的 `utils` 与 `mods.utils` 基础设施类迁移为 Kotlin，为核心 `mods` 主类 Kotlin 化铺路。功能行为无变化，重点保持 Java/Kotlin 互调用兼容、测试覆盖与构建稳定。
 
@@ -29,6 +29,17 @@
 - `versionCode` 170 / `versionName` r14.8.0。
 - 每迁一个文件后执行 `./gradlew :app:compileDebugJavaWithJavac` / `:app:test`。
 - 保持签名证书、包名与上一版一致，可覆盖安装。
+
+### 实机验证与发布整理
+
+- 实机重启日志审查：`VectorModuleManager` 成功加载 `tv.withaibuild.customiuizer.r14`；无 `am_crash` / `am_anr` / `AndroidRuntime` 模块崩溃；`FATAL` 均为 `init` 进程系统级信号，与模块无关。
+- 清理项目根目录旧版 APK、构建日志与临时文件；删除 `app/build` 中本次生成的 `r14.8.0_*.log / .exit / .pid`。
+- 运行 `./gradlew :app:lint` 并修复全部 5 个 error：
+  - `MainFragment.onCreate` 自定义 `super.onCreate(Bundle, Int)` 调用被 lint 误判为缺失 super call，使用 `@SuppressLint` 说明；
+  - `SpinnerEx` 改为使用 `R.styleable.SpinnerEx` 与 `android:entries`；
+  - `SortableListView` 对 `Drawable.alpha` 的 `Int` 取值（0–255）的 lint `Range` 误报加 `@SuppressLint`；
+  - `GlobalActionsIntentHelper` 中 `intent.addFlags(335544320)` 替换为 `Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP`。
+- lint 最终 0 error；release APK 构建成功。
 
 ## r14.7.4 — r14.7.x 系列合并整理
 

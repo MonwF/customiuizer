@@ -17,9 +17,9 @@ open class SpinnerEx(context: Context, attrs: AttributeSet?) : AppCompatSpinner(
     private val disabledItems = ArrayList<Int>()
 
     init {
-        val typedArray: TypedArray = context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.entries, R.attr.entryValues), 0, 0)
-        entries = typedArray.getTextArray(0)
-        val entryValuesResId = typedArray.getResourceId(1, 0)
+        val typedArray: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerEx, 0, 0)
+        entries = typedArray.getTextArray(R.styleable.SpinnerEx_android_entries)
+        val entryValuesResId = typedArray.getResourceId(R.styleable.SpinnerEx_entryValues, 0)
         if (entryValuesResId != 0) {
             entryValues = resources.getIntArray(entryValuesResId)
         }

@@ -71,6 +71,7 @@ class MainFragment : PreferenceFragmentBase() {
         return act != null && !act.isFinishing && isAdded
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         toolbarMenu = true
         activeMenus = "all"

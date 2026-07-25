@@ -6,8 +6,8 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前稳定版 | **r14.7.4** |
-| 上一稳定版 | r14.6.4 |
+| 当前稳定版 | **r14.8.0** |
+| 上一稳定版 | r14.7.4 |
 | 应用名 | 米客 A14 |
 | 包名 | `tv.withaibuild.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14（minSdk 34，仅 `arm64-v8a`） |
@@ -16,8 +16,8 @@
 | 运行基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
-- **推荐日常使用的稳定版**：**r14.7.4**。它合并 r14.7.0–r14.7.3 的全部内部重构与修复，并清理废弃文件、死代码与旧版构建；对外功能无变化，可覆盖安装。
-- **r14.6.4** 仍是上一完整验证基线；如果你更看重经过多轮重启测试的保守版本，可以继续使用。
+- **推荐日常使用的稳定版**：**r14.8.0**。它在 r14.7.4 基础上完成 `utils` 与 `mods.utils` 基础设施 Kotlin 迁移，修复 lint 全部 error，清理废弃文件与死代码，实机重启验证无模块相关崩溃/ANR；对外功能无变化，可覆盖安装。
+- **r14.7.4** 仍是上一完整验证基线；如果你更看重经过长期重启测试的保守版本，可以继续使用。
 - **r14.7.0 与 r14.7.1/2/3 的 release/tag 已删除**：r14.7 系列为内部重构/迁移阶段版本，现已全部合并整理到 r14.7.4。
 
 > [!WARNING]
@@ -27,7 +27,7 @@
 
 ## 各版本全方位对比
 
-下表覆盖从上游参考到 r14.7.4 的全部发行版，对比体积、加载速度、主要优化方向、稳定性与推荐度。APK 大小来自构建产物，加载时间来自同一设备 实测，详细样本见「模块加载实测」。
+下表覆盖从上游参考到 r14.8.0 的全部发行版，对比体积、加载速度、主要优化方向、稳定性与推荐度。APK 大小来自构建产物，加载时间来自同一设备 实测，详细样本见「模块加载实测」。
 
 | 版本 | 状态 | APK 大小 | 相对上一版 | 模块加载中位 | 主要优化方向 | 稳定性 | 推荐度 |
 |---|---|---:|---:|---:|---|---|---|
@@ -43,7 +43,8 @@
 | [r14.6.2](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.2) | 稳定版 | 2.90 MB | +13.8 KB | 参考 57 ms | 修复 r14.6.0 崩溃，清理死代码/权限/错误标签 | 无新增崩溃/ANR | 推荐 |
 | [r14.6.3](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.3) | 稳定版 | 2.95 MB | +49 KB | 参考 57 ms | 合并 r14.6.x 历史，修复双排信号栏 SIM1 为空与颜色跟随 | 完整重启验证通过 | 推荐 |
 | [r14.6.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.6.4) | 稳定版 | 2.82 MB | -135 KB | 参考 57 ms | 架构整理、大文件拆分、补充单元测试、整理 keep 规则 | 构建验证通过 | 稳定基线 |
-| [r14.7.4（本版）](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.7.4) | **稳定版** | 3.05 MB | +308 KB | 参考 57 ms | 合并 r14.7.x 重构与 hidden API 修复，清理废弃文件/死代码 | 完整重启验证通过 | **推荐日常版** |
+| [r14.7.4](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.7.4) | 稳定版 | 3.05 MB | +308 KB | 参考 57 ms | 合并 r14.7.x 重构与 hidden API 修复，清理废弃文件/死代码 | 完整重启验证通过 | 推荐日常版 |
+| [r14.8.0（本版）](https://github.com/tomthenpc/customiuizer-a14/releases/tag/r14.8.0) | **稳定版** | 2.99 MB | -61 KB | 参考 57 ms | `utils` 与 `mods.utils` 基础设施 Kotlin 迁移，清理废弃文件，修复 lint error | 完整重启验证通过 / lint 0 error | **推荐日常版** |
 
 > **关于“省电性”的说明**：
 > r14.2.7 及以后通过“功能未开启时不注册 Hook/Receiver/Observer”、减少对象分配与线程池化来降低 CPU/内存/唤醒开销，对续航与流畅度有正面作用。但 APK 大小和加载速度**不能直接等同于省电收益**；要量化续航改善，必须在同设备、同功能开关、同使用场景下使用 **Perfetto / Batterystats** 长时间对照采样。
