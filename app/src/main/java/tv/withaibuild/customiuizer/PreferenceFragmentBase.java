@@ -312,7 +312,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         long duration = (long) (animDur * Helpers.getAnimationScale(2) + 0.5f);
         ValueAnimator animator = ValueAnimator.ofFloat(startTrans, endTrans);
         animator.setDuration(duration);
-        animator.setInterpolator(new DecelerateInterpolator(1.5f));
+        animator.setInterpolator(new DecelerateInterpolator(1.2f));
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
