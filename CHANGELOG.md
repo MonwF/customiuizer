@@ -7,6 +7,19 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.10.0 — libxposed API 101 / API 102 compatibility
+
+发布日期：待 API 101 与 API 102 双环境实机验证。状态：**测试候选版，暂不发布 Release**。
+
+- 使用 `io.github.libxposed:api:102.0.0` 编译，并升级 `io.github.libxposed:service:102.0.0`。
+- 模块元数据声明 `minApiVersion=101`、`targetApiVersion=102`、`staticScope=false`；不声明 `autoHotReload`。
+- 保留 API 101 的现有 Hook 注册、优先级、before/after、异常传播、参数延迟实例化和 unhook 语义；不调用 API 102 专属 Hot Reload 或 hook replacement 接口。
+- 扫描业务源码与构建路径，未发现 Legacy `de.robv.android.xposed` API 调用；Manifest 中的 `MODULE_SETTINGS` category 仅为管理器入口元数据。
+- Gradle Groovy DSL 迁移到 Kotlin DSL，并通过 version catalog 集中锁定依赖版本；工具链升级到 Gradle 9.5.1 / AGP 9.2.1 / compileSdk 37，以满足 service 102 的 AAR 元数据要求，Android `minSdk=34` / `targetSdk=34` 保持不变。
+- 清理已确认无引用的资源菜单、`ResourceHooks` 死代码及 Kotlin 迁移后失效的宽泛 keep 规则；保留仍在实际调用边界上的 Java 文件。
+
+静态构建、签名和 APK 元数据验证不能替代实机验证。API 101 与 API 102 的 system_server、SystemUI、Launcher、Remote Preferences 和设置重启流程均需分别验证后才能发布。
+
 ## r14.9.0 — 核心 mods 主类 Kotlin 化
 
 发布日期：进行中。状态：**开发中（r14.9 系列第一阶段）**。

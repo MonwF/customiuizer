@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<item name="additem" type="id"/>
+	<item name="deleteitem" type="id"/>
 	<item name="update_alert" type="id"/>
 </resources>

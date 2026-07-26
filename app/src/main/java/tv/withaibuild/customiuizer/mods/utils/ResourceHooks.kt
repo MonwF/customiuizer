@@ -288,34 +288,6 @@ class ResourceHooks {
         return getModuleResValue(modRes, method, modResId, args.asList())
     }
 
-    private fun getFakeResource(modRes: Resources, method: String, args: Array<Any?>): Any? {
-        return try {
-            val modResId = fakes[(args[0] as Int)]
-            if (modResId == 0) null else getModuleResValue(modRes, method, modResId, args)
-        } catch (t: Throwable) {
-            XposedHelpers.log(t)
-            null
-        }
-    }
-
-    private fun getResourceReplacement(modRes: Resources, method: String, args: Array<Any?>): Any? {
-        val resId = args[0] as Int
-        val replacement = resourceIdReplacements[resId]
-        if (replacement == null) return null
-        if (replacement.mType == ReplacementType.OBJECT) {
-            return replacement.mValue
-        }
-        if (replacement.mType == ReplacementType.ID) {
-            val modResId = replacement.mValue as Int
-            try {
-                return getModuleResValue(modRes, method, modResId, args)
-            } catch (t: Throwable) {
-                XposedHelpers.log(t)
-            }
-        }
-        return null
-    }
-
     companion object {
         @JvmStatic
         fun getFakeResId(resourceName: String): Int {
@@ -323,6 +295,5 @@ class ResourceHooks {
         }
     }
 
-    private var valueUpdated = false
     private var themeResourcesHooked = false
 }

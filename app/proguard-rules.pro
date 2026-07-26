@@ -1,11 +1,8 @@
 # Xposed
 -adaptresourcefilecontents META-INF/xposed/java_init.list
--keepattributes RuntimeVisibleAnnotations
--keep,allowobfuscation public class * extends io.github.libxposed.api.XposedModule {
-    public <init>(...);
-    public void onModuleLoaded(...);
-    public void onPackageReady(...);
-    public void onSystemServerStarting(...);
+-dontwarn io.github.libxposed.annotation.**
+-keep,allowoptimization,allowobfuscation public class * extends io.github.libxposed.api.XposedModule {
+    public <init>();
 }
 
 # Hook callbacks are loaded only inside LSPosed target processes. Prevent R8 from
@@ -33,11 +30,6 @@
     public static <methods>;
     public <fields>;
 }
-
-# Pure-Java utilities are used in both the module and UI; keep their public APIs.
--keep class tv.withaibuild.customiuizer.utils.PrefMap { *; }
--keep class tv.withaibuild.customiuizer.utils.Helpers { *; }
--keep class tv.withaibuild.customiuizer.utils.AppHelper { *; }
 
 # Obfuscation
 -repackageclasses

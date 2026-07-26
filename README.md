@@ -12,11 +12,12 @@
 | 包名 | `tv.withaibuild.customiuizer.r14` |
 | 目标系统 | HyperOS 1 / Android 14（minSdk 34，仅 `arm64-v8a`） |
 | 代码基线 | 基于 HyperOS 1 / Android 14（API 34）实机适配，参考 MonwF/customiuizer v24.10.12 |
-| Hook 接口 | libxposed API 101 |
+| Hook 接口 | 稳定版：libxposed API 101；r14.10.0 候选版：min API 101 / target API 102 |
 | 运行基线 | [Vector v2.0-3046](https://github.com/JingMatrix/Vector/actions/runs/29805285935)，commit `9350c7c` |
 | 发布页 | [tomthenpc/customiuizer-a14 Releases](https://github.com/tomthenpc/customiuizer-a14/releases) |
 
 - **推荐日常使用的稳定版**：**r14.8.0**。它在 r14.7.4 基础上完成 `utils` 与 `mods.utils` 基础设施 Kotlin 迁移，修复 lint 全部 error，清理废弃文件与死代码，实机重启验证无模块相关崩溃/ANR；对外功能无变化，可覆盖安装。
+- **r14.10.0 当前是 API 101 / API 102 双兼容测试候选版**：使用 libxposed API 102 编译，声明最低运行 API 101；未启用 Hot Reload。完成 API 101 与 API 102 两套实机冷启动验证前，不替代现有稳定版。
 - **r14.7.4** 仍是上一完整验证基线；如果你更看重经过长期重启测试的保守版本，可以继续使用。
 - **r14.7.0 与 r14.7.1/2/3 的 release/tag 已删除**：r14.7 系列为内部重构/迁移阶段版本，现已全部合并整理到 r14.7.4。
 

@@ -1,0 +1,396 @@
+请先完整理解并验证当前本地项目，再实施 libxposed API 101 / API 102 单 APK 双兼容改造，并对 r14.9.0 Kotlin 重构结果进行第二轮有证据的代码审查。
+
+## 一、本次工作的唯一基线
+
+项目仓库：
+
+`https://github.com/tomthenpc/customiuizer-a14`
+
+远程 `main` 当前应包含以下基线提交：
+
+`5fd111e0d1937fef8cefe54fd947ac346a9231f6`
+
+提交说明：
+
+`r14.9.0: core mods Kotlin migration + UI lifecycle/animation optimizations`
+
+本次请使用一个全新的本地 clone，并从当前远程 `main` 创建独立分支：
+
+`r14.10.0-api101-api102`
+
+不要直接在 `main` 上开发，不要覆盖或改写 r14.9.0 API 101 基线。
+
+开始时先确认：
+
+- 当前目录确实是新 clone；
+- `git remote -v` 指向上述仓库；
+- `git fetch --all --tags --prune` 成功；
+- `origin/main` 包含上述基线提交；
+- 当前工作树干净；
+- 没有从其他本地目录复制进来的 `.bak`、日志、APK、keystore、缓存或临时脚本。
+
+如果远程 `main` 已经出现比 `5fd111e` 更新的提交，以实际最新 `origin/main` 为准，但必须先审查这些新增提交，确认它们属于本项目正常延续，不能盲目覆盖或回退。
+
+## 二、先读取项目规则
+
+修改源码前，依次阅读：
+
+- 根目录 `AGENTS.md`；
+- `docs/ENGINEERING_METHOD.md`；
+- `docs/KOTLIN_POST_MIGRATION_REVIEW.md`；
+- `README.md`；
+- `CHANGELOG.md`；
+- `app/build.gradle`；
+- `app/proguard-rules.pro`；
+- `META-INF/xposed` 下的全部配置；
+- Xposed 模块入口；
+- Hook 兼容层；
+- Remote Preferences 和 service 接入；
+- 现有测试。
+
+如果前三份开发规则尚未存在，请先把我提供的文件放到对应位置。它们是本项目的长期工程约束，不要把完整方法论重复塞进业务源码注释。
+
+注意：README 可能仍把 r14.8.0 标为当前稳定版，而构建配置和最新提交已经进入 r14.9.0。先根据 Git、构建文件和实际代码判断基线，不要因为文档滞后而回退代码，也不要在未经实机确认时擅自把 r14.9.0 或 r14.10.0 宣布为稳定版。
+
+## 三、当前已知项目状态
+
+当前基线应大致满足：
+
+- 应用：米客 A14 / CustoMIUIzer A14；
+- 包名：`tv.withaibuild.customiuizer.r14`；
+- Android：HyperOS 1 / Android 14；
+- `minSdkVersion=34`；
+- `targetSdkVersion=34`；
+- `compileSdk=36`；
+- `arm64-v8a`；
+- JDK/JVM target 17；
+- 当前版本：`versionCode=171`、`versionName=r14.9.0`；
+- 当前 libxposed 依赖：API 101；
+- 当前 `module.prop`：`minApiVersion=101`、`targetApiVersion=101`、`staticScope=false`；
+- System、SystemUI、Launcher、GlobalActions、Controls、Various、PackagePermissions 等核心 mods 已迁移到 Kotlin；
+- `MainModule`、部分 UI/兼容边界可能仍保留 Java，这是允许的，不得以“100% Kotlin”为目标机械改写；
+- Release 使用 R8、资源压缩、zipalign 和签名；
+- r14.9.0 已报告通过 Debug、单元测试和 Release 构建，但仍应在新环境重新验证。
+
+这些内容只是预期状态，必须以当前本地代码和实际命令结果核实。
+
+## 四、本阶段目标
+
+在保持 r14.9.0 API 101 功能、Hook 行为、ROM 兼容性、性能和稳定性的前提下，使同一个 Release APK 同时支持：
+
+- 实现 libxposed API 101 的框架；
+- 实现 libxposed API 102 的框架。
+
+不维护两个 APK，不创建 API 101 专版和 API 102 专版。
+
+兼容性应根据运行时实际 libxposed framework API 判断，而不是根据“LSPosed”“Vector”或管理器界面的产品名称判断。
+
+本阶段建议版本：
+
+- `versionCode=172`
+- `versionName=r14.10.0`
+
+只在兼容改造和本地验证完成后更新版本号。不要提前把未完成构建标记为正式版本。
+
+## 五、工作阶段
+
+### 阶段 A：冻结并验证 API 101 基线
+
+任何 API 升级前，先执行：
+
+1. 检查当前分支、HEAD、`git status` 和最近提交；
+2. 搜索未完成的 `TODO()`、`NotImplementedError`、临时空实现、固定假返回值和被禁用功能；
+3. 检查 Java/Kotlin 重复实现和动态引用风险；
+4. 执行现有单元测试；
+5. 执行 Debug 构建；
+6. 执行当前 API 101 Release 构建；
+7. 执行可用的 Lint、`lintRelease`、`lintVitalRelease`；
+8. 记录基线 APK 文件名、大小、SHA-256、包名、版本号和签名证书摘要；
+9. 保存基线构建结果，但不要提交 APK。
+
+若 API 101 基线本身失败，先定位是否为环境问题或已有代码问题。不得在未知失败基础上继续升级 API 102。
+
+### 阶段 B：官方 API 差异审查
+
+只使用 libxposed 官方 API、service、example、Javadoc、源码和 Maven 元数据作为技术依据。
+
+对比 API 101 与 API 102：
+
+- `XposedModule` 和 `XposedModuleInterface` 生命周期；
+- `XposedInterface`、`Chain`、`Hooker` 和 `HookHandle`；
+- framework attach/detach 的内部变化；
+- Remote Preferences 和 service；
+- API 102 新增 Hot Reload、Hook replacement、detach；
+- `targetApiVersion=102` 的行为限制；
+- Legacy `de.robv.android.xposed` API 禁止条件；
+- R8、类验证和二进制兼容风险。
+
+不要根据旧博客、论坛转述或管理器名称推断接口行为。
+
+### 阶段 C：实施最小双兼容改造
+
+预期配置原则：
+
+```properties
+minApiVersion=101
+targetApiVersion=102
+staticScope=false
+```
+
+依赖原则上调整为 API/service 102 的官方稳定版本，例如：
+
+```gradle
+compileOnly "io.github.libxposed:api:102.0.0"
+testImplementation "io.github.libxposed:api:102.0.0"
+implementation "io.github.libxposed:service:102.0.0"
+```
+
+但实施前必须查询执行时的官方仓库和 Maven 元数据，确认 API 102 对应的稳定坐标。不要自动升级到 API 103 或其他更高接口，也不要顺带升级无关依赖。
+
+双兼容要求：
+
+- API 101 是最低运行基线；
+- 原有核心 Hook 公共路径只依赖 API 101 已存在的能力；
+- API 102 环境复用稳定公共路径；
+- 只有确实需要 API 102 专属能力时才进行运行时判断；
+- API 版本判断放在入口、初始化或其他冷路径；
+- 不在每个高频 Hook 回调中重复判断 API；
+- 不允许 API 102 专属类型、方法签名、父类、字段类型或静态初始化污染 API 101 必经加载路径；
+- 不通过反射调用 libxposed API 来绕过版本限制；
+- 不引入 Legacy `de.robv.android.xposed` API；
+- 不通过降低 `targetApiVersion` 回避问题。
+
+重点防止：
+
+- `NoSuchMethodError`
+- `NoClassDefFoundError`
+- `AbstractMethodError`
+- `IncompatibleClassChangeError`
+- `VerifyError`
+- `ClassNotFoundException`
+- `HookFailedError`
+- 设置应用进程意外解析 compileOnly libxposed 类型
+- R8 将 Hooker 合并进普通 UI/启动类
+- API 101 环境过早解析 API 102 类型
+
+### 阶段 D：保守审查现有兼容层
+
+重点审查但不要无理由推翻：
+
+- `MainModule`；
+- `HookerClassHelper`；
+- `ModuleHelper`；
+- `XposedHelpers`；
+- `ResourceHooks`；
+- Hook 注册和 unhook 路径；
+- Remote Preferences；
+- `META-INF/xposed/java_init.list`；
+- `module.prop`；
+- scope 配置；
+- ProGuard/R8 规则。
+
+必须保留：
+
+- Hook target；
+- Hook priority；
+- 注册条件和顺序；
+- before/after 顺序；
+- 参数读取与修改；
+- 提前返回和提前抛出；
+- 原方法异常传播；
+- after-hook 的结果/异常替换；
+- 参数延迟实例化；
+- ClassLoader 和进程边界；
+- Java/Kotlin 静态互操作；
+- Release 混淆后的 callback 识别。
+
+`HookerClassHelper` 当前承担 API 101 旧行为适配，是高风险边界。只有发现 API 102 下存在明确不兼容或错误时才修改，不能为了“使用新 API”整体重写。
+
+### 阶段 E：Kotlin 重构后二次审查
+
+本阶段不是再次进行大规模 Java → Kotlin 迁移。
+
+对当前重构结果进行第二轮审查，只修复有证据的问题：
+
+- JVM 方法签名或 `@JvmStatic`/`@JvmField` 不正确；
+- `object`/`companion object` 初始化时机变化；
+- nullable/platform type 转换导致的运行风险；
+- Java/Kotlin 属性访问器差异；
+- Hook callback、异常语义或参数行为改变；
+- R8 下动态入口、after callback 或反射入口失效；
+- 重复 Hook、Receiver、Observer、Listener；
+- 生命周期泄漏；
+- 永久 Handler、Executor、Timer、Coroutine 或空轮询；
+- 静态持有 Activity、Fragment、View、Context、ClassLoader；
+- 无界缓存；
+- 高频路径中的反射、偏好读取、Binder、磁盘、高频日志或明显临时分配；
+- UI 生命周期和动画实现中的重复初始化或状态恢复错误。
+
+保留有意义的 Java边界。不要仅为了提高 Kotlin 文件比例迁移 `MainModule`、`PreferenceFragmentBase` 或其他稳定 Java 文件。
+
+每项“优化”必须说明实际减少了什么系统成本。无法说明收益、仅让代码更短、ART/R8 已可自动处理或会扩大兼容风险的修改，不要做。
+
+### 阶段 F：分离提交
+
+兼容改造与二次优化应尽量分成独立提交：
+
+1. `build: prepare libxposed API 101/102 compatibility`
+2. `compat: support libxposed API 101 and API 102`
+3. `fix: post-Kotlin migration correctness fixes`
+4. `perf: evidence-based lifecycle/hot-path optimizations`
+5. `docs: update r14.10.0 testing status`
+
+没有实际修改的类别不要制造空提交。
+
+不要把无关格式化、Gradle Kotlin DSL、version catalog、dependencyGuard、AGP/Kotlin/AndroidX 全量升级或大型架构替换混入本阶段。
+
+## 六、暂不启用 API 102 Hot Reload
+
+本阶段仅实现 API 101 / API 102 正常冷启动和重启兼容。
+
+不要启用：
+
+```properties
+autoHotReload=true
+```
+
+不要为了展示 API 102 新功能而主动实现：
+
+- `onHotReloading`；
+- `onHotReloaded`；
+- Hook 原子替换；
+- 自动 detach；
+- 模块 ClassLoader 热卸载。
+
+当前项目存在进程级静态状态、Remote Preferences、Hook、Receiver、Observer、Handler、协程、缓存和 DexKit/native 资源。Hot Reload 需要独立完成旧代 HookHandle、线程、回调、JNI 和 ClassLoader 的所有权治理，不属于本阶段。
+
+## 七、性能与故障处理原则
+
+固定优先级：
+
+> 实际可运行 > 功能正确 > API 101 稳定 > API 102 兼容 > 系统稳定 > 性能与功耗 > 可维护性 > 形式简洁。
+
+要求：
+
+- 功能关闭时接近零额外成本；
+- 未启用功能尽量不注册 Hook；
+- 各进程只初始化真正需要的功能；
+- 不增加轮询和空唤醒；
+- 不增加永久后台任务；
+- 不在热路径重复反射、版本判断、字符串格式化或集合分配；
+- 不为双兼容引入大型抽象框架；
+- 不通过吞异常、伪造返回值、禁用功能或扩大 keep 范围掩盖问题；
+- 找不到 ROM 类/方法时只记录一次并安全禁用单项功能；
+- 不允许异常重试或日志风暴；
+- SystemUI、Launcher、system_server 的稳定性高于单项功能可用性。
+
+## 八、完整验证
+
+修改完成后至少执行：
+
+- 当前全部单元测试；
+- Debug 构建；
+- Release 构建；
+- R8 混淆；
+- 资源压缩；
+- Lint；
+- `lintRelease`；
+- `lintVitalRelease`；
+- APK 签名验证；
+- APK 中 `module.prop`、`java_init.list`、scope 和 Xposed 元数据检查；
+- Legacy Xposed API 全仓扫描；
+- API 102 专属符号使用位置扫描；
+- `TODO()`、`NotImplementedError`、临时空实现和假返回扫描；
+- 完整 `git diff`；
+- 完整 `git status`。
+
+Release 构建命令以项目实际任务为准；Windows 环境通常使用：
+
+```powershell
+.\gradlew.bat --no-daemon clean assembleRelease lintRelease lintVitalRelease
+```
+
+不要为了通过构建关闭 R8、资源压缩或 Lint。
+
+## 九、双环境实机测试边界
+
+同一个最终签名 Release APK需要分别验证：
+
+### API 101 框架环境
+
+- 模块被正常识别和加载；
+- Remote Preferences 正常；
+- system_server Hook 正常；
+- SystemUI Hook 正常；
+- Launcher Hook 正常；
+- 设置修改、进程重启和设备重启后正常；
+- 无 API 102 类型缺失、验证错误或链接错误；
+- 无重复 Hook 和重复初始化。
+
+### API 102 框架环境
+
+- 模块被正常识别和加载；
+- API 101 原有功能行为一致；
+- system_server、SystemUI、Launcher 无崩溃或异常重启；
+- Remote Preferences 和 service 正常；
+- 不调用 Legacy Xposed API；
+- 无生命周期异常、重复 Hook 或日志风暴。
+
+如果本地环境无法提供两套真实框架，不得声称“双环境实机验证通过”。只完成静态、构建和可自动执行的验证，并明确输出待我实机验证的清单。
+
+## 十、APK 与交付
+
+完成本地构建后，将正式签名测试 APK复制到：
+
+`C:\Users\tv\Downloads\Peengeek`
+
+报告：
+
+- 分支和最终 commit；
+- 变更文件；
+- API 101/102 兼容设计；
+- 二次审查发现的问题及根因；
+- 实际执行的测试和构建结果；
+- 未执行或无法验证的项目；
+- APK 完整路径；
+- APK 文件名；
+- versionName/versionCode；
+- 包名；
+- 签名证书摘要；
+- 文件大小；
+- SHA-256；
+- API 101 实机测试清单；
+- API 102 实机测试清单；
+- 仍需重点关注的 SystemUI、system_server、Launcher、控制中心、锁屏、通知、小窗等功能。
+
+第一轮完成后：
+
+- 可以本地提交到独立分支；
+- 暂时不要合并到 `main`；
+- 暂时不要推送，除非我明确要求；
+- 不创建 tag；
+- 不创建 GitHub Release；
+- 不上传 APK 到 GitHub；
+- 等我分别测试 API 101 和 API 102 环境并反馈日志。
+
+## 十一、禁止事项
+
+未经明确授权，不得：
+
+- 修改或回退 r14.9.0 基线提交；
+- 直接在 `main` 开发；
+- `git reset --hard`；
+- `git restore .`；
+- `git checkout -- .`；
+- `git clean -fd`；
+- force push；
+- 修改或提交 keystore、密码和签名材料；
+- 提交设备日志、缓存、`.idea` 本地状态、构建目录或测试 APK；
+- 删除无法确认动态用途的类、资源或 keep 规则；
+- 将本阶段扩大为 Android 15/16 适配；
+- 将 Gradle 改成 Kotlin DSL；
+- 引入 version catalog、dependencyGuard 或无关依赖升级；
+- 为追求形式统一再次机械迁移所有 Java；
+- 在未实机验证前将 r14.10.0 标记为稳定版。
+
+请自主完成代码理解、基线验证、官方 API 对比、实现、二次审查、构建和报告。只有遇到必须由我决定的产品行为、缺少签名材料、缺少 API 101/API 102 实机环境或其他真实外部阻塞时才停止询问。
