@@ -23,7 +23,41 @@ import tv.withaibuild.customiuizer.utils.Helpers
 class MainActivity : AppCompatActivity() {
 
     private var mainFrag: MainFragment? = null
-    private var prefsChanged: SharedPreferences.OnSharedPreferenceChangeListener? = null
+    private val prefsChanged = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        if (AppHelper.remotePrefs == null) return@OnSharedPreferenceChangeListener
+        if (key == null) {
+            val prefEdit = AppHelper.remotePrefs!!.edit()
+            for (remoteKey in AppHelper.remotePrefs!!.all.keys) {
+                prefEdit.remove(remoteKey)
+            }
+            prefEdit.apply()
+            return@OnSharedPreferenceChangeListener
+        }
+        if (IGNORE_KEYS.contains(key)) return@OnSharedPreferenceChangeListener
+        val value = sharedPreferences.all[key] ?: run {
+            AppHelper.remotePrefs!!.edit().remove(key).apply()
+            return@OnSharedPreferenceChangeListener
+        }
+        val prefEdit = AppHelper.remotePrefs!!.edit()
+        when (value) {
+            is Boolean -> prefEdit.putBoolean(key, value)
+            is Float -> prefEdit.putFloat(key, value)
+            is Int -> prefEdit.putInt(key, value)
+            is Long -> prefEdit.putLong(key, value)
+            is String -> prefEdit.putString(key, value)
+            is Set<*> -> @Suppress("UNCHECKED_CAST") prefEdit.putStringSet(key, value as Set<String>)
+        }
+        prefEdit.apply()
+    }
+
+    companion object {
+        private var serviceListenerRegistered = false
+        private val IGNORE_KEYS = setOf(
+            "pref_key_miuizer_locale",
+            "pref_key_miuizer_launchericon",
+            "pref_key_miuizer_synced_from_lsposed"
+        )
+    }
 
     override fun attachBaseContext(base: Context) {
         try {
@@ -38,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (AppHelper.remotePrefs == null) {
+        if (AppHelper.remotePrefs == null && !serviceListenerRegistered) {
             XposedServiceHelper.registerListener(object : XposedServiceHelper.OnServiceListener {
                 override fun onServiceBind(service: XposedService) {
                     AppHelper.moduleActive = true
@@ -50,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                     AppHelper.remotePrefs = null
                 }
             })
+            serviceListenerRegistered = true
         }
 
         val myToolbar = findViewById<Toolbar>(R.id.mainActionBar)
@@ -64,40 +99,7 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val ignoreKeys = HashSet<String>().apply {
-            add("pref_key_miuizer_locale")
-            add("pref_key_miuizer_launchericon")
-            add("pref_key_miuizer_synced_from_lsposed")
-        }
-
-        prefsChanged = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (AppHelper.remotePrefs == null) return@OnSharedPreferenceChangeListener
-            if (key == null) {
-                val prefEdit = AppHelper.remotePrefs!!.edit()
-                for (remoteKey in AppHelper.remotePrefs!!.all.keys) {
-                    prefEdit.remove(remoteKey)
-                }
-                prefEdit.apply()
-                return@OnSharedPreferenceChangeListener
-            }
-            if (ignoreKeys.contains(key)) return@OnSharedPreferenceChangeListener
-            val value = sharedPreferences.all[key] ?: run {
-                AppHelper.remotePrefs!!.edit().remove(key).apply()
-                return@OnSharedPreferenceChangeListener
-            }
-            val prefEdit = AppHelper.remotePrefs!!.edit()
-            when (value) {
-                is Boolean -> prefEdit.putBoolean(key, value)
-                is Float -> prefEdit.putFloat(key, value)
-                is Int -> prefEdit.putInt(key, value)
-                is Long -> prefEdit.putLong(key, value)
-                is String -> prefEdit.putString(key, value)
-                is Set<*> -> @Suppress("UNCHECKED_CAST") prefEdit.putStringSet(key, value as Set<String>)
-            }
-            prefEdit.apply()
-        }
-
-        prefsChanged?.let { AppHelper.appPrefs!!.registerOnSharedPreferenceChangeListener(it) }
+        AppHelper.appPrefs?.registerOnSharedPreferenceChangeListener(prefsChanged)
     }
 
     fun navToSubFragment(
@@ -133,7 +135,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ApplySharedPref")
     override fun onDestroy() {
         try {
-            prefsChanged?.let { AppHelper.appPrefs!!.unregisterOnSharedPreferenceChangeListener(it) }
+            AppHelper.appPrefs?.unregisterOnSharedPreferenceChangeListener(prefsChanged)
         } catch (t: Throwable) {
             t.printStackTrace()
         }

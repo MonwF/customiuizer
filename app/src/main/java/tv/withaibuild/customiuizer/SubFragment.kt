@@ -214,7 +214,8 @@ open class SubFragment : PreferenceFragmentBase() {
             }
             smoothScroller.setTargetPosition(position)
             lifecycleScope.launch {
-                delay(380)
+                val delayMs = (animDur * Helpers.getAnimationScale(2) + 30).toLong()
+                delay(delayMs)
                 if (isAdded) {
                     mList.layoutManager?.startSmoothScroll(smoothScroller)
                 }
@@ -378,9 +379,7 @@ open class SubFragment : PreferenceFragmentBase() {
         val act = activity as? AppCompatActivity
         Helpers.hideKeyboard(act, view)
         val fragmentManager = parentFragmentManager
-        if (fragmentManager == null || !isResumed) {
-            act?.supportFragmentManager?.popBackStack()
-        } else {
+        if (fragmentManager != null && isAdded && !fragmentManager.isStateSaved) {
             fragmentManager.popBackStackImmediate()
         }
     }

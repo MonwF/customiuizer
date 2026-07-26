@@ -149,7 +149,7 @@ class HookerClassHelper private constructor() {
         }
 
         @Throws(Throwable::class)
-        override fun intercept(chain: XposedInterface.Chain): Any? {
+        open override fun intercept(chain: XposedInterface.Chain): Any? {
             if (mIsReturnConstant) {
                 return mReturnConstantValue
             }

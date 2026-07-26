@@ -7,6 +7,42 @@
 
 性能结论会区分静态分析与实机验证；未做同设备功耗采样时，不使用推测性续航或速度百分比。
 
+## r14.9.0 — 核心 mods 主类 Kotlin 化
+
+发布日期：进行中。状态：**开发中（r14.9 系列第一阶段）**。
+
+> 迁移 System / SystemUI / Launcher / GlobalActions / Controls / Various / PackagePermissions 等核心 mods 主类及拆分出的 Hook 子类。这些文件体积大、Xposed hook 密集，是整个 Kotlin 化过程中风险最高的阶段。必须坚持逐文件编译 + 实机测试后再合并，保持“功能关闭 = 零成本”与热路径优先原则。
+
+### 迁移范围
+
+**第一批**
+- `mods.Controls.java` → `Controls.kt`（待迁移）
+- `mods.Various.java` → `Various.kt`（待迁移）
+- `mods.PackagePermissions.java` → `PackagePermissions.kt`（待迁移）
+
+**第二批**
+- `mods.System.java` → `System.kt`（待迁移）
+- `mods.SystemClockHooks.java` → `SystemClockHooks.kt`（待迁移）
+- `mods.SystemStatusBar*Hooks.java` → 对应 Kotlin 文件（待迁移）
+- `mods.SystemColorizeNotificationHooks.java` → `SystemColorizeNotificationHooks.kt`（待迁移）
+
+**第三批**
+- `mods.SystemUI.java` → `SystemUI.kt`（待迁移）
+- `mods.SystemUIBatteryHooks.java` → `SystemUIBatteryHooks.kt`（待迁移）
+- `mods.SystemUIMonitorAndTileHooks.java` → `SystemUIMonitorAndTileHooks.kt`（待迁移）
+
+**最后一批**
+- `mods.Launcher.java` → `Launcher.kt`（待迁移）
+- `mods.GlobalActions.java` → `GlobalActions.kt`（待迁移）
+- `mods.GlobalActionSystemServerHooks.java` → `GlobalActionSystemServerHooks.kt`（待迁移）
+- `mods.GlobalActionsIntentHelper.java` → `GlobalActionsIntentHelper.kt`（待迁移）
+
+### 构建验证
+
+- `versionCode` 171 / `versionName` r14.9.0。
+- 每迁一个文件后执行 `./gradlew :app:compileDebugJavaWithJavac` / `:app:test`。
+- 每次合并前必须在实机重启验证，确认 `VectorModuleManager` 加载成功且无模块相关崩溃/ANR。
+
 ## r14.8.0 — 基础设施 / 工具类 Kotlin 化
 
 发布日期：2026-07-25。状态：**已发布 / 稳定版（实机重启验证通过，无模块相关崩溃/ANR）**。

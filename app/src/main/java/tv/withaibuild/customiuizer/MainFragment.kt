@@ -18,15 +18,12 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -65,8 +62,6 @@ class MainFragment : PreferenceFragmentBase() {
     private var inSearchView = 0
     private var lastFilter: String? = null
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     private fun isFragmentReady(act: AppCompatActivity?): Boolean {
         return act != null && !act.isFinishing && isAdded
     }
@@ -80,7 +75,8 @@ class MainFragment : PreferenceFragmentBase() {
 
         val act = activity as? AppCompatActivity ?: return
 
-        scope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (act.isFinishing) return@launch
             Helpers.getAllMods(act, savedInstanceState != null)
         }
 
@@ -88,7 +84,7 @@ class MainFragment : PreferenceFragmentBase() {
     }
 
     private fun checkModuleIsActive() {
-        scope.launch {
+        lifecycleScope.launch {
             delay(800L)
             if (!isActive) return@launch
             val act = activity as? AppCompatActivity ?: return@launch
@@ -108,8 +104,8 @@ class MainFragment : PreferenceFragmentBase() {
         mActionMenu = menu
         val searchMenuItem = mActionMenu?.findItem(R.id.search_btn) ?: return
 
-        val searchView = MenuItemCompat.getActionView(searchMenuItem) as? SearchView ?: return
-        MenuItemCompat.setOnActionExpandListener(searchMenuItem, object : MenuItemCompat.OnActionExpandListener {
+        val searchView = searchMenuItem.actionView as? SearchView ?: return
+        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 for (i in 0 until (mActionMenu?.size() ?: 0)) {
                     val menuItem = mActionMenu?.getItem(i) ?: continue
@@ -144,7 +140,7 @@ class MainFragment : PreferenceFragmentBase() {
         }
 
         if (inSearchView == 2) {
-            MenuItemCompat.expandActionView(searchMenuItem)
+            searchMenuItem.expandActionView()
             searchView.setQuery(lastFilter, false)
             searchView.clearFocus()
         }
@@ -180,7 +176,7 @@ class MainFragment : PreferenceFragmentBase() {
         resultView?.setOnTouchListener { _, event: MotionEvent ->
             if (isSearchFocused) {
                 isSearchFocused = false
-                scope.launch {
+                lifecycleScope.launch {
                     delay(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
                     Helpers.hideKeyboard(activity as? AppCompatActivity, this@MainFragment.view)
                     resultView?.requestFocus()
@@ -263,8 +259,4 @@ class MainFragment : PreferenceFragmentBase() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scope.cancel()
-    }
 }

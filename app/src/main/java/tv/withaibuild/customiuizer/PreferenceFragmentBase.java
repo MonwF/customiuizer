@@ -21,9 +21,14 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.view.animation.DecelerateInterpolator;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Locale;
@@ -44,21 +49,25 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     protected boolean isCustomActionBar = false;
     protected int headLayoutId = 0;
     protected int tailLayoutId = 0;
-    protected HashMap<Integer, String> mapKeys = new HashMap<Integer, String>() {{
-        put(R.id.search_btn, "search");
-        put(R.id.restartlauncher, "launcher");
-        put(R.id.restartsystemui, "systemui");
-        put(R.id.restartsecuritycenter, "securitycenter");
-        put(R.id.edit_confirm, "edit");
-        put(R.id.softreboot, "reboot");
-        put(R.id.backuprestore, "settings");
-        put(R.id.resetsettings, "reset");
-        put(R.id.about, "about");
-    }};
+    protected static final Map<Integer, String> MAP_KEYS;
+    static {
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+        map.put(R.id.search_btn, "search");
+        map.put(R.id.restartlauncher, "launcher");
+        map.put(R.id.restartsystemui, "systemui");
+        map.put(R.id.restartsecuritycenter, "securitycenter");
+        map.put(R.id.edit_confirm, "edit");
+        map.put(R.id.softreboot, "reboot");
+        map.put(R.id.backuprestore, "settings");
+        map.put(R.id.resetsettings, "reset");
+        map.put(R.id.about, "about");
+        MAP_KEYS = Collections.unmodifiableMap(map);
+    }
+    private static final SimpleDateFormat BACKUP_DATE_FORMAT = new SimpleDateFormat("MMddHHmmss", Locale.US);
 
     protected ActionBar getActionBar() {
         AppCompatActivity act = (AppCompatActivity) getActivity();
-        return act.getSupportActionBar();
+        return act == null ? null : act.getSupportActionBar();
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -77,7 +86,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
             for (int i = 0; i < menu.size(); i++) {
                 item = menu.getItem(i);
                 int menuId = item.getItemId();
-                String menuKey = mapKeys.get(menuId);
+                String menuKey = MAP_KEYS.get(menuId);
                 if (activeMenus.equals("all") && menuId == R.id.edit_confirm) {
                     item.setVisible(false);
                 }
@@ -164,6 +173,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     }
 
     public void showXposedDialog(AppCompatActivity act) {
+        if (act == null || act.isFinishing() || act.isDestroyed()) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle(R.string.warning);
         builder.setMessage(R.string.module_not_active);
@@ -177,6 +187,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
 
     public void showBackupRestoreDialog() {
         final AppCompatActivity act = (AppCompatActivity) getActivity();
+        if (act == null || act.isFinishing() || act.isDestroyed()) return;
 
         AlertDialog.Builder alert = new AlertDialog.Builder(act);
         alert.setTitle(R.string.backup_restore);
@@ -197,11 +208,12 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     private void initFragment() {
         setHasOptionsMenu(toolbarMenu);
         ActionBar actionBar = getActionBar();
+        if (actionBar == null) return;
 
         boolean showBack;
         if (this instanceof MainFragment) {
             AppCompatActivity act = (AppCompatActivity) getActivity();
-            showBack = act.getIntent().getBooleanExtra("from.settings", false);
+            showBack = act != null && act.getIntent().getBooleanExtra("from.settings", false);
         } else showBack = true;
 
         actionBar.setDisplayHomeAsUpEnabled(showBack);
@@ -263,71 +275,47 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         getParentFragmentManager().beginTransaction().setReorderingAllowed(true)
             .setCustomAnimations(R.animator.fragment_open_enter, R.animator.fragment_open_exit, R.animator.fragment_close_enter, R.animator.fragment_close_exit)
             .replace(R.id.fragment_container, fragment).addToBackStack(null).commitAllowingStateLoss();
-        getParentFragmentManager().executePendingTransactions();
     }
 
-    /*
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, final int nextAnim) {
         if (nextAnim == 0) return null;
-        Configuration config = getResources().getConfiguration();
-        float density = getResources().getDisplayMetrics().density;
-        final float scrWidth = config.screenWidthDp * density;
 
         final View top = getView();
         if (top == null) return null;
+
         final View content = getListView();
-        //ValueAnimator.setFrameDelay(17);
+        final float screenWidth = getResources().getDisplayMetrics().widthPixels;
+        if (screenWidth <= 0) return null;
+
         ValueAnimator valAnimator = new ValueAnimator();
         valAnimator.setDuration(animDur);
         valAnimator.setFloatValues(0.0f, 1.0f);
         valAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
 
-        if (nextAnim == R.animator.fragment_open_enter || nextAnim == R.animator.fragment_open_exit)
-            valAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-//				Log.e("animation", "start on: " + PreferenceFragmentBase.this.getClass().getCanonicalName());
-                    isAnimating = true;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-//				Log.e("animation", "end on: " + PreferenceFragmentBase.this.getClass().getCanonicalName());
-                    isAnimating = false;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {}
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {}
-            }); else isAnimating = false;
-
         valAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                if (content == null) return;
-                float val = (float)animation.getAnimatedValue();
+                if (top == null) return;
+                float val = (float) animation.getAnimatedValue();
                 if (nextAnim == R.animator.fragment_open_enter) {
-                    top.setX(scrWidth * (1.0f - val));
-                    content.setAlpha(0.6f + val * 0.4f);
+                    top.setTranslationX(screenWidth * (1.0f - val));
+                    if (content != null) content.setAlpha(0.6f + val * 0.4f);
                 } else if (nextAnim == R.animator.fragment_open_exit) {
-                    top.setX(-scrWidth / 4.0f * val);
+                    top.setTranslationX(-screenWidth / 4.0f * val);
                     top.setAlpha(1.0f - val * 0.4f);
                 } else if (nextAnim == R.animator.fragment_close_enter) {
-                    top.setX(-scrWidth / 4.0f * (1.0f - val));
+                    top.setTranslationX(-screenWidth / 4.0f * (1.0f - val));
                     top.setAlpha(0.6f + val * 0.4f);
                 } else if (nextAnim == R.animator.fragment_close_exit) {
-                    top.setX(scrWidth * val);
-                    content.setAlpha(1.0f - val * 0.4f);
+                    top.setTranslationX(screenWidth * val);
+                    if (content != null) content.setAlpha(1.0f - val * 0.4f);
                 }
             }
         });
 
         return valAnimator;
     }
-     */
 
     @Override
     public void onAttach(Context context) {
@@ -350,7 +338,7 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/octet-stream");
-        intent.putExtra(Intent.EXTRA_TITLE, "pengeek_backup_" + new SimpleDateFormat("MMddHHmmss", Locale.US).format(new java.util.Date()));
+        intent.putExtra(Intent.EXTRA_TITLE, "pengeek_backup_" + BACKUP_DATE_FORMAT.format(new java.util.Date()));
         startActivityForResult(intent, SAVE_BACKFILE);
     }
 
