@@ -22,6 +22,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -281,40 +282,64 @@ public class PreferenceFragmentBase extends PreferenceFragmentCompat {
     public Animator onCreateAnimator(int transit, boolean enter, final int nextAnim) {
         if (nextAnim == 0) return null;
 
-        final View top = getView();
-        if (top == null) return null;
+        final View view = getView();
+        if (view == null) return null;
 
-        final View content = getListView();
         final float screenWidth = getResources().getDisplayMetrics().widthPixels;
         if (screenWidth <= 0) return null;
 
-        ValueAnimator valAnimator = new ValueAnimator();
-        valAnimator.setDuration(animDur);
-        valAnimator.setFloatValues(0.0f, 1.0f);
-        valAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
+        final float startTrans;
+        final float endTrans;
+        if (nextAnim == R.animator.fragment_open_enter) {
+            startTrans = screenWidth;
+            endTrans = 0.0f;
+        } else if (nextAnim == R.animator.fragment_open_exit) {
+            startTrans = 0.0f;
+            endTrans = -screenWidth;
+        } else if (nextAnim == R.animator.fragment_close_enter) {
+            startTrans = -screenWidth;
+            endTrans = 0.0f;
+        } else if (nextAnim == R.animator.fragment_close_exit) {
+            startTrans = 0.0f;
+            endTrans = screenWidth;
+        } else {
+            return null;
+        }
 
-        valAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        view.setTranslationX(startTrans);
+        view.setAlpha(1.0f);
+
+        long duration = (long) (animDur * Helpers.getAnimationScale(2) + 0.5f);
+        ValueAnimator animator = ValueAnimator.ofFloat(startTrans, endTrans);
+        animator.setDuration(duration);
+        animator.setInterpolator(new DecelerateInterpolator(1.5f));
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                if (top == null) return;
-                float val = (float) animation.getAnimatedValue();
-                if (nextAnim == R.animator.fragment_open_enter) {
-                    top.setTranslationX(screenWidth * (1.0f - val));
-                    if (content != null) content.setAlpha(0.6f + val * 0.4f);
-                } else if (nextAnim == R.animator.fragment_open_exit) {
-                    top.setTranslationX(-screenWidth / 4.0f * val);
-                    top.setAlpha(1.0f - val * 0.4f);
-                } else if (nextAnim == R.animator.fragment_close_enter) {
-                    top.setTranslationX(-screenWidth / 4.0f * (1.0f - val));
-                    top.setAlpha(0.6f + val * 0.4f);
-                } else if (nextAnim == R.animator.fragment_close_exit) {
-                    top.setTranslationX(screenWidth * val);
-                    if (content != null) content.setAlpha(1.0f - val * 0.4f);
+                if (view != null) {
+                    view.setTranslationX((float) animation.getAnimatedValue());
+                }
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (view != null) {
+                    view.setTranslationX(endTrans);
+                    view.setAlpha(1.0f);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                if (view != null) {
+                    view.setTranslationX(endTrans);
+                    view.setAlpha(1.0f);
                 }
             }
         });
 
-        return valAnimator;
+        return animator;
     }
 
     @Override
