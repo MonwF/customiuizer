@@ -8,10 +8,6 @@ Para HyperOS baseado em Android 14.
 
 > Obrigado pelo incrível módulo de [Mikanoshi](https://code.highspec.ru/Mikanoshi/CustoMIUIzer)
 
-### Lançamentos antigos
-* [MIUI 14](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
-
 ### Traduções
 [![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
 

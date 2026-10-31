@@ -1,57 +1,45 @@
-## Pengeek
+## 米客
 
-**English** | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | [中文](README_zh.md)
+[English](README_en.md) | [日本語](README_jp.md) | [Português (Brasil)](README_PT-BR.md) | **中文**
 
-Customize your HyperOS to your liking.
+客制化你的HyperOS
 
-For `HyperOS 2` based on `Android 15`. LSPosed 2.0 users, please download the version with "A101".
+支持基于`Android 17`以上的`HyperOS 4`，全新UI
 
-> Thanks for the awesome module [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) from `Mikanoshi`
+> 感谢`Mikanoshi`的 [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) 模块
 
-### Legacy releases
-
-* [HyperOS 1.0 release](https://github.com/MonwF/customiuizer/releases/tag/v24.10.12)
-* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
-
-## Translations
-[![Crowdin](https://badges.crowdin.net/customiuizer14/localized.svg)](https://crowdin.com/project/customiuizer14)
-
-## Test builds
+### 测试版下载
+* [网盘](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 * [Telegram channel](https://t.me/pengeek)
-* [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
 
-### Donate
-Via paypal
-* [$5](https://paypal.me/tpsxj/5)
-* [$10](https://paypal.me/tpsxj/10)
-* [Other](https://paypal.me/tpsxj)
+### 主要功能
+* 双排状态栏
+* 信任蓝牙和Wi-Fi禁止锁屏
+* 查看已保存Wi-Fi密码
+* 自动亮度范围限制
+* 双排信号
+* 状态栏显示电池温度和电池
+* 跳过10s安全警告
+* 音乐可视化
+* 独立通知音量
+* 专辑封面设置为壁纸
+* 状态栏显秒与图标隐藏
+* 彩色电池条
+* 使用导航栏同时启用返回手势
+* 锁屏打开手电筒
+* 通知
+  * 通知重要性设置
+  * 自动展开
+  * 小窗打开通知
+  * 直接打开频道设置
+* 浮窗记住打开状态和位置、移除黑名单（含分屏）
+* 扩展电源菜单
+* 允许直接更新系统应用
+* 导航栏手势与自定义按钮
+* 安装或升级app时显示更多信息
+* 允许限制系统app使用网络
 
-## Here are the main working features:
-* Keep phone unlocked in a trusted environment (Bluetooth and Wi-Fi)
-* Autobrightness range limit
-* Extended timers for silent and dnd mode
-* Music visualizer
-* Set album art as wallpaper
-* Statusbar
-  * Hide icons
-  * Clock tweak
-  * Gesture (double tap to sleep, slice to adjust volume or brightness)
-  * Battery bar indicator
-* Notifications
-  * Notification importance
-  * Auto expand
-  * Extended menu
-  * Remove limit per package
-  * Open in floating window
-  * Open channel settings
-* Disable blacklist for floating windows
-* Extended power menu
-* Allow downgrade
-* Disable app signature verification
-* Use back gesture with navbar mode
-* Custom left/right buttons on the navbar
-* Skip permission intercept warning countdown
-* Control system apps to connect with Wi-Fi and battery saver
-* Show more detail on app installer or info activity
-* Powerful gesture with multi actions
+------
+#### 佛系开发，随缘打赏
+
+<img src="https://user-images.githubusercontent.com/1267050/193435662-74af0ec4-80c1-4c38-99ef-ed43e1862db6.JPG" alt="Donate" width="400"/>

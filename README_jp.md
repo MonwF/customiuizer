@@ -10,10 +10,6 @@ HyperOSを自分好みにカスタマイズ
 
 > `Mikanoshi`の素晴らしいモジュール [CustoMIUIzer](https://code.highspec.ru/Mikanoshi/CustoMIUIzer) をありがとう
 
-### レガシーリリース
-* [MIUI 14 release](https://github.com/MonwF/customiuizer/releases/tag/v23.11.26)
-* [MIUI 13 release](https://github.com/MonwF/customiuizer/releases/tag/v23.08.26)
-
 ### テストビルド
 * [Telegram channel](https://t.me/pengeek)
 * [jiandaoyun](https://rz3kv5wa4g.jiandaoyun.com/dash/650e43a383027ec3225083e9)
