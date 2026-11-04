@@ -59,6 +59,12 @@
             android:dependency="pref_key_launcher_native_folder_enabled"
             miuizer:minValue="848" miuizer:maxValue="1000" miuizer:format="%d" />
 
+        <name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+            android:key="pref_key_launcher_hide_new_marker"
+            android:title="@string/launcher_hide_new_marker_title"
+            android:summary="@string/launcher_hide_new_marker_summary"
+            android:defaultValue="false" />
+
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx

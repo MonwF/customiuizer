@@ -4,4 +4,6 @@
     <string name="launcher_native_folder_gap">额外纵向间距</string>
     <string name="launcher_native_folder_density">单元格高度比例（1000 为 100%）</string>
     <string name="launcher_native_folder_summary">需要支持 HyperOS Runtime 的框架，并启用 Android 系统作用域。列数使用上方设置，修改后重启桌面生效。首次加载配置桥接需要重启设备。</string>
+    <string name="launcher_hide_new_marker_title">隐藏新应用蓝点</string>
+    <string name="launcher_hide_new_marker_summary">仅适用于原生 HyperOS 桌面。保留应用名称和安装状态，独立于文件夹布局设置；重启桌面生效。</string>
 </resources>

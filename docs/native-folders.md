@@ -22,8 +22,8 @@ extra row flashing during opening. Four cell-height paths share the scale so
 closing animations retain their endpoint. Extra spacing respects the Launcher's
 own early zero-spacing branch; short folders retain fewer than the maximum rows.
 
-The native core also supports independent suppression of new-install prefixes;
-its separate UI follow-up leaves underlying application flags and labels intact.
+The independent Hide new-app blue dots switch suppresses new-install prefixes;
+it leaves underlying application flags and labels intact.
 Both feature flags default off. Nothing is installed before a valid snapshot.
 A default-off snapshot is authoritative and does not start scanning the launcher.
 

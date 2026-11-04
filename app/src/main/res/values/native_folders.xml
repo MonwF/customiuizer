@@ -4,4 +4,6 @@
     <string name="launcher_native_folder_gap">Extra vertical spacing</string>
     <string name="launcher_native_folder_density">Cell height scale (1000 = 100%)</string>
     <string name="launcher_native_folder_summary">Requires HyperOS Runtime native support and Android framework scope. Changes apply after restarting Launcher. Column count uses the setting above. First activation of the configuration bridge requires restarting the device.</string>
+    <string name="launcher_hide_new_marker_title">Hide new-app blue dots</string>
+    <string name="launcher_hide_new_marker_summary">Native HyperOS Launcher only. Keeps app names and installation flags. Independent of folder layout; restart Launcher to apply.</string>
 </resources>
