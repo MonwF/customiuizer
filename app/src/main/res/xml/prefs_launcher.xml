@@ -32,6 +32,39 @@
 			android:defaultValue="false"
 			miuizer:indentLevel="1" />
 
+        <name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+            android:key="pref_key_launcher_native_folder_enabled"
+            android:title="@string/launcher_native_folder_enabled"
+            android:defaultValue="false"
+            android:summary="@string/launcher_native_folder_summary" />
+
+        <name.monwf.customiuizer.prefs.SeekBarPreference
+            android:key="pref_key_launcher_native_folder_rows"
+            android:title="@string/launcher_native_folder_rows"
+            android:defaultValue="5"
+            android:dependency="pref_key_launcher_native_folder_enabled"
+            miuizer:minValue="5" miuizer:maxValue="8" miuizer:format="%d" />
+
+        <name.monwf.customiuizer.prefs.SeekBarPreference
+            android:key="pref_key_launcher_native_folder_gap"
+            android:title="@string/launcher_native_folder_gap"
+            android:defaultValue="0"
+            android:dependency="pref_key_launcher_native_folder_enabled"
+            miuizer:minValue="0" miuizer:maxValue="20" miuizer:format="%d" />
+
+        <name.monwf.customiuizer.prefs.SeekBarPreference
+            android:key="pref_key_launcher_native_folder_density"
+            android:title="@string/launcher_native_folder_density"
+            android:defaultValue="1000"
+            android:dependency="pref_key_launcher_native_folder_enabled"
+            miuizer:minValue="848" miuizer:maxValue="1000" miuizer:format="%d" />
+
+        <name.monwf.customiuizer.prefs.CheckBoxPreferenceEx
+            android:key="pref_key_launcher_hide_new_marker"
+            android:title="@string/launcher_hide_new_marker_title"
+            android:summary="@string/launcher_hide_new_marker_summary"
+            android:defaultValue="false" />
+
 	</name.monwf.customiuizer.prefs.PreferenceCategoryEx>
 
 	<name.monwf.customiuizer.prefs.PreferenceCategoryEx

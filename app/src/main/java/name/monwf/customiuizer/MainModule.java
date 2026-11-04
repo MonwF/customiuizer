@@ -89,6 +89,11 @@ public class MainModule extends XposedModule {
     public void onSystemServerStarting(final SystemServerStartingParam lpparam) {
         ModuleHelper.currentPackageName = "android";
         initPrefs();
+        // Native HyperOS processes have no ART entry from which to read preferences.
+        try {
+            name.monwf.customiuizer.mods.NativeFolderConfigBridge.install(
+                    getRemotePreferences(ModuleHelper.prefsName + "_remote"));
+        } catch (Throwable failure) { XposedHelpers.log("NativeFolders", failure); }
         PackagePermissions.hook(lpparam);
         GlobalActions.setupGlobalActions(lpparam);
 
