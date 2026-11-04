@@ -1,0 +1,7 @@
+<resources>
+    <string name="launcher_native_folder_enabled">Native HyperOS folder layout</string>
+    <string name="launcher_native_folder_rows">Visible folder rows</string>
+    <string name="launcher_native_folder_gap">Extra vertical spacing</string>
+    <string name="launcher_native_folder_density">Cell height scale (1000 = 100%)</string>
+    <string name="launcher_native_folder_summary">Requires HyperOS Runtime native support and Android framework scope. Changes apply after restarting Launcher. Column count uses the setting above. First activation of the configuration bridge requires restarting the device.</string>
+</resources>

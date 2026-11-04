@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 //def acraVersion = '5.7.0'
 def keystorePropertiesFile = rootProject.file("../keystore.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-def sFile = file(keystoreProperties['storeFile'])
+if (keystorePropertiesFile.exists()) keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+def sFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
 def sPassword = keystoreProperties['storePassword']
 def kAlias = keystoreProperties['keyAlias']
 def kPassword = keystoreProperties['keyPassword']
@@ -13,6 +13,8 @@ def lastVersionName = "25.09.25"
 
 android {
     namespace "name.monwf.customiuizer"
+    ndkVersion "29.0.14206865"
+    buildToolsVersion "36.0.0"
     signingConfigs {
         v2 {
             storeFile sFile
@@ -33,6 +35,10 @@ android {
         versionName lastVersionName
         resConfigs 'ru-rRU', 'zh-rCN', 'ja-rJP', 'vi-rVN', 'cs-rCZ', 'pt-rBR', 'tr-rTR', 'es-rES'
         ndk { abiFilters "arm64-v8a" }
+        externalNativeBuild { cmake { arguments "-DANDROID_STL=c++_static" } }
+    }
+    externalNativeBuild {
+        cmake { path file("src/main/cpp/CMakeLists.txt"); version "3.22.1" }
     }
     buildTypes {
         develop {

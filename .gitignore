@@ -18,3 +18,7 @@ app/standalone/*
 app/develop/
 .idea/.name
 .idea/copilot/
+
+# Native build outputs
+.cxx/
+**/__pycache__/
